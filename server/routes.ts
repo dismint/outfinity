@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning } from "./app";
+import { Authing, Friending, Posting, Sessioning, Collectioning } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -151,6 +151,69 @@ class Routes {
     const user = Sessioning.getUser(session);
     const fromOid = (await Authing.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
+  }
+
+  @Router.post("/closets")
+  async createCollection(session: SessionDoc, name: string, emoji: string) {
+    const user = Sessioning.getUser(session);
+    return await Collectioning.create(name, emoji, user);
+  }
+
+  @Router.get("/closets/:id/search/:keyword")
+  @Router.validate(z.object({ keyword: z.string() }))
+  // async searchCloset(id: string, keyword: string) {
+  //   const collection = await Collectioning.getClothesInCollection(new ObjectId(id));
+  //   const clothes = [];
+  //   // for (const p of collection) {
+  //   //   if (await Clothing.searchForKeyword(keyword, p)) {   ////////////////////////////////////////////////// @Annie
+  //   //     clothes.push(p);
+  //   //   }
+  //   // }
+  //   return clothes;
+  // }
+
+  @Router.get("/closets/user/:id")
+  async getCollectionsByUser(id: string) {
+    let collections;
+    if (id) {
+      collections = await Collectioning.getCollectionsByUser(new ObjectId(id));
+    } else {
+      collections = await Collectioning.getCollections();
+    }
+    return collections;
+  }
+
+  @Router.get("/closets/:id")
+  async getCollectionById(id: string) {
+    return await Collectioning.getCollectionById(new ObjectId(id));
+  }
+
+  @Router.get("/closets/:id/clothes")
+  async getClothingInCollection(id: string) {
+    return await Collectioning.getClothesInCollection(new ObjectId(id));
+  }
+
+  @Router.patch("/closets/:id/addClothing/:clothingId")
+  async addClothingToCollection(session: SessionDoc, id: string, clothingId: string) {
+    const user = Sessioning.getUser(session);
+    // await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Collectioning.addClothing(new ObjectId(id), new ObjectId(clothingId));
+  }
+
+  @Router.patch("/closets/:id/removeClothing/:clothingId")
+  async removeClothingFromCollection(session: SessionDoc, id: string, clothingId: string) {
+    const user = Sessioning.getUser(session);
+    // await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Collectioning.removeClothing(new ObjectId(id), new ObjectId(clothingId));
+  }
+
+  @Router.delete("/collections/:id")
+  async deleteCollection(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Collectioning.deleteCollection(new ObjectId(id));
   }
 }
 
