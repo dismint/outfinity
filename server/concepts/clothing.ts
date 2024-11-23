@@ -71,6 +71,19 @@ export default class ClothingConcept {
         return allMatches.filter((clothes, index, self) => self.findIndex((c) => c._id.toString() === clothes._id.toString()) === index);
     }
 
+    async assertClothingHasKeyword(_id: ObjectId, keyword: string) {
+        const clothing = await this.clothes.readOne({ _id });
+        if (!clothing) {
+            throw new ClothingNotFoundError(_id);
+        }
+        if (!clothing.name.includes(keyword) && !clothing.description.includes(keyword)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     private async assertClothingExists(_id: ObjectId) {
         const maybeClothing = await this.clothes.readOne({ _id });
         if (!maybeClothing) {
