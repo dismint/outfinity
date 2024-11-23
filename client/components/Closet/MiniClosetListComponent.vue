@@ -34,7 +34,7 @@ async function getMiniclosets() {
 // }
 
 const navigateToNewMiniclosetPage = async () => {
-  void router.push({ name: "Closet", params: { id: "new minicloset" } });
+  void router.push({ name: "CreateCloset" });
 };
 
 const navigateToNewClothesPage = async () => {

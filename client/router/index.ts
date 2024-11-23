@@ -2,12 +2,14 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
+import AddRemoveClothesView from "../views/AddRemoveClothesView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
 import ClosetView from "../views/ClosetView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import CreateClosetView from "../views/CreateClosetView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -47,6 +49,19 @@ const router = createRouter({
       component: ClosetView,
       meta: { requiresAuth: true },
       props: true,
+    },
+    {
+      path: "/addremoveclothes/:id",
+      name: "AddRemoveClothes",
+      component: AddRemoveClothesView,
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
+      path: "/createcloset",
+      name: "CreateCloset",
+      component: CreateClosetView,
+      meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",

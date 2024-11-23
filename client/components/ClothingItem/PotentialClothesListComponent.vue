@@ -9,11 +9,12 @@ const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 
 const props = defineProps(["id"]);
 const loaded = ref(false);
-let clothes = ref<Array<Record<string, string>>>([]);
+const clothes = ref<Array<Record<string, string>>>([]);
+const newClothes = ref<Array<Record<string, string>>>([]);
 
 async function getClothes() {
   // let query: Record<string, string> = { owner: currentUsername.value };
-  // TODO: replace api get clothes in given closet
+  // TODO: replace api get clothes not in given closet
   ///// have to filter to not show main closet
   // let miniclosetResults;
   // try {
@@ -25,14 +26,23 @@ async function getClothes() {
   // miniclosets.value = miniclosetResults;
   console.log(props.id);
   clothes.value = [
-    { _id: "1", name: "Clothing Item 1" },
-    { _id: "2", name: "Clothing Item 2" },
-    { _id: "3", name: "Clothing Item 3" },
+    { _id: "1", name: "Not Clothing Item 1" },
+    { _id: "2", name: "Not Clothing Item 2" },
+    { _id: "3", name: "Not Clothing Item 3" },
   ];
 }
 
-const navigateToAddRemoveClothesPage = async () => {
-  void router.push({ name: "AddRemoveClothes", params: { id: "add remove clothes" } });
+///// change closet clothing component to potential clothing component
+
+const addClothes = async () => {
+  // try {
+  //   await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { content: content } });
+  // } catch (e) {
+  //   return;
+  // }
+  // emit("editPost");
+  // emit("refreshPosts");
+  void router.push({ name: "Closet", params: { id: props.id } });
 };
 
 onBeforeMount(async () => {
@@ -42,18 +52,16 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Search bar and filtering</h1>
-    <button @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
-    <h3>Results</h3>
+  <form @submit.prevent="addClothes()">
     <section class="posts" v-if="loaded && clothes.length !== 0">
       <article v-for="clothing in clothes" :key="clothing._id">
         <ClosetClothingItemComponent :id="clothing._id" :name="clothing.name" />
       </article>
     </section>
-    <p v-else-if="loaded">No miniclosets yet!</p>
+    <p v-else-if="loaded">No potential new clothes!</p>
     <p v-else>Loading...</p>
-  </div>
+    <button type="submit">save</button>
+  </form>
 </template>
 
 <style scoped>
