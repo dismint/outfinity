@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning, Collectioning } from "./app";
+import { Authing, Friending, Posting, Sessioning, Collectioning, Clothing } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -161,16 +161,16 @@ class Routes {
 
   @Router.get("/closets/:id/search/:keyword")
   @Router.validate(z.object({ keyword: z.string() }))
-  // async searchCloset(id: string, keyword: string) {
-  //   const collection = await Collectioning.getClothesInCollection(new ObjectId(id));
-  //   const clothes = [];
-  //   // for (const p of collection) {
-  //   //   if (await Clothing.searchForKeyword(keyword, p)) {   ////////////////////////////////////////////////// @Annie
-  //   //     clothes.push(p);
-  //   //   }
-  //   // }
-  //   return clothes;
-  // }
+  async searchCloset(id: string, keyword: string) {
+    const collection = await Collectioning.getClothesInCollection(new ObjectId(id));
+    const clothes = [];
+    for (const p of collection) {
+      if (await Clothing.assertClothingHasKeyword(keyword, p)) {
+        clothes.push(p);
+      }
+    }
+    return clothes;
+  }
 
   @Router.get("/closets/user/:id")
   async getCollectionsByUser(id: string) {
@@ -196,7 +196,7 @@ class Routes {
   @Router.patch("/closets/:id/addClothing/:clothingId")
   async addClothingToCollection(session: SessionDoc, id: string, clothingId: string) {
     const user = Sessioning.getUser(session);
-    // await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
     await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
     return await Collectioning.addClothing(new ObjectId(id), new ObjectId(clothingId));
   }
@@ -204,7 +204,7 @@ class Routes {
   @Router.patch("/closets/:id/removeClothing/:clothingId")
   async removeClothingFromCollection(session: SessionDoc, id: string, clothingId: string) {
     const user = Sessioning.getUser(session);
-    // await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
     await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
     return await Collectioning.removeClothing(new ObjectId(id), new ObjectId(clothingId));
   }
