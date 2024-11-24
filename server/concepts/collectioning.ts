@@ -5,9 +5,10 @@ import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface CollectionDoc extends BaseDoc {
   name: string;
-  emoji: string;
+  description: string;
   owner: ObjectId;
   clothes: ObjectId[];
+  saved: boolean;
 }
 
 /**
@@ -23,13 +24,13 @@ export default class CollectioningConcept {
     this.collections = new DocCollection<CollectionDoc>(collectionName);
   }
 
-  async create(name: string, emoji: string, owner: ObjectId) {
+  async create(name: string, description: string, owner: ObjectId) {
     if (!name) {
       throw new NotAllowedError("Closet name cannot be empty!");
     } else if (name === "main closet") {
       throw new NotAllowedError("Closet name cannot be 'main closet'!");
     }
-    const _id = await this.collections.createOne({ name, emoji, owner, clothes: [] });
+    const _id = await this.collections.createOne({ name, description, owner, clothes: [], saved: false });
     return { msg: "Closet successfully created!", collection: await this.collections.readOne({ _id }) };
   }
 
@@ -86,6 +87,28 @@ export default class CollectioningConcept {
     return { msg: "Closet successfully deleted!" };
   }
 
+  async saveCollection(_id: ObjectId) {
+    await this.collections.partialUpdateOne({ _id }, { saved: true });
+    return { msg: "Outfit successfully saved!" };
+  }
+
+  async unsaveCollection(_id: ObjectId) {
+    await this.collections.partialUpdateOne({ _id }, { saved: false });
+    return { msg: "Outfit successfully unsaved!" };
+  }
+
+  async getUserSavedCollections(user: ObjectId) {
+    return await this.collections.readMany({ owner: user, saved: true });
+  }
+
+  async isCollectionSaved(_id: ObjectId) {
+    const collection = await this.collections.readOne({ _id });
+    if (!collection) {
+      throw new NotFoundError(`Collection ${_id} does not exist!`);
+    }
+    return collection.saved;
+  }
+
   async assertUserCanEditCollection(_id: ObjectId, user: ObjectId) {
     const collection = await this.collections.readOne({ _id });
     if (!collection) {
@@ -95,6 +118,55 @@ export default class CollectioningConcept {
       return;
     } else {
       throw new UserNotCollectionOwnerError(user, _id);
+    }
+  }
+
+  async searchCollectionsByKeyword(keyword: string) {
+    //if either the name or the description matches the keyword, return the collection
+    const nameMatches = await this.collections.readMany({ name: { $regex: keyword, $options: "i" } });
+    const descriptionMatches = await this.collections.readMany({ description: { $regex: keyword, $options: "i" } });
+    const allMatches = nameMatches.concat(descriptionMatches);
+    return allMatches.filter((collection, index, self) => self.findIndex((c) => c._id.toString() === collection._id.toString()) === index);
+  }
+
+  async assertClosetIsValid(array: string[]) {
+    //check that the array has at least one "top", one "bottom", and one "shoe"
+    let top = false;
+    let bottom = false;
+    let shoe = false;
+    for (const p of array) {
+      if (p === "top") {
+        top = true;
+      } else if (p === "bottom") {
+        bottom = true;
+      } else if (p === "shoe") {
+        shoe = true;
+      }
+    }
+    if (!top || !bottom || !shoe) {
+      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe!");
+    }
+  }
+
+  async assertOutfitIsValid(array: string[]) {
+    //check that the array has at least one "top", one "bottom", and exactly one "shoe"
+    let top = false;
+    let bottom = false;
+    let shoe = false;
+    for (const p of array) {
+      if (p === "top") {
+        top = true;
+      } else if (p === "bottom") {
+        bottom = true;
+      } else if (p === "shoe") {
+        if (shoe) {
+          throw new NotAllowedError("Closet must contain exactly one shoe!");
+        }
+        shoe = true;
+      }
+    }
+    if (!top || !bottom || !shoe) {
+      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe!");
     }
   }
 }

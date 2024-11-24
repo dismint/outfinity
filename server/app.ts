@@ -11,5 +11,6 @@ export const Sessioning = new SessioningConcept();
 export const Authing = new AuthenticatingConcept("users");
 export const Posting = new PostingConcept("posts");
 export const Friending = new FriendingConcept("friends");
-export const Collectioning = new CollectioningConcept("collections");
+export const Closeting = new CollectioningConcept("closets");
+export const Outfiting = new CollectioningConcept("outfits");
 export const Clothing = new ClothingConcept("clothes");
