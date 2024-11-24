@@ -165,7 +165,7 @@ class Routes {
     const collection = await Collectioning.getClothesInCollection(new ObjectId(id));
     const clothes = [];
     for (const p of collection) {
-      if (await Clothing.assertClothingHasKeyword(keyword, p)) {
+      if (await Clothing.assertClothingHasKeyword(new ObjectId(p), keyword)) {
         clothes.push(p);
       }
     }
