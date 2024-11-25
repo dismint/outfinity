@@ -27,8 +27,8 @@ export default class CollectioningConcept {
   async create(name: string, description: string, owner: ObjectId) {
     if (!name) {
       throw new NotAllowedError("Closet name cannot be empty!");
-    } else if (name === "main closet") {
-      throw new NotAllowedError("Closet name cannot be 'main closet'!");
+    } else if (name === "main") {
+      throw new NotAllowedError("Closet name cannot be 'main'!");
     }
     const _id = await this.collections.createOne({ name, description, owner, clothes: [], saved: false });
     return { msg: "Closet successfully created!", collection: await this.collections.readOne({ _id }) };
@@ -56,6 +56,18 @@ export default class CollectioningConcept {
     return collection.clothes;
   }
 
+  async getClosetByUserAndName(user: ObjectId, name: string) {
+    const closet = await this.collections.readOne({ name: name, owner: user });
+    if (!closet) {
+      throw new NotFoundError("Closet does not exist!");
+    }
+    return closet;
+  }
+
+  async getCollectionsItemIn(_id: ObjectId) {
+    return await this.collections.readMany({ clothes: _id });
+  }
+
   async addClothing(_id: ObjectId, clothing: ObjectId) {
     const collection = await this.collections.readOne({ _id });
     if (!collection) {
@@ -80,6 +92,23 @@ export default class CollectioningConcept {
     collection.clothes = collection.clothes.filter((p) => p.toString() !== clothing.toString());
     await this.collections.partialUpdateOne({ _id }, collection);
     return { msg: "Closet successfully updated!" };
+  }
+
+  async filterInCollection(_id: ObjectId, clothing: ObjectId[]) {
+    // return all the items in clothing that are in the collection _id
+    const collection = await this.collections.readOne({ _id });
+    const filtered = [];
+    if (!collection) {
+      throw new NotFoundError(`Collection ${_id} does not exist!`);
+    }
+    for (const p of clothing) {
+      for (const c of collection.clothes) {
+        if (p.toString() === c.toString()) {
+          filtered.push(p);
+        }
+      }
+    }
+    return filtered;
   }
 
   async deleteCollection(_id: ObjectId) {
@@ -153,6 +182,7 @@ export default class CollectioningConcept {
     let top = false;
     let bottom = false;
     let shoe = false;
+    let onepiece = false;
     for (const p of array) {
       if (p === "top") {
         top = true;
@@ -163,10 +193,12 @@ export default class CollectioningConcept {
           throw new NotAllowedError("Closet must contain exactly one shoe!");
         }
         shoe = true;
+      } else if (p === "onepiece") {
+        onepiece = true;
       }
     }
-    if (!top || !bottom || !shoe) {
-      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe!");
+    if ((!top || !bottom || !shoe) && (!onepiece || !shoe)) {
+      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe, or one one-piece and one shoe!");
     }
   }
 }
