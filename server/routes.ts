@@ -187,7 +187,7 @@ class Routes {
   @Router.get("/closets/:id/filter/:type")
   @Router.validate(z.object({ type: z.string() }))
   async filterClosetByType(id: string, type: string) {
-    const clothes = Clothing.searchClothingByType(type);
+    const clothes = await Clothing.searchClothingByType(type);
     const clothingIds = [];
     for (const p of clothes) {
       clothingIds.push(p._id);
@@ -199,7 +199,7 @@ class Routes {
   @Router.validate(z.object({ keyword: z.string(), type: z.string() }))
   async searchAndFilterCloset(session: SessionDoc, id: string, keyword: string, type: string) {
     const user = Sessioning.getUser(session);
-    const clothes = Clothing.searchAndFilter(type, keyword, user);
+    const clothes = await Clothing.searchAndFilter(type, keyword, user);
     const clothingIds = [];
     for (const p of clothes) {
       clothingIds.push(p._id);
