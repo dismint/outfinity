@@ -5,11 +5,14 @@ import { useUserStore } from "@/stores/user";
 import AddRemoveClothesView from "../views/AddRemoveClothesView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
 import ClosetView from "../views/ClosetView.vue";
+import CreateClosetView from "../views/CreateClosetView.vue";
+import CreateOutfitView from "../views/CreateOutfitView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import OutfitsView from "../views/OutfitsView.vue";
+import OutfitView from "../views/OutfitView.vue";
 import ProfileView from "../views/ProfileView.vue";
-import CreateClosetView from "../views/CreateClosetView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,6 +39,26 @@ const router = createRouter({
           return { name: "Profile" };
         }
       },
+    },
+    {
+      path: "/outfits",
+      name: "Outfits",
+      component: OutfitsView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/outfit/:id",
+      name: "Outfit",
+      component: OutfitView,
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
+      path: "/newoutfit",
+      name: "CreateOutfit",
+      component: CreateOutfitView,
+      meta: { requiresAuth: true },
+      props: true,
     },
     {
       path: "/allclosets",

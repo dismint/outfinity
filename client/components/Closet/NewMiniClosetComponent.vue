@@ -3,9 +3,11 @@ import router from "@/router";
 // import { Picker } from "emoji-mart-vue";
 // import "emoji-mart-vue/dist/style.css";
 import { ref } from "vue";
+import EmojiPicker from "vue3-emoji-picker";
+import "vue3-emoji-picker/css";
 
 const name = ref("");
-const emoji = ref("😜");
+const selectedEmoji = ref("");
 
 const newMiniCloset = async (name: string, emoji: string) => {
   /// TODO: api to make new minicloset
@@ -15,14 +17,49 @@ const newMiniCloset = async (name: string, emoji: string) => {
   //   return;
   // }
   console.log(name, emoji);
-  void router.push({ name: "AllClosets" });
+  //// TODO: replace id with id from new minicloset
+  void router.push({ name: "Closet", params: { id: "1" } });
 };
 
-const selectedEmoji = ref("");
+//  export default {
+//    components: {
+//      VueEmojiPicker
+//    },
+//    data() {
+//      return {
+//        message: ''
+//      };
+//    },
+//    methods: {
+//      addEmoji(emoji) {
+//        this.message += emoji.native;
+//      }
+//    }
+//  };
 
-const onEmojiSelect = (emoji: any) => {
-  selectedEmoji.value = emoji;
-};
+interface Emoji {
+  i: string;
+  n: string[];
+  r: string;
+  t: string;
+  u: string;
+}
+
+function onSelectEmoji(emoji: Emoji) {
+  // console.log(emoji);
+  selectedEmoji.value = emoji.i;
+  console.log(selectedEmoji.value);
+  /*
+    // result
+    { 
+        i: "😚", 
+        n: ["kissing face"], 
+        r: "1f61a", // with skin tone
+        t: "neutral", // skin tone
+        u: "1f61a" // without tone
+    }
+    */
+}
 </script>
 
 <template>
@@ -30,12 +67,13 @@ const onEmojiSelect = (emoji: any) => {
     <h2>Name:</h2>
     <textarea id="name" v-model="name" required> </textarea>
     <h2 class="author">Select an emoji to represent this minicloset!</h2>
-    <!-- <div class="base">emoji dropdown?</div> -->
     <div>
-      <!-- <Picker @emoji-select="onEmojiSelect" /> -->
-      <div v-if="selectedEmoji">Selected Emoji: {{ selectedEmoji }}</div>
+      <EmojiPicker :native="true" @select="onSelectEmoji" />
+      <h3 v-if="selectedEmoji != ''">
+        Emoji selected:
+        <span class="emoji">{{ selectedEmoji }}</span>
+      </h3>
     </div>
-    <!-- <form @submit.prevent="newMiniCloset(name, selectedEmoji.value.native)"> -->
     <button class="" type="submit">create minicloset</button>
   </form>
 </template>
@@ -53,5 +91,10 @@ img {
   width: 30%;
   height: auto;
   cursor: pointer;
+}
+
+.emoji {
+  width: 500px;
+  height: auto;
 }
 </style>
