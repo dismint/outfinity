@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import NavbarView from "@/views/NavbarView.vue";
 
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
@@ -23,6 +24,7 @@ onBeforeMount(async () => {
 
 <template>
   <header>
+    <!--
     <nav>
       <div class="title">
         <img src="@/assets/images/logo.svg" />
@@ -42,21 +44,23 @@ onBeforeMount(async () => {
         </li>
       </ul>
     </nav>
+    -->
     <article v-if="toast !== null" class="toast" :class="toast.style">
       <p>{{ toast.message }}</p>
     </article>
   </header>
+  <NavbarView />
   <RouterView />
 </template>
 
 <style scoped>
 @import "./assets/toast.css";
 
-nav {
-  padding: 1em 2em;
-  background-color: lightgray;
-  display: flex;
-  align-items: center;
+header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1000;
 }
 
 h1 {
@@ -80,14 +84,21 @@ a {
   text-decoration: none;
 }
 
-ul {
-  list-style-type: none;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 1em;
-}
+/*ul {*/
+/*  list-style-type: none;*/
+/*  margin-left: auto;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  flex-direction: row;*/
+/*  gap: 1em;*/
+/*}*/
+/**/
+/*nav {*/
+/*  padding: 1em 2em;*/
+/*  background-color: lightgray;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*}*/
 
 .underline {
   text-decoration: underline;

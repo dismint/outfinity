@@ -1,8 +1,17 @@
 /* Add some global styles here! */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Eczar:wght@400..800&display=swap");
 
 :root {
   --red: rgb(208, 67, 12);
   --base-bg: #f1f3f5;
+  --dark-green: #344C45;
+  font-size: 16px;
+}
+
+body {
+  font-family: "Inter";
 }
 
 button.btn-small {
@@ -29,4 +38,15 @@ a.button {
   justify-content: center;
   align-items: center;
   gap: 1em;
+}
+
+.centered {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.compressWidth {
+  max-width: max(60%, min(95%, 1200px));
 }
