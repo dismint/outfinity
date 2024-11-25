@@ -1,32 +1,30 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import MiniClosetComponent from "./MiniClosetComponent.vue";
 
-const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
+const { userId } = storeToRefs(useUserStore());
 
 const loaded = ref(false);
 let miniclosets = ref<Array<Record<string, string>>>([]);
 
 async function getMiniclosets() {
-  // let query: Record<string, string> = { owner: currentUsername.value };
-  // TODO: replace api
-  ///// have to filter to not show main closet
-  // let miniclosetResults;
-  // try {
-  //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
-  // } catch (_) {
-  //   return;
-  // }
-  // searchAuthor.value = author ? author : "";
-  // miniclosets.value = miniclosetResults;
-  miniclosets.value = [
-    { _id: "1", name: "Closet 1", emoji: "👗" },
-    { _id: "2", name: "Closet 2", emoji: "👠" },
-    { _id: "3", name: "Closet 3", emoji: "👒" },
-  ];
+  let query: Record<string, string> = { id: userId.value };
+  let miniclosetResults;
+  try {
+    miniclosetResults = await fetchy("/api/closets/user", "GET", { query });
+  } catch (_) {
+    return;
+  }
+  miniclosets.value = miniclosetResults.filter((minicloset: Record<string, string>) => minicloset.name !== "main");
+  // miniclosets.value = [
+  //   { _id: "1", name: "Closet 1", emoji: "👗" },
+  //   { _id: "2", name: "Closet 2", emoji: "👠" },
+  //   { _id: "3", name: "Closet 3", emoji: "👒" },
+  // ];
 }
 
 // function updateEditing(id: string) {

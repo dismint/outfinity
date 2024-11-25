@@ -2,6 +2,7 @@
 import router from "@/router";
 // import { Picker } from "emoji-mart-vue";
 // import "emoji-mart-vue/dist/style.css";
+import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
 import EmojiPicker from "vue3-emoji-picker";
 import "vue3-emoji-picker/css";
@@ -10,15 +11,21 @@ const name = ref("");
 const selectedEmoji = ref("");
 
 const newMiniCloset = async (name: string, emoji: string) => {
-  /// TODO: api to make new minicloset
-  // try {
-  //   await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { content: content } });
-  // } catch (e) {
-  //   return;
-  // }
-  console.log(name, emoji);
-  //// TODO: replace id with id from new minicloset
-  void router.push({ name: "Closet", params: { id: "1" } });
+  console.log("selected", name, emoji);
+  let closetResult;
+  try {
+    closetResult = await fetchy(`/api/closets`, "POST", { body: { name, emoji } });
+  } catch (e) {
+    return;
+  }
+  console.log("id", closetResult.collection._id);
+  emptyForm();
+  void router.push({ name: "Closet", params: { id: closetResult.collection._id } });
+};
+
+const emptyForm = () => {
+  name.value = "";
+  selectedEmoji.value = "";
 };
 
 //  export default {

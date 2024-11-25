@@ -2,10 +2,6 @@
 // import PostListComponent from "@/components/Post/PostListComponent.vue";
 import MainClosetComponent from "@/components/Closet/MainClosetComponent.vue";
 import MiniClosetListComponent from "@/components/Closet/MiniClosetListComponent.vue";
-import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
-
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 </script>
 
 <template>

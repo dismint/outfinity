@@ -172,7 +172,7 @@ class Routes {
     return clothes;
   }
 
-  @Router.get("/closets/user/:id")
+  @Router.get("/closets/user")
   @Router.validate(z.object({ id: z.string().optional() }))
   async getClosetByUser(id?: string) {
     let collections;
