@@ -153,6 +153,26 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
+  @Router.post("/clothes")
+  async createClothes(session: SessionDoc, name: string, description: string, imgUrl: string, type: string) {
+    const user = Sessioning.getUser(session);
+    await Clothing.addClothing(type, name, description, imgUrl, user);
+    const main = await Closeting.getMainCloset(user);
+    await Closeting.addClothing(main, user);
+    // TODO: return something
+  }
+
+  @Router.delete("/clothes/:id")
+  async deleteClothes(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    await Clothing.removeClothing(new ObjectId(id), user);
+    const allClosets = await Closeting.getCollectionsItemsIn(new ObjectId(id));
+    for (clo in allClosets) {
+      await Closeting.removeClothing(clo, new ObjectId(id));
+    }
+    // TODO: delete all outfits containing this clothing
+  }
+
   @Router.post("/closets")
   async createCloset(session: SessionDoc, name: string, emoji: string) {
     const user = Sessioning.getUser(session);
