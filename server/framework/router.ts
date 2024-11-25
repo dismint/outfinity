@@ -179,7 +179,7 @@ export class Router {
    * @param zodSchema Zod "schema" describing types, constraints, and/or coercions
    */
   static validate(zodSchema: ZodSchema) {
-    return function (originalMethod: Function, context: ClassMethodDecoratorContext<Object>) {
+    return function (originalMethod: Function, context: ClassMethodDecoratorContext<object>) {
       context.addInitializer(function () {
         Reflect.defineMetadata("zodSchema", zodSchema, this, context.name);
       });
@@ -187,7 +187,7 @@ export class Router {
   }
 
   private static httpDecorator(method: HttpMethod, route: string) {
-    return function (originalMethod: Function, context: ClassMethodDecoratorContext<Object>) {
+    return function (originalMethod: Function, context: ClassMethodDecoratorContext<object>) {
       context.addInitializer(function () {
         // For each method decorated with this decorator, save the method and path metadata.
         // This metadata can be accessed later to build the express router.
@@ -211,7 +211,7 @@ function getParamNames(f: Function) {
  * @param routes object where functions have been decorated with e.g. `@Router.get`, etc.
  * @returns router to be mounted in an Express app
  */
-export function getExpressRouter(routes: Object) {
+export function getExpressRouter(routes: object) {
   const router = new Router();
 
   // Get all methods in the Routes class (e.g., getUsers, createUser, etc).
