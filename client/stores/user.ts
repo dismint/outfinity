@@ -32,7 +32,7 @@ export const useUserStore = defineStore(
         const { username } = await fetchy("/api/session", "GET", { alert: false });
         currentUsername.value = username;
         if (username) {
-          const { _id } = await fetchy(`/api/users/username/${username}`, "GET");
+          const { _id } = await fetchy(`/api/users/${username}`, "GET");
           userId.value = _id;
         }
       } catch {
