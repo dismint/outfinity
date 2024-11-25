@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning, Collectioning } from "./app";
+import { Authing, Closeting, Clothing, Friending, Outfiting, Posting, Sessioning } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -154,66 +154,164 @@ class Routes {
   }
 
   @Router.post("/closets")
-  async createCollection(session: SessionDoc, name: string, emoji: string) {
+  async createCloset(session: SessionDoc, name: string, emoji: string) {
     const user = Sessioning.getUser(session);
-    return await Collectioning.create(name, emoji, user);
+    return await Closeting.create(name, emoji, user);
   }
 
   @Router.get("/closets/:id/search/:keyword")
   @Router.validate(z.object({ keyword: z.string() }))
-  // async searchCloset(id: string, keyword: string) {
-  //   const collection = await Collectioning.getClothesInCollection(new ObjectId(id));
-  //   const clothes = [];
-  //   // for (const p of collection) {
-  //   //   if (await Clothing.searchForKeyword(keyword, p)) {   ////////////////////////////////////////////////// @Annie
-  //   //     clothes.push(p);
-  //   //   }
-  //   // }
-  //   return clothes;
-  // }
+  async searchClosetByKeyword(id: string, keyword: string) {
+    const collection = await Closeting.getClothesInCollection(new ObjectId(id));
+    const clothes = [];
+    for (const p of collection) {
+      if (await Clothing.assertClothingHasKeyword(new ObjectId(p), keyword)) {
+        clothes.push(p);
+      }
+    }
+    return clothes;
+  }
 
   @Router.get("/closets/user/:id")
-  async getCollectionsByUser(id: string) {
+  @Router.validate(z.object({ id: z.string().optional() }))
+  async getClosetByUser(id?: string) {
     let collections;
     if (id) {
-      collections = await Collectioning.getCollectionsByUser(new ObjectId(id));
+      collections = await Closeting.getCollectionsByUser(new ObjectId(id));
     } else {
-      collections = await Collectioning.getCollections();
+      collections = await Closeting.getCollections();
     }
     return collections;
   }
 
   @Router.get("/closets/:id")
-  async getCollectionById(id: string) {
-    return await Collectioning.getCollectionById(new ObjectId(id));
+  async getClosetById(id: string) {
+    return await Closeting.getCollectionById(new ObjectId(id));
   }
 
   @Router.get("/closets/:id/clothes")
-  async getClothingInCollection(id: string) {
-    return await Collectioning.getClothesInCollection(new ObjectId(id));
+  async getClothingInCloset(id: string) {
+    return await Closeting.getClothesInCollection(new ObjectId(id));
   }
 
   @Router.patch("/closets/:id/addClothing/:clothingId")
-  async addClothingToCollection(session: SessionDoc, id: string, clothingId: string) {
+  async addClothingToCloset(session: SessionDoc, id: string, clothingId: string) {
     const user = Sessioning.getUser(session);
-    // await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Collectioning.addClothing(new ObjectId(id), new ObjectId(clothingId));
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Closeting.addClothing(new ObjectId(id), new ObjectId(clothingId));
   }
 
   @Router.patch("/closets/:id/removeClothing/:clothingId")
-  async removeClothingFromCollection(session: SessionDoc, id: string, clothingId: string) {
+  async removeClothingFromCloset(session: SessionDoc, id: string, clothingId: string) {
     const user = Sessioning.getUser(session);
-    // await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Collectioning.removeClothing(new ObjectId(id), new ObjectId(clothingId));
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Closeting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
   }
 
-  @Router.delete("/collections/:id")
-  async deleteCollection(session: SessionDoc, id: string) {
+  @Router.delete("/closets/:id")
+  async deleteCloset(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
-    await Collectioning.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Collectioning.deleteCollection(new ObjectId(id));
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Closeting.deleteCollection(new ObjectId(id));
+  }
+
+  @Router.post("/outfits")
+  async createOutfit(session: SessionDoc, name: string, description: string) {
+    const user = Sessioning.getUser(session);
+    return await Outfiting.create(name, description, user);
+  }
+
+  @Router.get("/outfits/search/:keyword")
+  @Router.validate(z.object({ keyword: z.string() }))
+  async searchForOutfitsByKeyword(id: string, keyword: string) {
+    //get all outfits that have this keyword in its name or description
+    return await Outfiting.searchCollectionsByKeyword(keyword);
+  }
+
+  @Router.get("/outfits/user/:id")
+  @Router.validate(z.object({ id: z.string().optional() }))
+  async getOutfitsByUser(id?: string) {
+    let collections;
+    if (id) {
+      collections = await Outfiting.getCollectionsByUser(new ObjectId(id));
+    } else {
+      collections = await Outfiting.getCollections();
+    }
+    return collections;
+  }
+
+  @Router.get("/outfits/:id")
+  async getOutfitById(id: string) {
+    return await Outfiting.getCollectionById(new ObjectId(id));
+  }
+
+  @Router.get("/outfits/:id/clothes")
+  async getClothingInOutfit(id: string) {
+    return await Outfiting.getClothesInCollection(new ObjectId(id));
+  }
+
+  @Router.patch("/outfits/createOutfit")
+  async createOutfitWithClothes(session: SessionDoc, name: string, description: string, clothes: string[]) {
+    const user = Sessioning.getUser(session);
+    const outfitId = await Outfiting.create(name, description, user);
+    if (outfitId === null || outfitId.collection === null) {
+      return { msg: "Outfit creation failed!" };
+    } else {
+      // assert all clothes exist
+      for (const p of clothes) {
+        await Clothing.assertClothingExists(new ObjectId(p));
+      }
+      for (const p of clothes) {
+        await Outfiting.addClothing(new ObjectId(outfitId.collection._id), new ObjectId(p));
+      }
+      return { msg: "Outfit created successfully!", collection: outfitId.collection };
+    }
+  }
+
+  @Router.patch("/outfits/:id/addClothing/:clothingId")
+  async addClothingToOutfit(session: SessionDoc, id: string, clothingId: string) {
+    const user = Sessioning.getUser(session);
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Outfiting.addClothing(new ObjectId(id), new ObjectId(clothingId));
+  }
+
+  @Router.patch("/outfits/:id/removeClothing/:clothingId")
+  async removeClothingFromOutfit(session: SessionDoc, id: string, clothingId: string) {
+    const user = Sessioning.getUser(session);
+    await Clothing.assertClothingExists(new ObjectId(clothingId));
+    await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Outfiting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
+  }
+
+  @Router.delete("/outfits/:id")
+  async deleteOutfit(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
+    return await Outfiting.deleteCollection(new ObjectId(id));
+  }
+
+  @Router.patch("/outfits/save/:id")
+  async saveOutfit(id: string) {
+    return await Outfiting.saveCollection(new ObjectId(id));
+  }
+
+  @Router.patch("/outfits/unsave/:id")
+  async unsaveOutfit(id: string) {
+    return await Outfiting.unsaveCollection(new ObjectId(id));
+  }
+
+  @Router.get("/outfits/saved")
+  async getSavedOutfits(session: SessionDoc) {
+    const user = Sessioning.getUser(session);
+    return await Outfiting.getUserSavedCollections(user);
+  }
+
+  @Router.get("/outfits/:id/saved")
+  async isOutfitSaved(id: string) {
+    return await Outfiting.isCollectionSaved(new ObjectId(id));
   }
 }
 
