@@ -183,19 +183,19 @@ onMounted(() => {
 
 .slideIn {
   animation-name: slideFromTop;
-  animation-duration: 1.5s;
+  animation-duration: 1s;
   animation-fill-mode: forwards;
 }
 
 .slideSide {
   animation-name: slideFromLeft;
-  animation-duration: 1.5s;
+  animation-duration: 1s;
   animation-fill-mode: forwards;
 }
 
 .slideSideRight {
   animation-name: slideFromRight;
-  animation-duration: 1.5s;
+  animation-duration: 1s;
   animation-fill-mode: forwards;
 }
 
@@ -227,7 +227,7 @@ onMounted(() => {
 }
 
 .splashText {
-  font-size: 6em;
+  font-size: 5em;
   font-weight: 800;
   text-align: center;
   color: var(--dark-green);

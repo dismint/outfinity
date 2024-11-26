@@ -32,8 +32,7 @@ const navbarStyle = computed(() => {
     width: `${Math.floor(100 - 30 * scrollFraction)}%`,
     backdropFilter: `blur(${scrollFraction * 5}px)`,
     background: `rgba(255, 252, 246, ${scrollFraction * 0.8})`,
-    borderLeft: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
-    borderRight: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
+    borderBottom: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
   };
 });
 </script>
