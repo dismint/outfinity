@@ -185,7 +185,7 @@ class Routes {
   }
 
   @Router.get("/closets/:id")
-  async getClosetById(id: string) {
+  async getClosetsById(id: string) {
     return await Closeting.getCollectionById(new ObjectId(id));
   }
 
@@ -230,7 +230,7 @@ class Routes {
     return await Outfiting.searchCollectionsByKeyword(keyword);
   }
 
-  @Router.get("/outfits/user/:id")
+  @Router.get("/outfits/user")
   @Router.validate(z.object({ id: z.string().optional() }))
   async getOutfitsByUser(id?: string) {
     let collections;

@@ -3,19 +3,21 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { defineProps, onBeforeMount, ref } from "vue";
-import ClosetClothingItemComponent from "./ClosetClothingItemComponent.vue";
+import PotentialClosetClothingItemComponent from "./PotentialClosetClothingItemComponent.vue";
 
 const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 
-const props = defineProps(["id"]);
+const props = defineProps(["closet"]);
 const loaded = ref(false);
-const clothes = ref<Array<Record<string, string>>>([]);
-const newClothes = ref<Array<Record<string, string>>>([]);
+const clothesNotAdded = ref<Array<Record<string, string>>>([]);
+const clothesAdded = ref<Array<Record<string, string>>>([]);
+const toAddClothes = ref<Array<string>>([]);
+const toRemoveClothes = ref<Array<string>>([]);
 
-async function getClothes() {
+async function getPotentialClothes() {
   // let query: Record<string, string> = { owner: currentUsername.value };
-  // TODO: replace api get clothes not in given closet
-  ///// have to filter to not show main closet
+  // TODO: replace api to get all clothes and then mark the clothes in current closet (also call that api) to be
+  /// TODO: add a property to all clothes that is a boolean if it is about to be added or not (the check)
   // let miniclosetResults;
   // try {
   //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
@@ -24,38 +26,68 @@ async function getClothes() {
   // }
   // searchAuthor.value = author ? author : "";
   // miniclosets.value = miniclosetResults;
-  console.log(props.id);
-  clothes.value = [
+  // console.log(props.id);
+  clothesNotAdded.value = [
     { _id: "1", name: "Not Clothing Item 1" },
     { _id: "2", name: "Not Clothing Item 2" },
     { _id: "3", name: "Not Clothing Item 3" },
   ];
+  clothesAdded.value = [
+    { _id: "4", name: "Not Clothing Item 4" },
+    { _id: "5", name: "Not Clothing Item 5" },
+    { _id: "6", name: "Not Clothing Item 6" },
+  ];
 }
 
-///// change closet clothing component to potential clothing component
+const submitClosetClothesChanges = async () => {
+  try {
+    // await Promise.all(fetchy(`/api/closets/${props.closet._id}/addClothing/${clothing}`, "PATCH", { alert: false })); // iterate through all of toAddClothes
+  } catch (e) {
+    return;
+  }
 
-const addClothes = async () => {
-  // try {
-  //   await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { content: content } });
-  // } catch (e) {
-  //   return;
-  // }
-  // emit("editPost");
-  // emit("refreshPosts");
-  void router.push({ name: "Closet", params: { id: props.id } });
+  try {
+    // await Promise.all(fetchy(`/api/closets/${props.closet._id}/removeClothing/${clothing}`, "PATCH", { alert: false })); // iterate through all of toRemoveClothes
+  } catch (e) {
+    return;
+  }
+  void router.push({ name: "Closet", params: { id: props.closet._id } });
 };
 
+function add(id: string) {
+  const index = toRemoveClothes.value.indexOf(id);
+  if (index > -1) {
+    toRemoveClothes.value.splice(index, 1);
+  } else {
+    toAddClothes.value.push(id);
+  }
+}
+
+function remove(id: string) {
+  const index = toAddClothes.value.indexOf(id);
+  if (index > -1) {
+    toAddClothes.value.splice(index, 1);
+  } else {
+    toRemoveClothes.value.push(id);
+  }
+}
+
 onBeforeMount(async () => {
-  await getClothes();
+  await getPotentialClothes();
   loaded.value = true;
 });
+
+/// TODO: same as ClosetClothesListComponent, do we represent clothes are the fully thing from api results?
 </script>
 
 <template>
-  <form @submit.prevent="addClothes()">
-    <section class="posts" v-if="loaded && clothes.length !== 0">
-      <article v-for="clothing in clothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" :name="clothing.name" />
+  <form @submit.prevent="submitClosetClothesChanges()">
+    <section class="posts" v-if="loaded && clothesNotAdded.length !== 0">
+      <article v-for="clothing in clothesAdded" :key="clothing._id">
+        <PotentialClosetClothingItemComponent :id="clothing._id" @add="add" @remove="remove" :in-closet="true" />
+      </article>
+      <article v-for="clothing in clothesNotAdded" :key="clothing._id">
+        <PotentialClosetClothingItemComponent :id="clothing._id" @add="add" @remove="remove" :in-closet="false" />
       </article>
     </section>
     <p v-else-if="loaded">No potential new clothes!</p>

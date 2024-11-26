@@ -2,43 +2,44 @@
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { defineProps, onBeforeMount, ref } from "vue";
+import { defineProps, ref } from "vue";
 import ClosetClothingItemComponent from "./ClosetClothingItemComponent.vue";
 
 const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 
-const props = defineProps(["id"]);
-const loaded = ref(false);
+const props = defineProps(["closet"]);
+// const loaded = ref(false);
 let clothes = ref<Array<Record<string, string>>>([]);
 
-async function getClothes() {
-  // let query: Record<string, string> = { owner: currentUsername.value };
-  // TODO: replace api get clothes in given closet
-  ///// have to filter to not show main closet
-  // let miniclosetResults;
-  // try {
-  //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
-  // } catch (_) {
-  //   return;
-  // }
-  // searchAuthor.value = author ? author : "";
-  // miniclosets.value = miniclosetResults;
-  console.log(props.id);
-  clothes.value = [
-    { _id: "1", name: "Clothing Item 1" },
-    { _id: "2", name: "Clothing Item 2" },
-    { _id: "3", name: "Clothing Item 3" },
-  ];
-}
+// async function getClothes() {
+//   // let query: Record<string, string> = { owner: currentUsername.value };
+//   // TODO: replace api get clothes in given closet
+//   ///// have to filter to not show main closet
+//   // let miniclosetResults;
+//   // try {
+//   //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
+//   // } catch (_) {
+//   //   return;
+//   // }
+//   // searchAuthor.value = author ? author : "";
+//   // miniclosets.value = miniclosetResults;
+//   // console.log(props.id);
+//   clothes.value = [
+//     { _id: "1", name: "Clothing Item 1" },
+//     { _id: "2", name: "Clothing Item 2" },
+//     { _id: "3", name: "Clothing Item 3" },
+//   ];
+// }
 
 const navigateToAddRemoveClothesPage = async () => {
-  void router.push({ name: "AddRemoveClothes", params: { id: "add remove clothes" } });
+  void router.push({ name: "AddRemoveClothes", params: { id: props.closet._id } });
 };
 
-onBeforeMount(async () => {
-  await getClothes();
-  loaded.value = true;
-});
+// onBeforeMount(async () => {
+//   await getClothes();
+//   loaded.value = true;
+// });
+//// TODO: if we format collection results, then we can pass in closet.clothes and then access each clothes from there
 </script>
 
 <template>
@@ -46,13 +47,12 @@ onBeforeMount(async () => {
     <h1>Search bar and filtering</h1>
     <button @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
     <h3>Results</h3>
-    <section class="posts" v-if="loaded && clothes.length !== 0">
-      <article v-for="clothing in clothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" :name="clothing.name" />
+    <section class="posts" v-if="clothes.length !== 0">
+      <article v-for="clothing in closet.clothes" :key="clothing">
+        <ClosetClothingItemComponent :id="clothing" />
       </article>
     </section>
-    <p v-else-if="loaded">No miniclosets yet!</p>
-    <p v-else>Loading...</p>
+    <p v-else>No clothes yet!</p>
   </div>
 </template>
 

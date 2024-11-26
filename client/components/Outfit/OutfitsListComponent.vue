@@ -1,27 +1,29 @@
 <script setup lang="ts">
+import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
+import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import OutfitComponent from "./OutfitComponent.vue";
 
 const loaded = ref(false);
 let outfits = ref<Array<Record<string, string>>>([]);
+const { userId } = storeToRefs(useUserStore());
 
 async function getOutfits() {
-  // let query: Record<string, string> = { owner: currentUsername.value };
-  // TODO: replace api
-  ///// have to filter to not show main closet
-  // let miniclosetResults;
-  // try {
-  //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
-  // } catch (_) {
-  //   return;
-  // }
-  // searchAuthor.value = author ? author : "";
-  // miniclosets.value = miniclosetResults;
-  outfits.value = [
-    { _id: "1", name: "Outfit 1", emoji: "👗" },
-    { _id: "2", name: "Outfit 2", emoji: "👠" },
-    { _id: "3", name: "Outfit 3", emoji: "👒" },
-  ];
+  let query: Record<string, string> = { id: userId.value };
+  // TODO: check
+  let outfitResults;
+  try {
+    outfitResults = await fetchy("/api/outfits/user", "GET", { query });
+  } catch (_) {
+    return;
+  }
+  outfits.value = outfitResults;
+  // outfits.value = [
+  //   { _id: "1", name: "Outfit 1", emoji: "👗" },
+  //   { _id: "2", name: "Outfit 2", emoji: "👠" },
+  //   { _id: "3", name: "Outfit 3", emoji: "👒" },
+  // ];
 }
 
 onBeforeMount(async () => {
@@ -33,8 +35,8 @@ onBeforeMount(async () => {
 <template>
   <div>
     <section class="posts" v-if="loaded && outfits.length !== 0">
-      <article v-for="minicloset in outfits" :key="minicloset._id">
-        <OutfitComponent :id="minicloset._id" :emoji="minicloset.emoji" :name="minicloset.name" />
+      <article v-for="outfit in outfits" :key="outfit._id">
+        <OutfitComponent :outfit="outfit" />
       </article>
     </section>
     <p v-else-if="loaded">No outfits yet!</p>

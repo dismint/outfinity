@@ -20,16 +20,7 @@ async function getMiniclosets() {
     return;
   }
   miniclosets.value = miniclosetResults.filter((minicloset: Record<string, string>) => minicloset.name !== "main");
-  // miniclosets.value = [
-  //   { _id: "1", name: "Closet 1", emoji: "👗" },
-  //   { _id: "2", name: "Closet 2", emoji: "👠" },
-  //   { _id: "3", name: "Closet 3", emoji: "👒" },
-  // ];
 }
-
-// function updateEditing(id: string) {
-//   editing.value = id;
-// }
 
 const navigateToNewMiniclosetPage = async () => {
   void router.push({ name: "CreateCloset" });
@@ -50,7 +41,7 @@ onBeforeMount(async () => {
     <button @click="navigateToNewMiniclosetPage">create new minicloset</button>
     <section class="posts" v-if="loaded && miniclosets.length !== 0">
       <article v-for="minicloset in miniclosets" :key="minicloset._id">
-        <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.emoji" :name="minicloset.name" />
+        <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.description" :name="minicloset.name" />
       </article>
     </section>
     <p v-else-if="loaded">No miniclosets yet!</p>
