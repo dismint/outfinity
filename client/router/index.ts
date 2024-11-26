@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useUserStore } from "@/stores/user";
-import AddRemoveClothesView from "../views/AddRemoveClothesView.vue";
+import AddRemoveClothesView from "../views/AddRemoveClothesClosetView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
 import ClosetView from "../views/ClosetView.vue";
 import CreateClosetView from "../views/CreateClosetView.vue";
