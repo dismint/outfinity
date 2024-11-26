@@ -31,8 +31,8 @@ const navbarStyle = computed(() => {
   return {
     width: `${Math.floor(100 - 30 * scrollFraction)}%`,
     backdropFilter: `blur(${scrollFraction * 5}px)`,
-    background: `rgba(255, 252, 246, ${scrollFraction * 0.8})`,
-    borderBottom: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
+    background: `rgba(79, 115, 104, ${scrollFraction * 0.4})`,
+    //borderBottom: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
   };
 });
 </script>
@@ -113,9 +113,10 @@ nav {
   align-items: center;
   text-align: center;
   height: 3em;
+  padding: 0.5em;
   transition:
     width 0.3s ease,
     margin 0.3s ease;
-  border-radius: 0.5em;
+  border-radius: 1em;
 }
 </style>
