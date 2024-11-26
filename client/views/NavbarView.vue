@@ -27,19 +27,13 @@ onBeforeUnmount(() => {
 
 const navbarStyle = computed(() => {
   const scrollFraction = Math.min(scrollY.value / maxScroll, 1);
-  const windowWidth = window.innerWidth;
-  const widthPx = Math.min(windowWidth * maxWidthFrac, maxWidth);
 
-  const targetPx = Math.min(windowWidth * targetFrac, targetWidth);
-  const diff = widthPx - targetPx;
-  const width = widthPx - diff * scrollFraction;
-
-  const padding = 1 + 0.5 * scrollFraction;
-  console.log(padding);
   return {
-    width: `${width}px`,
-    backdropFilter: `blur(${scrollFraction * 10}px)`,
-    background: `rgba(249, 243, 233, ${scrollFraction * 0.8})`,
+    width: `${Math.floor(100 - 30 * scrollFraction)}%`,
+    backdropFilter: `blur(${scrollFraction * 5}px)`,
+    background: `rgba(255, 252, 246, ${scrollFraction * 0.8})`,
+    borderLeft: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
+    borderRight: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
   };
 });
 </script>
@@ -101,12 +95,17 @@ ul {
 }
 
 .navContainer {
+  z-index: 100;
   position: sticky;
   top: 0.5em;
   width: 100%;
   margin-bottom: 1em;
   display: flex;
   justify-content: center;
+  align-items: center;
+  max-width: max(55%, min(95%, 1200px));
+  width: max(55%, min(95%, 1200px));
+  margin: 0 auto;
 }
 
 nav {
@@ -118,6 +117,6 @@ nav {
   transition:
     width 0.3s ease,
     margin 0.3s ease;
-  border-radius: 1em;
+  border-radius: 0.5em;
 }
 </style>
