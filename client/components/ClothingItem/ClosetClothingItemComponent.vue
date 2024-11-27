@@ -3,6 +3,7 @@ import router from "@/router";
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
+import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue"; 
 
 const props = defineProps(["id"]);
 
@@ -34,7 +35,7 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <img :src="image" alt="clothing" @click="navigateToClothingItemPage" />
+    <ClothingImageComponent :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
     <h1 v-if="loaded">{{ clothing.name }}</h1>
     <!-- <DisplayLabels :item="{ title: props.id, _id: props.id }" /> -->
   </main>

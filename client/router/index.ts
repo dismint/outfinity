@@ -5,6 +5,7 @@ import { useUserStore } from "@/stores/user";
 import AddRemoveClothesView from "../views/AddRemoveClothesClosetView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
 import ClosetView from "../views/ClosetView.vue";
+import ClothingItemView from "../views/ClothingItemView.vue";
 import CreateClosetView from "../views/CreateClosetView.vue";
 import CreateClothesView from "../views/CreateClothesView.vue";
 import CreateOutfitView from "../views/CreateOutfitView.vue";
@@ -92,6 +93,13 @@ const router = createRouter({
       name: "AddClothes",
       component: CreateClothesView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/clothes/:id",
+      name: "ClothingItem",
+      component: ClothingItemView,
+      meta: { requiresAuth: true },
+      props: true,
     },
     {
       path: "/:catchAll(.*)",

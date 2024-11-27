@@ -2,28 +2,45 @@
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { fetchy } from "../../utils/fetchy";
-import { onMounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import ClothingImageComponent from "./ClothingImageComponent.vue";
 
-const props = defineProps(["clothing"]);
+const props = defineProps(["id"]);
+const clothing = ref<Record<string, string>>({});
 const { userId } = storeToRefs(useUserStore());
+
+const getClothingInfo = async () => {
+    let clothingInfo;
+    try {
+        clothingInfo = await fetchy(`/api/clothes`, "GET", { query: { id: props.id } });
+    } catch (e) {
+        return;
+    }
+    clothing.value = clothingInfo;
+    console.log(clothing.value, clothingInfo);
+};
 
 const deleteClothing = async () => {
     try {
-        await fetchy(`/api/clothes/${props.clothing._id}`, "DELETE");
+        await fetchy(`/api/clothes/${props.id}`, "DELETE");
     } catch {
         return;
     }
 };
+
+onBeforeMount(async () => {
+  await getClothingInfo();
+});
+
 </script>
 
 <template>
-    <ClothingImageComponent class="img" :clothing="props.clothing" />
+    <ClothingImageComponent class="img" :imgUrl="clothing.imgUrl" />
     <div class="clothing-container">
-        <p>{{ props.clothing.name }}</p>
-        <p>{{ props.clothing.description }}</p>
+        <p>{{ clothing.name }}</p>
+        <p>{{ clothing.description }}</p>
     </div>
-    <div class="base" v-if="userId==props.clothing.owner">
+    <div class="base" v-if="userId==clothing.owner">
         <menu>
             <li>
                 <button class="btn-small button-error" @click="deleteClothing">Delete</button>
