@@ -27,7 +27,7 @@ const remove = () => {
 
 <template>
   <main>
-    <img v-if="inCloset" src="../../assets/images/closet.png" alt="checkbox filled in" @click="remove" />
+    <img v-if="inCloset" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
     <img v-else src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
     <!-- <img :src="image" alt="clothing" /> -->
     <!-- @click="navigateToClothingItemPage" -->
