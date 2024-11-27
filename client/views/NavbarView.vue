@@ -1,38 +1,41 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
 
-const currentRoute = useRoute();
-const currentRouteName = computed(() => currentRoute.name);
+const userStore = useUserStore();
+const { isLoggedIn } = storeToRefs(userStore);
 
 const scrollY = ref(0);
-const maxScroll = 500;
-const maxWidth = 1000;
-const maxWidthFrac = 0.8;
-const targetWidth = 800;
-const targetFrac = 0.7;
+const maxScroll = ref(window.innerHeight * 1.0);
 
 // Update scroll position on scroll event
 const updateScroll = () => {
   scrollY.value = window.scrollY;
 };
+const updateMaxScroll = () => {
+  maxScroll.value = window.innerHeight * 1.0;
+};
 
 // add and remove event listeners
 onMounted(() => {
   window.addEventListener("scroll", updateScroll);
+  window.addEventListener("resize", updateMaxScroll);
 });
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", updateScroll);
+  window.removeEventListener("resize", updateMaxScroll);
 });
 
 const navbarStyle = computed(() => {
-  const scrollFraction = Math.min(scrollY.value / maxScroll, 1);
+  const scrollFraction = Math.min(scrollY.value / maxScroll.value, 1);
+  console.log(scrollFraction, maxScroll.value);
 
   return {
     width: `${Math.floor(100 - 30 * scrollFraction)}%`,
-    backdropFilter: `blur(${scrollFraction * 5}px)`,
-    background: `rgba(79, 115, 104, ${scrollFraction * 0.4})`,
-    //borderBottom: `4px solid rgba(52, 76, 69, ${scrollFraction * 1.0})`,
+    backdropFilter: `blur(${scrollFraction * 6}px)`,
+    background: `rgba(122, 164, 151, ${scrollFraction * 0.75})`,
   };
 });
 </script>
@@ -44,14 +47,11 @@ const navbarStyle = computed(() => {
         <li class="navItem left">
           <RouterLink :to="{ name: 'Home' }">Outfinity</RouterLink>
         </li>
-        <li class="navItem right">
+        <li v-if="isLoggedIn" class="navItem right">
           <RouterLink :to="{ name: 'Settings' }">Settings</RouterLink>
         </li>
-        <li class="navItem right">
+        <li v-if="!isLoggedIn" class="navItem right">
           <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
-        </li>
-        <li class="navItem right">
-          <RouterLink :to="{ name: 'Login' }">Anodda</RouterLink>
         </li>
       </ul>
     </nav>
