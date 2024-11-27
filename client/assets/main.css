@@ -1,8 +1,25 @@
 /* Add some global styles here! */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Eczar:wght@400..800&display=swap");
 
 :root {
   --red: rgb(208, 67, 12);
   --base-bg: #f1f3f5;
+  --dark-green: #344C45;
+  --light-green: #C3CEBD;
+  --text-color: #252525;
+  font-size: 16px;
+  font-family: "Inter";
+  color: #252525;
+}
+
+html, body {
+  overscroll-behavior: none;
+}
+
+body {
+  background: #F9F3E9;
 }
 
 button.btn-small {
@@ -28,5 +45,53 @@ a.button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1em;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.compressWidth {
+  max-width: max(50%, min(95%, 1200px));
+  width: max(50%, min(95%, 1200px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+*, html {
+
+    scroll-behavior: smooth !important;
+}
+
+::-webkit-scrollbar {
+    width: 12px; 
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fffcf6;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--dark-green);
+    border-radius: 6px; /* Rounded corners */
+    border: 2px solid #f4f4f4; /* Space around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #53796e;
 }
