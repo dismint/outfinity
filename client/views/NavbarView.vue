@@ -30,7 +30,6 @@ onBeforeUnmount(() => {
 
 const navbarStyle = computed(() => {
   const scrollFraction = Math.min(scrollY.value / maxScroll.value, 1);
-  console.log(scrollFraction, maxScroll.value);
 
   return {
     width: `${Math.floor(100 - 30 * scrollFraction)}%`,
@@ -113,7 +112,7 @@ nav {
   align-items: center;
   text-align: center;
   height: 3em;
-  padding: 0.5em;
+  padding: 0.1em;
   transition:
     width 0.3s ease,
     margin 0.3s ease;

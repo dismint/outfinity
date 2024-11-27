@@ -88,7 +88,7 @@ const imageObserver = new IntersectionObserver(
     });
   },
   {
-    threshold: 0.75,
+    threshold: 0.4,
   },
 );
 
@@ -116,44 +116,57 @@ onMounted(() => {
     <div v-if="isLoggedIn">
       <h1>Welcome {{ currentUsername }}!</h1>
     </div>
-    <div v-else class="compressWidth">
-      <div class="scrollSeal titleContainer">
-        <h1 class="title">Outfinity</h1>
-      </div>
-      <div class="scrollSeal splashContainer">
-        <h1 class="splashText left">Endless<br />Outfits</h1>
-        <h1 class="splashText">Infinite<br />Inspiration</h1>
-      </div>
-      <div class="imageGallery row">
-        <div class="col" style="width: 48.5%; height: 96%; margin: 1% 0.5% 1% 1%">
-          <div class="row" style="height: 50%">
-            <div class="imageSmall L scrollSeal imageBox"></div>
-            <div class="imageSmall R scrollSeal imageBox rightPlease"></div>
-          </div>
-          <div class="imageMedium scrollSeal imageBox rightPlease"></div>
+    <div v-else class="centered">
+      <div class="compressWidth">
+        <div class="scrollSeal titleContainer">
+          <h1 class="title">Outfinity</h1>
         </div>
-        <div class="imageLarge scrollSeal imageBox"></div>
       </div>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
-      <h1>sup</h1>
+      <div class="compressWidth firstSection">
+        <div class="scrollSeal splashContainer">
+          <h1 class="splashText left">Endless<br />Outfits</h1>
+          <h1 class="splashText">Infinite<br />Inspiration</h1>
+        </div>
+        <div class="imageGallery row">
+          <div class="col" style="width: 48.5%; height: 96%; margin: 1% 0.5% 1% 1%">
+            <div class="row" style="height: 50%">
+              <div class="imageSmall L scrollSeal imageBox"></div>
+              <div class="imageSmall R scrollSeal imageBox rightPlease"></div>
+            </div>
+            <div class="imageMedium scrollSeal imageBox rightPlease"></div>
+          </div>
+          <div class="imageLarge scrollSeal imageBox"></div>
+        </div>
+      </div>
+      <div class="compressWidth">
+        <div class="peopleContainer">
+          <div class="personContainer"></div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <style scoped>
+.peopleContainer {
+  margin: 5% 0;
+  background-color: var(--dark-green);
+  width: 100%;
+  height: 50vh;
+  border-radius: 4em;
+}
+
+.firstSection {
+  box-sizing: border-box;
+  background-color: var(--light-green);
+  padding: 2%;
+  border-radius: 4em;
+}
+
 .imageGallery {
   width: 100%;
   aspect-ratio: 2 / 1;
-  margin: 5% 0;
+  margin: 5% 0 0 0;
 }
 
 .imageSmall {
@@ -222,6 +235,9 @@ onMounted(() => {
   font-family: "Baloo Tamma 2";
   font-size: 8em;
   font-weight: 800;
+  background: linear-gradient(to right, var(--light-green), var(--dark-green) 50%, var(--light-green));
+  background-clip: text;
+  color: transparent;
   margin-bottom: 18vh;
 }
 
