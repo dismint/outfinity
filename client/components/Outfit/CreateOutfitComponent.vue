@@ -20,6 +20,8 @@ const submit = async () => {
   }
 };
 /// TODO: change images to the object id of outfit
+
+// TODO: emits for outfitpicker, so when something is picked it's added to image
 </script>
 
 <template>

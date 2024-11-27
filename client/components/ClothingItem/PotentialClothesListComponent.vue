@@ -30,6 +30,7 @@ async function getPotentialClothes() {
   let allClothesResults;
   console.log("closet", props.closet._id);
   try {
+    /// TODO: change this to api for searchAndFilterCloset
     // allClothesResults = await fetchy(`/api/closets/${props.closet._id}/clothes`, "GET", { alert: false });
     allClothesResults = await fetchy(`/api/clothes`, "GET", { alert: false });
   } catch (_) {

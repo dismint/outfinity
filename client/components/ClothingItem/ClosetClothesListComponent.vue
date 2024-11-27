@@ -4,51 +4,44 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { defineProps, ref } from "vue";
 import ClosetClothingItemComponent from "./ClosetClothingItemComponent.vue";
+import DropdownFilterComponent from "./DropdownFilterComponent.vue";
+import SearchBarComponent from "./SearchBarComponent.vue";
 
 const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 
 const props = defineProps(["closet"]);
-// const loaded = ref(false);
-let clothes = ref<Array<Record<string, string>>>([]);
+const clothes = ref<Array<Record<string, string>>>(props.closet.clothes);
+//// TODO: if we format collection results, then we can pass in closet.clothes and then access each clothes from there
+const searchQuery = ref("");
+const filterType = ref("");
 
-// async function getClothes() {
-//   // let query: Record<string, string> = { owner: currentUsername.value };
-//   // TODO: replace api get clothes in given closet
-//   ///// have to filter to not show main closet
-//   // let miniclosetResults;
-//   // try {
-//   //   miniclosetResults = await fetchy("/api/posts", "GET", { query });
-//   // } catch (_) {
-//   //   return;
-//   // }
-//   // searchAuthor.value = author ? author : "";
-//   // miniclosets.value = miniclosetResults;
-//   // console.log(props.id);
-//   clothes.value = [
-//     { _id: "1", name: "Clothing Item 1" },
-//     { _id: "2", name: "Clothing Item 2" },
-//     { _id: "3", name: "Clothing Item 3" },
-//   ];
-// }
+function handleSearchUpdate(query: string) {
+  searchQuery.value = query;
+}
+
+function handleFilterUpdate(filter: string) {
+  filterType.value = filter;
+}
 
 const navigateToAddRemoveClothesPage = async () => {
   void router.push({ name: "AddRemoveClothes", params: { id: props.closet._id } });
 };
-
-// onBeforeMount(async () => {
-//   await getClothes();
-//   loaded.value = true;
-// });
-//// TODO: if we format collection results, then we can pass in closet.clothes and then access each clothes from there
 </script>
 
 <template>
   <div>
-    <h1>Search bar and filtering</h1>
-    <button @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
+    <div>
+      <h1>Clothing Search and Filter</h1>
+      <SearchBarComponent @update:query="handleSearchUpdate" />
+      <DropdownFilterComponent @update:filter="handleFilterUpdate" />
+
+      <p><strong>Search Query:</strong> {{ searchQuery }}</p>
+      <p><strong>Selected Filter:</strong> {{ filterType }}</p>
+    </div>
+    <button v-if="props.closet.name !== 'main'" @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
     <h3>Results</h3>
     <section class="posts" v-if="clothes.length !== 0">
-      <article v-for="clothing in closet.clothes" :key="clothing">
+      <article v-for="clothing in clothes" :key="clothing._id">
         <ClosetClothingItemComponent :id="clothing" />
       </article>
     </section>
@@ -57,6 +50,16 @@ const navigateToAddRemoveClothesPage = async () => {
 </template>
 
 <style scoped>
+div {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
 section {
   display: flex;
   /* flex-direction: column; */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
-import DisplayLabels from "../Labeling/DisplayLabels.vue";
+// import DisplayLabels from "../Labeling/DisplayLabels.vue";
 
 const props = defineProps(["clothing", "inCloset"]);
 const emit = defineEmits(["add", "remove"]);
@@ -31,7 +31,7 @@ const remove = () => {
     <!-- <ClothingImageComponent :clothing="props.clothing" /> -->
     <!-- @click="navigateToClothingItemPage" -->
     <h1>{{ props.clothing.name }}</h1>
-    <DisplayLabels :item="{ title: props.clothing.name, _id: props.clothing._id }" />
+    <!-- <DisplayLabels :item="{ title: props.clothing.name, _id: props.clothing._id }" /> -->
   </main>
 </template>
 

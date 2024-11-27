@@ -10,14 +10,14 @@ const { userId } = storeToRefs(useUserStore());
 
 async function getMainCloset() {
   let query: Record<string, string> = { user: userId.value, name: "main" };
-  let mainIdResult;
+  let mainResult;
   try {
-    mainIdResult = await fetchy("/api/closets/byname", "GET", { query, alert: false });
+    mainResult = await fetchy("/api/closets/byname", "GET", { query, alert: false });
   } catch (_) {
     return;
   }
-  main.value = mainIdResult;
-  console.log(main.value);
+  main.value = mainResult;
+  console.log("mainResult", main.value);
 }
 
 onBeforeMount(async () => {

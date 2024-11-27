@@ -6,13 +6,16 @@ const props = defineProps(["closet"]);
 
 const selectedCategory = ref("all");
 
-const categories = ["all", "hats", "tops", "bottoms", "one-pieces", "shoes"];
+const categories = ["all", "hat", "top", "bottom", "onepiece", "shoe"];
 
 const filteredClothes = computed(() => {
+  console.log("selectedCategory", selectedCategory.value);
   if (selectedCategory.value === "all") {
     return props.closet.clothes || [];
   }
-  return props.closet.clothes.filter((clothing: any) => clothing.category === selectedCategory.value);
+  console.log("heh", props.closet);
+  //// TODO: format clothes in closet then this will be fixed
+  return props.closet.clothes.filter((clothing: any) => clothing.type === selectedCategory.value);
 });
 
 const switchCategory = (category: string) => {

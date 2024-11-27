@@ -159,13 +159,13 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
-  @Router.get("/clothes")
-  // @Router.validate(z.object({ closet: z.string().optional() }))
-  async getClothes(session: SessionDoc) {
-    //, closet: string
-    const user = Sessioning.getUser(session);
-    return await Clothing.getClothes(user);
-  }
+  // @Router.get("/clothes")
+  // // @Router.validate(z.object({ closet: z.string().optional() }))
+  // async getClothes(session: SessionDoc) {
+  //   //, closet: string
+  //   const user = Sessioning.getUser(session);
+  //   return await Clothing.getClothes(user);
+  // }
 
   @Router.post("/clothes")
   async createClothes(session: SessionDoc, name: string, description: string, imgUrl: string, type: string) {

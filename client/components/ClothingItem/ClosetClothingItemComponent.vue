@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { defineProps, onBeforeMount, ref } from "vue";
-import DisplayLabels from "../Labeling/DisplayLabels.vue";
+// import DisplayLabels from "../Labeling/DisplayLabels.vue";
 
 const props = defineProps(["id"]);
 
@@ -40,7 +40,7 @@ onBeforeMount(async () => {
   <main>
     <img :src="image" alt="clothing" @click="navigateToClothingItemPage" />
     <h1>{{ props.id }}</h1>
-    <DisplayLabels :item="{ title: props.id, _id: props.id }" />
+    <!-- <DisplayLabels :item="{ title: props.id, _id: props.id }" /> -->
   </main>
 </template>
 
