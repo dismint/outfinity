@@ -1,15 +1,33 @@
 <script setup lang="ts">
-import OutfitPickingComponent from "@/components/Outfit/OutfitPickingComponent.vue";
-// const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
-// import { defineProps, onBeforeMount, ref } from "vue";
+import CreateOutfitComponent from "@/components/Outfit/CreateOutfitComponent.vue";
+import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
+import { storeToRefs } from "pinia";
+import { onBeforeMount, ref } from "vue";
 
-// const props = defineProps(["id"]);
+const main = ref<Record<string, string>>({});
+const { userId } = storeToRefs(useUserStore());
+
+async function getMainCloset() {
+  let query: Record<string, string> = { user: userId.value, name: "main" };
+  let mainIdResult;
+  try {
+    mainIdResult = await fetchy("/api/closets/byname", "GET", { query, alert: false });
+  } catch (_) {
+    return;
+  }
+  main.value = mainIdResult;
+  console.log(main.value);
+}
+
+onBeforeMount(async () => {
+  await getMainCloset();
+});
 </script>
 
 <template>
   <main class="outfitpage">
-    <!-- <OutfitImageComponent :id="props.id" /> -->
-    <OutfitPickingComponent :title="'New Outfit'" :outfit-or-challenge="'outfit'" />
+    <CreateOutfitComponent :title="'New Outfit'" :outfit-or-challenge="'outfit'" :closet="main" />
   </main>
 </template>
 

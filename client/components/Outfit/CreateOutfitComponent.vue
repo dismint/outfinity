@@ -2,9 +2,9 @@
 import router from "@/router";
 import { defineProps, ref } from "vue";
 import OutfitImageComponent from "./OutfitImageComponent.vue";
-// import DisplayLabels from "../Labeling/DisplayLabels.vue";
+import OutfitPickerComponent from "./OutfitPickerComponent.vue";
 
-const props = defineProps(["challenegeId", "title", "outfitOrChallenge"]);
+const props = defineProps(["title", "outfitOrChallenge", "closet", "challengeId"]);
 
 const headImages = ref<Array<string>>(["🧢", "🎩", "👒"]);
 const topImages = ref<Array<string>>(["👕", "👚", "👔"]);
@@ -16,7 +16,7 @@ const submit = async () => {
   if (props.outfitOrChallenge === "outfit") {
     void router.push({ name: "Outfit", params: { id: "1" } }); // id is the outfit we just made here
   } else {
-    void router.push({ name: "SubmitChallenge", params: { id: props.challenegeId } }); // TODO: how to move just made outfit to this page? maybe have outfit id and challenge id in params of page
+    void router.push({ name: "SubmitChallenge", params: { id: props.challengeId } }); // TODO: how to move just made outfit to this page? maybe have outfit id and challenge id in params of page
   }
 };
 /// TODO: change images to the object id of outfit
@@ -26,7 +26,7 @@ const submit = async () => {
   <OutfitImageComponent :head-images="headImages" :top-images="topImages" :bottom-images="bottomImages" :shoe-images="shoeImages" />
   <div>
     <h1>{{ props.title }}</h1>
-    <p>MAKE PICKER HERE</p>
+    <OutfitPickerComponent :closet="props.closet" />
     <button @click="submit">Save Outfit</button>
   </div>
 </template>
