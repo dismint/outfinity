@@ -6,6 +6,7 @@ import { defineProps, onBeforeMount, ref } from "vue";
 
 const props = defineProps(["id"]);
 const closet = ref<Record<string, string>>({});
+const loaded = ref(false);
 
 async function getCloset() {
   let api: string = `/api/closets/${props.id}`;
@@ -16,17 +17,19 @@ async function getCloset() {
     return;
   }
   closet.value = closetResult;
+  console.log("bruh", closetResult);
 }
 
 onBeforeMount(async () => {
   await getCloset();
+  loaded.value = true;
 });
 </script>
 
 <template>
   <main>
     <h1>{{ closet.name }}</h1>
-    <ClosetClothesListComponent :closet="closet" />
+    <ClosetClothesListComponent v-if="loaded" :closet="closet" />
   </main>
 </template>
 

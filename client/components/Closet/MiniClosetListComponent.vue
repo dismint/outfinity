@@ -27,7 +27,7 @@ const navigateToNewMiniclosetPage = async () => {
 };
 
 const navigateToNewClothesPage = async () => {
-  void router.push({ name: "Closet", params: { id: "new clothes" } });
+  void router.push({ name: "AddClothes" });
 };
 
 onBeforeMount(async () => {

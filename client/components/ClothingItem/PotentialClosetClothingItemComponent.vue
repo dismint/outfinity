@@ -2,26 +2,24 @@
 import { defineProps, ref } from "vue";
 import DisplayLabels from "../Labeling/DisplayLabels.vue";
 
-const props = defineProps(["id", "name", "inCloset"]);
+const props = defineProps(["clothing", "inCloset"]);
 const emit = defineEmits(["add", "remove"]);
 const inCloset = ref(props.inCloset);
-
-const image = ref("");
 
 // const navigateToClothingItemPage = async () => {
 //   void router.push({ name: "ClothingItem", params: { id: props.id } });
 // };
 
-//// TODO: check this works
+/// TODO: ClothingImageComponent
 
 const add = () => {
   inCloset.value = true;
-  emit("add", props.id);
+  emit("add", props.clothing._id);
 };
 
 const remove = () => {
   inCloset.value = false;
-  emit("remove", props.id);
+  emit("remove", props.clothing._id);
 };
 </script>
 
@@ -30,9 +28,10 @@ const remove = () => {
     <img v-if="inCloset" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
     <img v-else src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
     <!-- <img :src="image" alt="clothing" /> -->
+    <!-- <ClothingImageComponent :clothing="props.clothing" /> -->
     <!-- @click="navigateToClothingItemPage" -->
-    <h1>{{ props.name }}</h1>
-    <DisplayLabels :item="{ title: props.name, _id: props.id }" />
+    <h1>{{ props.clothing.name }}</h1>
+    <DisplayLabels :item="{ title: props.clothing.name, _id: props.clothing._id }" />
   </main>
 </template>
 
