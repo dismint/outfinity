@@ -224,11 +224,20 @@ class Routes {
     return await Closeting.filterInCollection(new ObjectId(id), clothingIds);
   }
 
-  @Router.get("/closets/:id/search/:keyword/filter/:type")
-  @Router.validate(z.object({ keyword: z.string(), type: z.string() }))
-  async searchAndFilterCloset(session: SessionDoc, id: string, keyword: string, type: string) {
+  @Router.get("/closets/:id/searchandfilter")
+  @Router.validate(z.object({ keyword: z.string().optional(), type: z.string().optional() }))
+  async searchAndFilterCloset(session: SessionDoc, id: string, keyword?: string, type?: string) {
     const user = Sessioning.getUser(session);
-    const clothes = await Clothing.searchAndFilter(type, keyword, user);
+    let clothes = [];
+    if (type && keyword) {
+      clothes = await Clothing.searchAndFilter(type, keyword, user);
+    } else if (type) {
+      clothes = await Clothing.searchClothingByType(type, user);
+    } else if (keyword) {
+      clothes = await Clothing.searchClothingByKeyword(keyword, user);
+    } else {
+      clothes = await Clothing.searchClothingByOwner(user);
+    }
     const clothingIds = [];
     for (const p of clothes) {
       clothingIds.push(p._id);
@@ -269,6 +278,19 @@ class Routes {
     await Clothing.assertClothingExists(new ObjectId(clothingId));
     await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
     return await Closeting.addClothing(new ObjectId(id), new ObjectId(clothingId));
+  }
+
+  @Router.patch("/closets/:id/bulkAddClothing")
+  async bulkAddClothingToCloset(session: SessionDoc, id: string, clothes: string[]) {
+    const user = Sessioning.getUser(session);
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    for (const p of clothes) {
+      await Clothing.assertClothingExists(new ObjectId(p));
+    }
+    return await Closeting.bulkAddClothing(
+      new ObjectId(id),
+      clothes.map((p) => new ObjectId(p)),
+    );
   }
 
   @Router.patch("/closets/:id/removeClothing/:clothingId")

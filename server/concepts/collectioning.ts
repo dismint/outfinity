@@ -80,6 +80,24 @@ export default class CollectioningConcept {
     return { msg: "Closet successfully updated!" };
   }
 
+  async bulkAddClothing(_id: ObjectId, clothing: ObjectId[]) {
+    const collection = await this.collections.readOne({ _id });
+    if (!collection) {
+      throw new NotFoundError(`Collection ${_id} does not exist!`);
+    }
+    for (const p of clothing) {
+      //check if clothing already in collection
+      for (const c of collection.clothes) {
+        if (p.toString() === c.toString()) {
+          return;
+        }
+      }
+      collection.clothes.push(p);
+    }
+    await this.collections.partialUpdateOne({ _id }, collection);
+    return { msg: "Closet successfully updated!" };
+  }
+
   async removeClothing(_id: ObjectId, clothing: ObjectId) {
     const collection = await this.collections.readOne({ _id });
     if (!collection) {
