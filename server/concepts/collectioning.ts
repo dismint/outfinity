@@ -25,11 +25,7 @@ export default class CollectioningConcept {
   }
 
   async create(name: string, description: string, owner: ObjectId) {
-    if (!name) {
-      throw new NotAllowedError("Closet name cannot be empty!");
-    } else if (name === "main") {
-      throw new NotAllowedError("Closet name cannot be 'main'!");
-    }
+    await this.assertValidClosetName(name);
     const _id = await this.collections.createOne({ name, description, owner, clothes: [], saved: false });
     return { msg: "Closet successfully created!", collection: await this.collections.readOne({ _id }) };
   }
@@ -174,6 +170,15 @@ export default class CollectioningConcept {
     const descriptionMatches = await this.collections.readMany({ description: { $regex: keyword, $options: "i" } });
     const allMatches = nameMatches.concat(descriptionMatches);
     return allMatches.filter((collection, index, self) => self.findIndex((c) => c._id.toString() === collection._id.toString()) === index);
+  }
+
+  async assertValidClosetName(name: string) {
+    if (!name) {
+      throw new NotAllowedError("Closet name cannot be empty!");
+    }
+    if (await this.collections.readOne({ name })) {
+      throw new NotAllowedError(`Closet with name ${name} already exists!`);
+    }
   }
 
   async assertClosetIsValid(array: string[]) {

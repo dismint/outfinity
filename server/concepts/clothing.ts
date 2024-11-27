@@ -3,7 +3,7 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface ClothingDoc extends BaseDoc {
-  type: validTypes;
+  type: string;
   name: string;
   description: string;
   numWears: number;
@@ -11,16 +11,8 @@ export interface ClothingDoc extends BaseDoc {
   owner: ObjectId;
 }
 
-enum validTypes {
-  TOP,
-  BOTTOM,
-  SHOES,
-  HAT,
-  ONEPIECE,
-}
-
 /**
- * concept: Photocarding
+ * concept: Clothing
  */
 export default class ClothingConcept {
   public readonly clothes: DocCollection<ClothingDoc>;
@@ -33,9 +25,14 @@ export default class ClothingConcept {
     void this.clothes.collection.createIndex({ type: 1 });
   }
 
-  async addClothing(type: validTypes, name: string, description: string, imgUrl: string, owner: ObjectId) {
+  async addClothing(type: string, name: string, description: string, imgUrl: string, owner: ObjectId) {
+    await this.assertTypeValid(type);
     const _id = await this.clothes.createOne({ type, name, description, numWears: 0, imgUrl, owner });
     return { msg: "Clothing added successfully!", id: _id };
+  }
+
+  async getClothes(user: ObjectId) {
+    return await this.clothes.readMany({ owner: user }, { sort: { _id: -1 } });
   }
 
   async removeClothing(_id: ObjectId, owner: ObjectId) {
@@ -56,18 +53,27 @@ export default class ClothingConcept {
     return await this.clothes.readOne({ _id });
   }
 
-  async searchClothingByType(type: validTypes) {
-    return await this.clothes.readMany({ type });
+  async searchClothingByType(type: string, owner: ObjectId) {
+    await this.assertTypeValid(type);
+    return await this.clothes.readMany({ type, owner });
   }
 
   async searchClothingByOwner(owner: ObjectId) {
     return await this.clothes.readMany({ owner });
   }
 
-  async searchClothingByKeyword(keyword: string) {
-    const nameMatches = await this.clothes.readMany({ name: { $regex: keyword, $options: "i" } });
-    const descriptionMatches = await this.clothes.readMany({ description: { $regex: keyword, $options: "i" } });
+  async searchClothingByKeyword(keyword: string, owner: ObjectId) {
+    const nameMatches = await this.clothes.readMany({ name: { $regex: keyword, $options: "i" }, owner });
+    const descriptionMatches = await this.clothes.readMany({ description: { $regex: keyword, $options: "i" }, owner });
     const allMatches = nameMatches.concat(descriptionMatches);
+    return allMatches.filter((clothes, index, self) => self.findIndex((c) => c._id.toString() === clothes._id.toString()) === index);
+  }
+
+  async searchAndFilter(type: string, keyword: string, owner: ObjectId) {
+    await this.assertTypeValid(type);
+    const typeMatches = await this.searchClothingByType(type, owner);
+    const keywordMatches = await this.searchClothingByKeyword(keyword, owner);
+    const allMatches = typeMatches.filter((value) => keywordMatches.includes(value));
     return allMatches.filter((clothes, index, self) => self.findIndex((c) => c._id.toString() === clothes._id.toString()) === index);
   }
 
@@ -97,6 +103,12 @@ export default class ClothingConcept {
     }
     if (maybeClothing.owner !== owner) {
       throw new NotAllowedError(`You do not own this clothing!`);
+    }
+  }
+
+  private async assertTypeValid(type: string) {
+    if (!["top", "bottom", "shoe", "hat", "onepiece"].includes(type)) {
+      throw new NotAllowedError(`Invalid clothing type!`);
     }
   }
 }
