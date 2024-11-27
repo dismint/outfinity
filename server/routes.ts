@@ -242,6 +242,19 @@ class Routes {
     return await Closeting.addClothing(new ObjectId(id), new ObjectId(clothingId));
   }
 
+  @Router.patch("/closets/:id/bulkAddClothing")
+  async bulkAddClothingToCloset(session: SessionDoc, id: string, clothes: string[]) {
+    const user = Sessioning.getUser(session);
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    for (const p of clothes) {
+      await Clothing.assertClothingExists(new ObjectId(p));
+    }
+    return await Closeting.bulkAddClothing(
+      new ObjectId(id),
+      clothes.map((p) => new ObjectId(p)),
+    );
+  }
+
   @Router.patch("/closets/:id/removeClothing/:clothingId")
   async removeClothingFromCloset(session: SessionDoc, id: string, clothingId: string) {
     const user = Sessioning.getUser(session);
