@@ -4,7 +4,7 @@ import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
 
-const props = defineProps(["id"]);
+const props = defineProps(["id", "clothingobject"]);
 
 const image = ref("");
 const clothing = ref<Record<string, string>>({});
@@ -27,7 +27,11 @@ const navigateToClothingItemPage = async () => {
 };
 
 onBeforeMount(async () => {
-  await getClothing();
+  if (props.clothingobject) {
+    clothing.value = props.clothingobject;
+  } else {
+    await getClothing();
+  }
   loaded.value = true;
 });
 </script>

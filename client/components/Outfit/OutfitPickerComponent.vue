@@ -1,26 +1,41 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from "vue";
+import { fetchy } from "@/utils/fetchy";
+import { computed, defineProps, onBeforeMount, ref } from "vue";
 import ClosetClothingItemComponent from "../ClothingItem/ClosetClothingItemComponent.vue";
 
 const props = defineProps(["closet"]);
 
 const selectedCategory = ref("all");
+const clothes = ref<Array<Record<string, string>>>([]);
+const loaded = ref(false);
 
 const categories = ["all", "hat", "top", "bottom", "onepiece", "shoe"];
 
-const filteredClothes = computed(() => {
-  console.log("selectedCategory", selectedCategory.value);
-  if (selectedCategory.value === "all") {
-    return props.closet.clothes || [];
+const getClothes = async () => {
+  let clothesResults;
+  try {
+    clothesResults = await Promise.all(props.closet.clothes.map((clothing: string) => fetchy(`/api/clothes`, "GET", { query: { id: clothing } })));
+  } catch (_) {
+    return;
   }
-  console.log("heh", props.closet);
-  //// TODO: format clothes in closet then this will be fixed
-  return props.closet.clothes.filter((clothing: any) => clothing.type === selectedCategory.value);
+  clothes.value = clothesResults;
+};
+
+const filteredClothes = computed(() => {
+  if (selectedCategory.value === "all") {
+    return clothes.value || [];
+  }
+  return clothes.value.filter((clothing: any) => clothing.type === selectedCategory.value);
 });
 
 const switchCategory = (category: string) => {
   selectedCategory.value = category;
 };
+
+onBeforeMount(async () => {
+  await getClothes();
+  loaded.value = true;
+});
 </script>
 
 <template>
@@ -33,7 +48,7 @@ const switchCategory = (category: string) => {
     </nav>
     <section class="clothes" v-if="filteredClothes.length !== 0">
       <article v-for="clothing in filteredClothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" />
+        <ClosetClothingItemComponent :id="clothing._id" :clothingobject="clothing" />
       </article>
     </section>
     <p v-else>No clothes found in this category!</p>

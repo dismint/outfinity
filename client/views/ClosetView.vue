@@ -17,7 +17,6 @@ async function getCloset() {
     return;
   }
   closet.value = closetResult;
-  console.log("bruh", closetResult);
 }
 
 onBeforeMount(async () => {

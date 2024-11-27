@@ -7,6 +7,7 @@ import { onBeforeMount, ref } from "vue";
 
 const main = ref<Record<string, string>>({});
 const { userId } = storeToRefs(useUserStore());
+const loaded = ref(false);
 
 async function getMainCloset() {
   let query: Record<string, string> = { user: userId.value, name: "main" };
@@ -17,17 +18,17 @@ async function getMainCloset() {
     return;
   }
   main.value = mainResult;
-  console.log("mainResult", main.value);
 }
 
 onBeforeMount(async () => {
   await getMainCloset();
+  loaded.value = true;
 });
 </script>
 
 <template>
   <main class="outfitpage">
-    <CreateOutfitComponent :title="'New Outfit'" :outfit-or-challenge="'outfit'" :closet="main" />
+    <CreateOutfitComponent v-if="loaded" :title="'New Outfit'" :outfit-or-challenge="'outfit'" :closet="main" />
   </main>
 </template>
 
