@@ -4,7 +4,7 @@ import { onBeforeMount, ref } from "vue";
 
 const mainId = ref("");
 
-async function getMainId() {
+async function getMainCloset() {
   // let query: Record<string, string> = { name: "main closet" };
   // let mainIdResult;
   // TODO: replace api
@@ -22,7 +22,7 @@ const navigateToClosetPage = async () => {
 };
 
 onBeforeMount(async () => {
-  await getMainId();
+  await getMainCloset();
 });
 </script>
 

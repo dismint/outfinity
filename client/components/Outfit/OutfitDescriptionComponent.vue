@@ -13,19 +13,19 @@ const getItem = async () => {
   // } catch {
   //   return;
   // }
+  item.value.name = "outfit name";
   item.value.description = "outfit description";
-  item.value.author = "jennifer";
+  item.value.owner = "jennifer";
 };
 
-const woreOutfit = async () => {
-  // TODO: update wore outfit
-  // fetch description
-  // try {
-  //   await fetchy(`/api/posts/${props.post._id}`, "DELETE");
-  // } catch {
-  //   return;
-  // }
-};
+// const woreOutfit = async () => {
+//   // fetch description
+//   // try {
+//   //   await fetchy(`/api/posts/${props.post._id}`, "DELETE");
+//   // } catch {
+//   //   return;
+//   // }
+// };
 
 onBeforeMount(async () => {
   await getItem();
@@ -34,11 +34,11 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <h1>Outfit Name</h1>
+    <h1>{{ item.name }}</h1>
     <h2>id: {{ props.id }}</h2>
     <h3>{{ item.description }}</h3>
     <EditLabels :item="item" />
-    <button @click="woreOutfit">I wore this today!</button>
+    <!-- <button @click="woreOutfit">I wore this today!</button> -->
   </main>
 </template>
 

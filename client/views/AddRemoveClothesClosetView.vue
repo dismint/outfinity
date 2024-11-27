@@ -1,34 +1,31 @@
 <script setup lang="ts">
-// const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 import PotentialClothesListComponent from "@/components/ClothingItem/PotentialClothesListComponent.vue";
+import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 
 const props = defineProps(["id"]);
-const name = ref("");
+const closet = ref<Record<string, string>>({});
 
-async function getName() {
-  // let query: Record<string, string> = { name: "main closet" };
-  // let mainIdResult;
-  // TODO: replace api
-  // try {
-  //   mainIdResult = await fetchy("/api/posts", "GET", { query });
-  // } catch (_) {
-  //   return;
-  // }
-  // mainId.value = mainIdResult;
-  name.value = "closet blah";
+async function getCloset() {
+  let api: string = `/api/closets/${props.id}`;
+  let closetResult;
+  try {
+    closetResult = await fetchy(api, "GET");
+  } catch (_) {
+    return;
+  }
+  closet.value = closetResult;
 }
 
 onBeforeMount(async () => {
-  await getName();
+  await getCloset();
 });
 </script>
 
 <template>
   <main>
-    <h1>Add/remove items to {{ name }}</h1>
-    <h3>id: {{ props.id }}</h3>
-    <PotentialClothesListComponent :id="props.id" />
+    <h1>Add/remove items to {{ closet.name }}</h1>
+    <PotentialClothesListComponent :closet="closet" />
   </main>
 </template>
 

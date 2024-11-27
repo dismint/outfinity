@@ -11,7 +11,7 @@ const navigateToClosetPage = async () => {
 <template>
   <main @click="navigateToClosetPage">
     <h1>{{ props.emoji }}</h1>
-    <h1 class="author">{{ props.name }} Minicloset</h1>
+    <h1 class="author">{{ props.name }}</h1>
   </main>
 </template>
 
