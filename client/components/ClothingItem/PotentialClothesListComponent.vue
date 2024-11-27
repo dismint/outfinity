@@ -28,16 +28,17 @@ const toRemoveClothes = ref<Array<string>>([]);
 async function getPotentialClothes() {
   // TODO: replace api to get all clothes and then mark the clothes in current closet (also call that api) to be
   let allClothesResults;
-  console.log("closet", props.closet._id);
+  console.log("closet", props.closet.name);
   try {
-    /// TODO: change this to api for searchAndFilterCloset
-    // allClothesResults = await fetchy(`/api/closets/${props.closet._id}/clothes`, "GET", { alert: false });
-    allClothesResults = await fetchy(`/api/clothes`, "GET", { alert: false });
+    /// TODO: change this to api for searchAndFilterCloset /closets/:id/searchandfilter
+    allClothesResults = await fetchy(`/api/closets/${props.closet._id}/searchandfilter`, "GET", { alert: false });
+    // allClothesResults = await fetchy(`/api/clothes/all`, "GET", { alert: false });
   } catch (_) {
     return;
   }
   console.log("bruh", allClothesResults);
-  clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing._id)); /// TODO: objectId not do equality checking correctly
+  clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing)); /// TODO: objectId not do equality checking correctly
+  console.log("clothesNotAdded", clothesNotAdded.value);
   clothesAdded.value = props.closet.clothes; /// TODO: get all the corresponding clothes by id or reformat
 }
 
@@ -103,11 +104,11 @@ onBeforeMount(async () => {
   </div> -->
   <form @submit.prevent="submitClosetClothesChanges()">
     <section class="posts" v-if="loaded && clothesNotAdded.length !== 0">
-      <article v-for="clothing in clothesAdded" :key="clothing._id">
-        <PotentialClosetClothingItemComponent :clothing="clothing" @add="add" @remove="remove" :in-closet="true" />
+      <article v-for="clothing in clothesAdded" :key="clothing">
+        <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="true" />
       </article>
       <article v-for="clothing in clothesNotAdded" :key="clothing._id">
-        <PotentialClosetClothingItemComponent :clothing="clothing" @add="add" @remove="remove" :in-closet="false" />
+        <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="false" />
       </article>
     </section>
     <p v-else-if="loaded">No potential new clothes!</p>
