@@ -198,7 +198,7 @@ h2 {
   box-sizing: border-box;
   position: relative;
   align-self: flex-start;
-  margin: 0 2% 0 2%;
+  margin: auto 2%;
   width: 20%;
   color: var(--light-green);
   font-family: "Baloo Tamma 2";
