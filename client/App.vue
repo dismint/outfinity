@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { computed, onBeforeMount } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
+import NavbarView from "@/views/NavbarView.vue";
 
 const currentRoute = useRoute();
 const currentRouteName = computed(() => currentRoute.name);
@@ -23,46 +24,22 @@ onBeforeMount(async () => {
 
 <template>
   <header>
-    <nav>
-      <div class="title">
-        <img src="@/assets/images/logo.svg" />
-        <RouterLink :to="{ name: 'Home' }">
-          <h1>Social Media App</h1>
-        </RouterLink>
-      </div>
-      <ul>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
-        </li>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Outfits' }" :class="{ underline: currentRouteName == 'Outfits' }"> My Outfits </RouterLink>
-        </li>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'AllClosets' }" :class="{ underline: currentRouteName == 'AllClosets' }"> My Closets </RouterLink>
-        </li>
-        <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile </RouterLink>
-        </li>
-        <li v-else>
-          <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
-        </li>
-      </ul>
-    </nav>
     <article v-if="toast !== null" class="toast" :class="toast.style">
       <p>{{ toast.message }}</p>
     </article>
   </header>
+  <NavbarView />
   <RouterView />
 </template>
 
 <style scoped>
 @import "./assets/toast.css";
 
-nav {
-  padding: 1em 2em;
-  background-color: lightgray;
-  display: flex;
-  align-items: center;
+header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1000;
 }
 
 h1 {
@@ -86,14 +63,21 @@ a {
   text-decoration: none;
 }
 
-ul {
-  list-style-type: none;
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 1em;
-}
+/*ul {*/
+/*  list-style-type: none;*/
+/*  margin-left: auto;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  flex-direction: row;*/
+/*  gap: 1em;*/
+/*}*/
+/**/
+/*nav {*/
+/*  padding: 1em 2em;*/
+/*  background-color: lightgray;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*}*/
 
 .underline {
   text-decoration: underline;
