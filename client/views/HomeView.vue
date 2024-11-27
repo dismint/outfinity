@@ -140,7 +140,30 @@ onMounted(() => {
       </div>
       <div class="compressWidth">
         <div class="peopleContainer">
-          <div class="personContainer"></div>
+          <div class="personRow">
+            <div class="personContainer centered">
+              <img class="image" src="https://u.cubeupload.com/dismint/bottom.jpg" alt="bottom" />
+              <div class="shadow"></div>
+            </div>
+            <div class="personContainer centered">
+              <img class="image" src="https://u.cubeupload.com/dismint/top.jpg" alt="top" />
+              <div class="shadow"></div>
+            </div>
+            <div class="personContainer centered">
+              <img class="image" src="https://u.cubeupload.com/dismint/left.jpg" alt="left" />
+              <div class="shadow"></div>
+            </div>
+            <div class="personContainer centered">
+              <img class="image" src="https://u.cubeupload.com/dismint/right.jpg" alt="right" />
+              <div class="shadow"></div>
+            </div>
+          </div>
+          <div class="namesRow">
+            <div class="nameContainer centered">Jennifer</div>
+            <div class="nameContainer centered">Tiana</div>
+            <div class="nameContainer centered">Justin</div>
+            <div class="nameContainer centered">Annie</div>
+          </div>
         </div>
       </div>
     </div>
@@ -148,11 +171,74 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.nameContainer {
+  box-sizing: border-box;
+  position: relative;
+  align-self: flex-start;
+  margin: 0 2% 0 2%;
+  width: 20%;
+  color: var(--light-green);
+  font-family: "Baloo Tamma 2";
+  font-size: 2.5em;
+  font-weight: 600;
+}
+
+.namesRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 25%;
+}
+
+.shadow {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  z-index: 10;
+  box-shadow:
+    0.5em 0.5em 0.5em rgba(37, 37, 37, 0.8) inset,
+    -0.3em -0.3em 0.3em rgba(195, 206, 189, 0.8) inset;
+}
+
+.image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 50%;
+  z-index: 5;
+}
+
+.personRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 75%;
+}
+
+.personContainer {
+  box-sizing: border-box;
+  position: relative;
+  align-self: flex-start;
+  margin: 4% 2% 0 2%;
+  width: 20%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 0.5em solid var(--light-green);
+}
+
 .peopleContainer {
+  box-sizing: border-box;
   margin: 5% 0;
   background-color: var(--dark-green);
   width: 100%;
-  height: 50vh;
+  height: 40vh;
   border-radius: 4em;
 }
 
