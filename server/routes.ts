@@ -159,23 +159,31 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
+  @Router.get("/clothes")
+  // @Router.validate(z.object({ closet: z.string().optional() }))
+  async getClothes(session: SessionDoc) {
+    //, closet: string
+    const user = Sessioning.getUser(session);
+    return await Clothing.getClothes(user);
+  }
+
   @Router.post("/clothes")
   async createClothes(session: SessionDoc, name: string, description: string, imgUrl: string, type: string) {
     const user = Sessioning.getUser(session);
-    await Clothing.addClothing(type, name, description, imgUrl, user);
-    // const main = await Closeting.getMainCloset(user);
-    // await Closeting.addClothing(main, user);
-    // TODO: return something and uncomment closeting sync
+    const result = await Clothing.addClothing(type, name, description, imgUrl, user);
+    const main = await Closeting.getClosetByUserAndName(user, "main");
+    await Closeting.addClothing(main._id, new ObjectId(result.id));
+    return result;
   }
 
   @Router.delete("/clothes/:id")
   async deleteClothes(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     await Clothing.removeClothing(new ObjectId(id), user);
-    // const allClosets = await Closeting.getCollectionsItemsIn(new ObjectId(id));
-    // for (clo in allClosets) {
-    //   await Closeting.removeClothing(clo, new ObjectId(id));
-    // }
+    const allClosets = await Closeting.getCollectionsItemIn(new ObjectId(id));
+    for (const clo in allClosets) {
+      await Closeting.removeClothing(new ObjectId(clo), new ObjectId(id));
+    }
     // TODO: delete all outfits containing this clothing
   }
 
