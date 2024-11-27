@@ -47,7 +47,10 @@ const navbarStyle = computed(() => {
           <RouterLink :to="{ name: 'Home' }">Outfinity</RouterLink>
         </li>
         <li v-if="isLoggedIn" class="navItem right">
-          <RouterLink :to="{ name: 'Settings' }">Settings</RouterLink>
+          <RouterLink :to="{ name: 'Outfits' }">Outfits</RouterLink>
+        </li>
+        <li v-if="isLoggedIn" class="navItem right">
+          <RouterLink :to="{ name: 'Profile' }">Profile</RouterLink>
         </li>
         <li v-if="!isLoggedIn" class="navItem right">
           <RouterLink :to="{ name: 'Login' }">Login</RouterLink>
