@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import router from "@/router";
+import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
+import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 
+const { userId } = storeToRefs(useUserStore());
 const mainId = ref("");
 
 async function getMainCloset() {
-  // let query: Record<string, string> = { name: "main closet" };
-  // let mainIdResult;
-  // TODO: replace api
-  // try {
-  //   mainIdResult = await fetchy("/api/posts", "GET", { query });
-  // } catch (_) {
-  //   return;
-  // }
-  // mainId.value = mainIdResult;
-  mainId.value = "293i03i3nr";
+  let query: Record<string, string> = { user: userId.value, name: "main" };
+  let mainIdResult;
+  try {
+    mainIdResult = await fetchy("/api/closets/byname", "GET", { query, alert: false });
+  } catch (_) {
+    return;
+  }
+  mainId.value = mainIdResult._id;
 }
 
 const navigateToClosetPage = async () => {
