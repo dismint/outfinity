@@ -163,19 +163,19 @@ class Routes {
   async createClothes(session: SessionDoc, name: string, description: string, imgUrl: string, type: string) {
     const user = Sessioning.getUser(session);
     await Clothing.addClothing(type, name, description, imgUrl, user);
-    const main = await Closeting.getMainCloset(user);
-    await Closeting.addClothing(main, user);
-    // TODO: return something
+    // const main = await Closeting.getMainCloset(user);
+    // await Closeting.addClothing(main, user);
+    // TODO: return something and uncomment closeting sync
   }
 
   @Router.delete("/clothes/:id")
   async deleteClothes(session: SessionDoc, id: string) {
     const user = Sessioning.getUser(session);
     await Clothing.removeClothing(new ObjectId(id), user);
-    const allClosets = await Closeting.getCollectionsItemsIn(new ObjectId(id));
-    for (clo in allClosets) {
-      await Closeting.removeClothing(clo, new ObjectId(id));
-    }
+    // const allClosets = await Closeting.getCollectionsItemsIn(new ObjectId(id));
+    // for (clo in allClosets) {
+    //   await Closeting.removeClothing(clo, new ObjectId(id));
+    // }
     // TODO: delete all outfits containing this clothing
   }
 
@@ -206,8 +206,9 @@ class Routes {
 
   @Router.get("/closets/:id/filter/:type")
   @Router.validate(z.object({ type: z.string() }))
-  async filterClosetByType(id: string, type: string) {
-    const clothes = await Clothing.searchClothingByType(type);
+  async filterClosetByType(session: SessionDoc, id: string, type: string) {
+    const user = Sessioning.getUser(session);
+    const clothes = await Clothing.searchClothingByType(type, user);
     const clothingIds = [];
     for (const p of clothes) {
       clothingIds.push(p._id);
