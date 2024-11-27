@@ -195,11 +195,20 @@ class Routes {
     return await Closeting.filterInCollection(new ObjectId(id), clothingIds);
   }
 
-  @Router.get("/closets/:id/search/:keyword/filter/:type")
-  @Router.validate(z.object({ keyword: z.string(), type: z.string() }))
-  async searchAndFilterCloset(session: SessionDoc, id: string, keyword: string, type: string) {
+  @Router.get("/closets/:id/searchandfilter")
+  @Router.validate(z.object({ keyword: z.string().optional(), type: z.string().optional() }))
+  async searchAndFilterCloset(session: SessionDoc, id: string, keyword?: string, type?: string) {
     const user = Sessioning.getUser(session);
-    const clothes = await Clothing.searchAndFilter(type, keyword, user);
+    let clothes = [];
+    if (type && keyword) {
+      clothes = await Clothing.searchAndFilter(type, keyword, user);
+    } else if (type) {
+      clothes = await Clothing.searchClothingByType(type, user);
+    } else if (keyword) {
+      clothes = await Clothing.searchClothingByKeyword(keyword, user);
+    } else {
+      clothes = await Clothing.searchClothingByOwner(user);
+    }
     const clothingIds = [];
     for (const p of clothes) {
       clothingIds.push(p._id);
