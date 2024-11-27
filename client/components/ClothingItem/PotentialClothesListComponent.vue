@@ -6,12 +6,12 @@ import { storeToRefs } from "pinia";
 import { defineProps, onBeforeMount, ref } from "vue";
 import PotentialClosetClothingItemComponent from "./PotentialClosetClothingItemComponent.vue";
 
-const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
+const { userId } = storeToRefs(useUserStore());
 
 const props = defineProps(["closet"]);
 const loaded = ref(false);
-const clothesNotAdded = ref<Array<Record<string, string>>>([]);
-const clothesAdded = ref<Array<Record<string, string>>>([]);
+const clothesNotAdded = ref<Array<string>>([]);
+const clothesAdded = ref<Array<string>>([]);
 const toAddClothes = ref<Array<string>>([]);
 const toRemoveClothes = ref<Array<string>>([]);
 // const searchQuery = ref("");
@@ -26,37 +26,59 @@ const toRemoveClothes = ref<Array<string>>([]);
 // }
 
 async function getPotentialClothes() {
-  // TODO: replace api to get all clothes and then mark the clothes in current closet (also call that api) to be
+  const mainId = (await getMainCloset())._id;
   let allClothesResults;
   console.log("closet", props.closet.name);
   try {
-    /// TODO: change this to api for searchAndFilterCloset /closets/:id/searchandfilter
-    allClothesResults = await fetchy(`/api/closets/${props.closet._id}/searchandfilter`, "GET", { alert: false });
-    // allClothesResults = await fetchy(`/api/clothes/all`, "GET", { alert: false });
+    allClothesResults = await fetchy(`/api/users/${userId.value}/closets/${mainId}/searchandfilter`, "GET", { alert: false });
   } catch (_) {
     return;
   }
-  console.log("bruh", allClothesResults);
   clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing)); /// TODO: objectId not do equality checking correctly
-  console.log("clothesNotAdded", clothesNotAdded.value);
-  clothesAdded.value = props.closet.clothes; /// TODO: get all the corresponding clothes by id or reformat
+  clothesAdded.value = props.closet.clothes;
+}
+
+async function getMainCloset() {
+  let query: Record<string, string> = { user: userId.value, name: "main" };
+  let mainIdResult;
+  try {
+    mainIdResult = await fetchy("/api/closets/byname", "GET", { query, alert: false });
+  } catch (_) {
+    return;
+  }
+  return mainIdResult;
 }
 
 const submitClosetClothesChanges = async () => {
   try {
-    const promises = toAddClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/addClothing/${clothing}`, "PATCH", { alert: false }));
-    await Promise.all(promises);
+    // const promises = toAddClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/addClothing/${clothing}`, "PATCH", { alert: false }));
+    // await Promise.all(promises);
+    // /closets/:id/bulkAddClothing
+    console.log("adding", toAddClothes.value);
+    await fetchy(`/api/closets/${props.closet._id}/bulkAddClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
   } catch (e) {
     return;
   }
 
   try {
-    const promises = toRemoveClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/removeClothing/${clothing}`, "PATCH", { alert: false }));
-    await Promise.all(promises);
+    // const promises = toRemoveClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/removeClothing/${clothing}`, "PATCH", { alert: false }));
+    // await Promise.all(promises);
+    console.log("removing", toRemoveClothes.value);
+    await fetchy(`/api/closets/${props.closet._id}/bulkRemoveClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
   } catch (e) {
     return;
   }
   emptyForm();
+
+  /// deug
+  // let query: Record<string, string> = { user: userId.value, name: "main" };
+  let mainIdResult;
+  try {
+    mainIdResult = await fetchy(`/api/closets/${props.closet._id}`, "GET", { alert: false });
+  } catch (_) {
+    return;
+  }
+  console.log("closet", mainIdResult);
   void router.push({ name: "Closet", params: { id: props.closet._id } });
 };
 
@@ -107,7 +129,7 @@ onBeforeMount(async () => {
       <article v-for="clothing in clothesAdded" :key="clothing">
         <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="true" />
       </article>
-      <article v-for="clothing in clothesNotAdded" :key="clothing._id">
+      <article v-for="clothing in clothesNotAdded" :key="clothing">
         <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="false" />
       </article>
     </section>

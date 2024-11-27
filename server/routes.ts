@@ -159,16 +159,7 @@ class Routes {
     return await Friending.rejectRequest(fromOid, user);
   }
 
-  @Router.get("/clothes/all")
-  // @Router.validate(z.object({ closet: z.string().optional() }))
-  async getClothes(session: SessionDoc) {
-    //, closet: string
-    const user = Sessioning.getUser(session);
-    return (await Clothing.getClothes(user)).map((c) => c._id);
-  }
-
   @Router.get("/clothes")
-  @Router.validate(z.object({ id: z.string().min(1) }))
   async getClothingById(session: SessionDoc, id: string) {
     // const user = Sessioning.getUser(session);
     // const result = await Clothing.addClothing(type, name, description, imgUrl, user);
@@ -194,6 +185,7 @@ class Routes {
     for (const clo in allClosets) {
       await Closeting.removeClothing(new ObjectId(clo), new ObjectId(id));
     }
+    return { msg: "Clothing removed!" };
     // TODO: delete all outfits containing this clothing
   }
 
@@ -234,28 +226,17 @@ class Routes {
     return await Closeting.filterInCollection(new ObjectId(id), clothingIds);
   }
 
-  @Router.get("/closets/:id/searchandfilter")
-  @Router.validate(z.object({ keyword: z.string().optional(), type: z.string().optional() }))
-  async searchAndFilterCloset(session: SessionDoc, id: string, keyword?: string, type?: string) {
-    console.log("here");
-    console.log("keyword: " + keyword);
-    console.log("type: " + type);
-    console.log("session", session);
-    console.log("Session: " + Sessioning.getUser(session));
-    const user = Sessioning.getUser(session);
-    console.log("user: " + user);
+  @Router.get("/users/:userid/closets/:id/searchandfilter")
+  async searchAndFilterCloset(userid: string, id: string, keyword?: string, type?: string) {
+    const user = new ObjectId(userid);
     let clothes = [];
     if (type && keyword) {
-      console.log("Searching and filtering by type and keyword");
       clothes = await Clothing.searchAndFilter(type, keyword, user);
     } else if (type) {
-      console.log("Filtering by type");
       clothes = await Clothing.searchClothingByType(type, user);
     } else if (keyword) {
-      console.log("Searching by keyword");
       clothes = await Clothing.searchClothingByKeyword(keyword, user);
     } else {
-      console.log("No search or filter criteria provided");
       clothes = await Clothing.searchClothingByOwner(user);
     }
     const clothingIds = [];
@@ -308,6 +289,19 @@ class Routes {
       await Clothing.assertClothingExists(new ObjectId(p));
     }
     return await Closeting.bulkAddClothing(
+      new ObjectId(id),
+      clothes.map((p) => new ObjectId(p)),
+    );
+  }
+
+  @Router.patch("/closets/:id/bulkRemoveClothing")
+  async bulkRemoveClothingFromCloset(session: SessionDoc, id: string, clothes: string[]) {
+    const user = Sessioning.getUser(session);
+    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+    for (const p of clothes) {
+      await Clothing.assertClothingExists(new ObjectId(p));
+    }
+    return await Closeting.bulkRemoveClothing(
       new ObjectId(id),
       clothes.map((p) => new ObjectId(p)),
     );

@@ -21,7 +21,7 @@ async function getClothing() {
   } catch (_) {
     return;
   }
-  console.log("clothing", clothingResults);
+  // console.log("clothing", clothingResults);
   clothing.value = clothingResults;
 }
 
