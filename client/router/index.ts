@@ -6,6 +6,7 @@ import AddRemoveClothesView from "../views/AddRemoveClothesClosetView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
 import ClosetView from "../views/ClosetView.vue";
 import CreateClosetView from "../views/CreateClosetView.vue";
+import CreateClothesView from "../views/CreateClothesView.vue";
 import CreateOutfitView from "../views/CreateOutfitView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
@@ -85,6 +86,12 @@ const router = createRouter({
       path: "/createcloset",
       name: "CreateCloset",
       component: CreateClosetView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/addclothes",
+      name: "AddClothes",
+      component: CreateClothesView,
       meta: { requiresAuth: true },
     },
     {
