@@ -51,20 +51,13 @@ async function getMainCloset() {
 
 const submitClosetClothesChanges = async () => {
   try {
-    // const promises = toAddClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/addClothing/${clothing}`, "PATCH", { alert: false }));
-    // await Promise.all(promises);
-    // /closets/:id/bulkAddClothing
-    console.log("adding", toAddClothes.value);
     await fetchy(`/api/closets/${props.closet._id}/bulkAddClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
   } catch (e) {
     return;
   }
 
   try {
-    // const promises = toRemoveClothes.value.map((clothing) => fetchy(`/api/closets/${props.closet._id}/removeClothing/${clothing}`, "PATCH", { alert: false }));
-    // await Promise.all(promises);
-    console.log("removing", toRemoveClothes.value);
-    await fetchy(`/api/closets/${props.closet._id}/bulkRemoveClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
+    await fetchy(`/api/closets/${props.closet._id}/bulkRemoveClothing`, "PATCH", { body: { clothes: toRemoveClothes.value }, alert: false });
   } catch (e) {
     return;
   }

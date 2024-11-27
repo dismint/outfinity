@@ -97,31 +97,9 @@ export default class CollectioningConcept {
         collection.clothes.push(p);
       }
     }
-    console.log("check", collection.clothes);
     await this.collections.partialUpdateOne({ _id }, { clothes: collection.clothes });
-    const update = await this.collections.readOne({ _id });
-    console.log("update", update);
     return { msg: "Closet successfully updated!" };
   }
-
-  // async bulkAddClothing(_id: ObjectId, clothing: ObjectId[]) {
-  //   const collection = await this.collections.readOne({ _id });
-  //   if (!collection) {
-  //     throw new NotFoundError(`Collection ${_id} does not exist!`);
-  //   }
-
-  //   const existingClothes = new Set(collection.clothes.map((c) => c.toString()));
-  //   const newClothes = clothing.filter((p) => !existingClothes.has(p.toString()));
-
-  //   if (newClothes.length > 0) {
-  //     // await this.collections.partialUpdateOne({ _id }, { $push: { clothes: { $each: newClothes } } });
-  //     const result = await this.collections.partialUpdateOne(
-  //       { _id },
-  //       { clothes: { $each: clothing } }, // Add items to the `clothes` array
-  //     );
-  //   }
-  //   return { msg: "Closet successfully updated!" };
-  // }
 
   async bulkRemoveClothing(_id: ObjectId, clothing: ObjectId[]) {
     const collection = await this.collections.readOne({ _id });
