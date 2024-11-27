@@ -166,11 +166,34 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <div class="bottomMark">
+        <h2>Outfinity</h2>
+      </div>
     </div>
   </main>
 </template>
 
 <style scoped>
+h2 {
+  font-family: "Baloo Tamma 2";
+  font-size: 2em;
+  font-weight: 800;
+  color: var(--dark-green);
+}
+
+.bottomMark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--light-green);
+  height: 10vh;
+  width: 100%;
+  margin-top: 20vh;
+  border-radius: 8em 8em 0 0;
+  padding-top: 1vh;
+}
+
 .nameContainer {
   box-sizing: border-box;
   position: relative;
