@@ -246,8 +246,8 @@ h2 {
   box-sizing: border-box;
   position: relative;
   align-self: flex-start;
-  margin: 4% 2% 0 2%;
-  width: 20%;
+  margin: 4% auto 0 auto;
+  width: 20vh;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   border: 0.5em solid var(--light-green);
@@ -389,7 +389,7 @@ h1 {
 
 @keyframes slideFromLeft {
   0% {
-    transform: translateX(-30vw);
+    transform: translateX(-20vw);
   }
   100% {
     transform: translateX(0);
@@ -398,7 +398,7 @@ h1 {
 
 @keyframes slideFromRight {
   0% {
-    transform: translateX(30vw);
+    transform: translateX(20vw);
   }
   100% {
     transform: translateX(0);
