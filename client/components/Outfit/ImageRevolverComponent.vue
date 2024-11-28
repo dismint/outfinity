@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
+import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 
-const props = defineProps(["images"]);
+const props = defineProps(["images", "oneimage"]);
 const imageOrder = ref(props.images.slice());
 
 const bringToFront = (index: number) => {
@@ -11,12 +12,14 @@ const bringToFront = (index: number) => {
 </script>
 
 <template>
-  <div class="image-revolver">
+  <div class="image-revolver" v-if="props.images.length !== 0">
     <div v-for="(image, index) in imageOrder" :key="index" :style="{ zIndex: images.length - index, transform: `translateX(${index * 20}px)` }" class="image-container" @click="bringToFront(index)">
       <!-- <img :src="image" alt="Image" /> -->
-      <p>{{ image }}</p>
+      <ClothingImageComponent :imgUrl="image" />
+      <!-- <p>{{ image }}</p> -->
     </div>
   </div>
+  <p v-else>No clothes added to this type!</p>
 </template>
 
 <style scoped>

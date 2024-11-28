@@ -3,11 +3,9 @@ import router from "@/router";
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
-import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue"; 
+import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 
 const props = defineProps(["id", "clothingobject"]);
-
-const image = ref("");
 const clothing = ref<Record<string, string>>({});
 const loaded = ref(false);
 
@@ -19,7 +17,6 @@ async function getClothing() {
   } catch (_) {
     return;
   }
-  // console.log("clothing", clothingResults);
   clothing.value = clothingResults;
 }
 

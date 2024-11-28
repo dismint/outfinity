@@ -8,6 +8,7 @@ const props = defineProps(["closet"]);
 const selectedCategory = ref("all");
 const clothes = ref<Array<Record<string, string>>>([]);
 const loaded = ref(false);
+const emit = defineEmits(["clickClothing"]);
 
 const categories = ["all", "hat", "top", "bottom", "onepiece", "shoe"];
 
@@ -48,7 +49,7 @@ onBeforeMount(async () => {
     </nav>
     <section class="clothes" v-if="filteredClothes.length !== 0">
       <article v-for="clothing in filteredClothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" :clothingobject="clothing" />
+        <ClosetClothingItemComponent :id="clothing._id" :clothingobject="clothing" @click="emit('clickClothing', clothing._id)" />
       </article>
     </section>
     <p v-else>No clothes found in this category!</p>

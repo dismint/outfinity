@@ -2,15 +2,16 @@
 import ImageRevolverComponent from "@/components/Outfit/ImageRevolverComponent.vue";
 import { defineProps } from "vue";
 
-const props = defineProps(["headImages", "topImages", "bottomImages", "shoeImages"]);
+const props = defineProps(["headImage", "topImages", "bottomImages", "onepieceImage", "shoeImage"]);
 </script>
 
 <template>
   <main>
-    <ImageRevolverComponent :images="props.headImages" />
-    <ImageRevolverComponent :images="props.topImages" />
-    <ImageRevolverComponent :images="props.bottomImages" />
-    <ImageRevolverComponent :images="props.shoeImages" />
+    <ImageRevolverComponent :images="props.headImage" :oneimage="true" />
+    <ImageRevolverComponent :images="props.topImages" :oneimage="false" />
+    <ImageRevolverComponent :images="props.bottomImages" :oneimage="false" />
+    <ImageRevolverComponent :images="props.onepieceImage" :oneimage="true" />
+    <ImageRevolverComponent :images="props.shoeImage" :oneimage="true" />
   </main>
 </template>
 
