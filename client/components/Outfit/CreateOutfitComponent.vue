@@ -101,11 +101,15 @@ const handleClothingClick = async (id: string) => {
 </script>
 
 <template>
-  <OutfitImageComponent :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
-  <div>
-    <h1>{{ props.title }}</h1>
-    <OutfitPickerComponent :closet="props.closet" @clickClothing="handleClothingClick" />
-    <button @click="submit">Save Outfit</button>
+  <div class="centered">
+    <div class="compressWidth">
+      <OutfitImageComponent :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
+      <div>
+        <h1>{{ props.title }}</h1>
+        <OutfitPickerComponent :closet="props.closet" @clickClothing="handleClothingClick" />
+        <button @click="submit">Save Outfit</button>
+      </div>
+    </div>
   </div>
 </template>
 
