@@ -29,23 +29,28 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main>
+  <main class="centered">
     <img src="../../assets/images/closet.png" alt="closet" @click="navigateToClosetPage" />
     <h1 class="author">Main Closet</h1>
   </main>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
+.centered {
+  width: 50%;
+  height: 100%;
 }
 
 img {
-  width: 30%;
+  height: 100%;
+  width: 100%;
   height: auto;
   cursor: pointer;
+}
+
+.author {
+  font-family: "Eczar";
+  font-size: 2em;
+  margin: 0;
 }
 </style>

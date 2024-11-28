@@ -9,9 +9,13 @@ const navigateToCreateOutfitPage = () => {
 
 <template>
   <main>
-    <h1>My Saved Outfits</h1>
-    <button @click="navigateToCreateOutfitPage">Create New Outfit</button>
-    <OutfitsListComponent />
+    <div class="centered">
+      <div class="compressWidth">
+        <h1>My Saved Outfits</h1>
+        <button @click="navigateToCreateOutfitPage">Create New Outfit</button>
+        <OutfitsListComponent />
+      </div>
+    </div>
   </main>
 </template>
 

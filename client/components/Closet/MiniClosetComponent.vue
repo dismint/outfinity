@@ -9,24 +9,35 @@ const navigateToClosetPage = async () => {
 </script>
 
 <template>
-  <main @click="navigateToClosetPage">
-    <h1>{{ props.emoji }}</h1>
-    <h1 class="author">{{ props.name }}</h1>
+  <main class="row" @click="navigateToClosetPage">
+    <h1>{{ props.emoji }}{{ props.name }}</h1>
   </main>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
-  cursor: pointer;
+.row {
+  background-color: var(--light);
+  max-height: 100%;
+  max-width: 100%;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow:
+    -0.3em -0.3em 0.3em rgba(195, 206, 189, 0.8) inset,
+    0.5em 0.5em 0.5em rgba(37, 37, 37, 0.8) inset;
+  border-radius: 2em;
 }
 
 img {
   width: 30%;
-  height: auto;
+  cursor: pointer;
+}
+
+h1 {
+  font-family: "Eczar";
+  font-size: 2em;
+  max-width: 100%;
+  text-align: center;
   cursor: pointer;
 }
 </style>

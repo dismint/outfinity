@@ -25,11 +25,15 @@ const submit = async () => {
 </script>
 
 <template>
-  <OutfitImageComponent :head-images="headImages" :top-images="topImages" :bottom-images="bottomImages" :shoe-images="shoeImages" />
-  <div>
-    <h1>{{ props.title }}</h1>
-    <OutfitPickerComponent :closet="props.closet" />
-    <button @click="submit">Save Outfit</button>
+  <div class="centered">
+    <div class="compressWidth">
+      <OutfitImageComponent :head-images="headImages" :top-images="topImages" :bottom-images="bottomImages" :shoe-images="shoeImages" />
+      <div>
+        <h1>{{ props.title }}</h1>
+        <OutfitPickerComponent :closet="props.closet" />
+        <button @click="submit">Save Outfit</button>
+      </div>
+    </div>
   </div>
 </template>
 
