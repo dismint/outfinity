@@ -22,14 +22,6 @@ async function getMiniclosets() {
   miniclosets.value = miniclosetResults.filter((minicloset: Record<string, string>) => minicloset.name !== "main");
 }
 
-const navigateToNewMiniclosetPage = async () => {
-  void router.push({ name: "CreateCloset" });
-};
-
-const navigateToNewClothesPage = async () => {
-  void router.push({ name: "AddClothes" });
-};
-
 onBeforeMount(async () => {
   await getMiniclosets();
   loaded.value = true;
@@ -37,50 +29,37 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div>
-    <button @click="navigateToNewMiniclosetPage">create new minicloset</button>
-    <section class="posts" v-if="loaded && miniclosets.length !== 0">
-      <article v-for="minicloset in miniclosets" :key="minicloset._id">
+  <div class="centered">
+    <section class="posts centered" v-if="loaded && miniclosets.length !== 0">
+      <article v-for="minicloset in miniclosets" :key="minicloset._id" :style="{ width: 100 + '%', height: 100 / miniclosets.length + '%', maxHeight: 100 / miniclosets.length + '%' }">
         <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.description" :name="minicloset.name" />
       </article>
     </section>
-    <p v-else-if="loaded">No miniclosets yet!</p>
+    <p v-else-if="loaded">Add a Minicloset!</p>
     <p v-else>Loading...</p>
-    <button @click="navigateToNewClothesPage">upload new clothing item</button>
   </div>
 </template>
 
 <style scoped>
-section {
-  display: flex;
-  /* flex-direction: column; */
-  gap: 1em;
+.centered {
+  width: 50%;
 }
 
-section,
-p,
-.row {
-  margin: 0 auto;
-  max-width: 60em;
-}
-
-article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+p {
+  font-family: "Eczar";
+  font-size: 2em;
+  text-align: center;
+  font-weight: 500;
 }
 
 .posts {
-  padding: 1em;
-}
-
-.row {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  margin: 0 auto;
-  max-width: 60em;
+  max-width: 100%;
+  max-height: 100%;
+  height: 100%;
+  width: 100%;
+  margin: auto;
 }
 </style>
