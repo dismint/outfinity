@@ -36,6 +36,14 @@ export default class ChallengingConcept {
     return await this.challenges.readMany({}, { sort: { _id: -1 } });
   }
 
+  async getChallengeById(_id: ObjectId) {
+    const challenge = await this.challenges.readOne({ _id });
+    if (!challenge) {
+      throw new NotFoundError(`Challenge ${_id} does not exist!`);
+    }
+    return challenge;
+  }
+
   async getByOwner(owner: ObjectId) {
     return await this.challenges.readMany({ owner });
   }
