@@ -29,28 +29,63 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="centered">
-    <img src="../../assets/images/closet.png" alt="closet" @click="navigateToClosetPage" />
-    <h1 class="author">Main Closet</h1>
+  <main class="mainClosetContainer">
+    <div class="innerBox">
+      <div class="centered imgContainer">
+        <img src="../../assets/images/closet.png" alt="closet" @click="navigateToClosetPage" />
+      </div>
+      <div class="centered textContainer">
+        <h1>Main Closet</h1>
+      </div>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.centered {
-  width: 50%;
+.mainClosetContainer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 15vh;
+  background-color: var(--light);
+  border-radius: 3vh;
+}
+
+.innerBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: 80%;
+}
+
+.textContainer {
+  box-sizing: border-box;
+  padding: 10%;
   height: 100%;
+  width: 80%;
+}
+
+.imgContainer {
+  box-sizing: border-box;
+  height: 100%;
+  width: 20%;
 }
 
 img {
   height: 100%;
-  width: 100%;
-  height: auto;
   cursor: pointer;
 }
 
-.author {
+h1 {
   font-family: "Eczar";
-  font-size: 2em;
-  margin: 0;
+  font-size: 4em;
+  width: 100%;
+  text-align: center;
 }
 </style>

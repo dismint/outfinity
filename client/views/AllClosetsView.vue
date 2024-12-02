@@ -16,7 +16,8 @@ const navigateToNewClothesPage = async () => {
   <main>
     <div class="centered">
       <div class="compressWidth">
-        <h1>My Closets</h1>
+        <h1>Closets</h1>
+
         <div class="closets">
           <MainClosetComponent />
           <MiniClosetListComponent />
@@ -30,17 +31,26 @@ const navigateToNewClothesPage = async () => {
 
 <style scoped>
 h1 {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
   font-family: "Eczar";
-  font-size: 3em;
-  text-align: center;
+  color: var(--dark-green);
+  text-align: left;
+  font-size: 4em;
+  padding: 0;
+  margin-top: 1em;
 }
 
 .closets {
   display: flex;
-  flex-direction: row;
-  background: var(--light);
-  height: 60vh;
-  padding: 1em;
-  border-radius: 4em;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /*background: var(--light);*/
+  /*height: 60vh;*/
+  /*padding: 1em;*/
+  /*border-radius: 4em;*/
 }
 </style>
