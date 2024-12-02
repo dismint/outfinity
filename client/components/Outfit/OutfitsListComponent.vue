@@ -11,7 +11,6 @@ const { userId } = storeToRefs(useUserStore());
 
 async function getOutfits() {
   let query: Record<string, string> = { id: userId.value };
-  // TODO: check
   let outfitResults;
   try {
     outfitResults = await fetchy("/api/outfits/user", "GET", { query });
@@ -19,11 +18,6 @@ async function getOutfits() {
     return;
   }
   outfits.value = outfitResults;
-  // outfits.value = [
-  //   { _id: "1", name: "Outfit 1", emoji: "👗" },
-  //   { _id: "2", name: "Outfit 2", emoji: "👠" },
-  //   { _id: "3", name: "Outfit 3", emoji: "👒" },
-  // ];
 }
 
 onBeforeMount(async () => {

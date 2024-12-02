@@ -5,7 +5,7 @@ import { defineProps, onBeforeMount, ref } from "vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
 import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 
-const props = defineProps(["id", "clothingobject"]);
+const props = defineProps(["id", "noclick", "clothingobject"]);
 const clothing = ref<Record<string, string>>({});
 const loaded = ref(false);
 
@@ -36,7 +36,8 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ClothingImageComponent :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
+    <ClothingImageComponent v-if="props.noclick" :imgUrl="clothing.imgUrl" />
+    <ClothingImageComponent v-else :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
     <h1 v-if="loaded">{{ clothing.name }}</h1>
     <!-- <DisplayLabels :item="{ title: props.id, _id: props.id }" /> -->
   </main>

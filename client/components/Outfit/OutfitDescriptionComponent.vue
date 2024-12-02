@@ -1,43 +1,14 @@
 <script setup lang="ts">
-import { defineProps, onBeforeMount, ref } from "vue";
-import EditLabels from "../Labeling/EditLabels.vue";
+import { defineProps } from "vue";
 
-const props = defineProps(["id"]);
-const item = ref<Record<string, string>>({});
-
-const getItem = async () => {
-  //// TODO: get item
-  // fetch item
-  // try {
-  //   await fetchy(`/api/posts/${props.post._id}`, "DELETE");
-  // } catch {
-  //   return;
-  // }
-  item.value.name = "outfit name";
-  item.value.description = "outfit description";
-  item.value.owner = "jennifer";
-};
-
-// const woreOutfit = async () => {
-//   // fetch description
-//   // try {
-//   //   await fetchy(`/api/posts/${props.post._id}`, "DELETE");
-//   // } catch {
-//   //   return;
-//   // }
-// };
-
-onBeforeMount(async () => {
-  await getItem();
-});
+const props = defineProps(["outfit"]);
 </script>
 
 <template>
   <main>
-    <h1>{{ item.name }}</h1>
-    <h2>id: {{ props.id }}</h2>
-    <h3>{{ item.description }}</h3>
-    <EditLabels :item="item" />
+    <h1>{{ props.outfit.name }}</h1>
+    <p v-if="props.outfit.description">{{ props.outfit.description }}</p>
+    <p v-else>No description</p>
     <!-- <button @click="woreOutfit">I wore this today!</button> -->
   </main>
 </template>

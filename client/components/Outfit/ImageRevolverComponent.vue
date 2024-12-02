@@ -34,7 +34,7 @@ const imageOrder = ref(props.images.slice());
 
 .image-container {
   /* position: absolute; */
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: transform 0.3s;
 }
 

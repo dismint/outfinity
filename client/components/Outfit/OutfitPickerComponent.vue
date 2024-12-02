@@ -49,7 +49,7 @@ onBeforeMount(async () => {
     </nav>
     <section class="clothes" v-if="filteredClothes.length !== 0">
       <article v-for="clothing in filteredClothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" :clothingobject="clothing" @click="emit('clickClothing', clothing._id)" />
+        <ClosetClothingItemComponent :id="clothing._id" :noclick="true" :clothingobject="clothing" @click="emit('clickClothing', clothing._id)" />
       </article>
     </section>
     <p v-else>No clothes found in this category!</p>
