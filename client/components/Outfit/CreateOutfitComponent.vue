@@ -60,33 +60,29 @@ const isOutfitComplete = computed(() => {
 
 const submit = async () => {
   /// TODO: validate outfit before submitting
-  // const query = { id: props.id };
-  // let clothingResults;
-  // try {
-  //   clothingResults = await fetchy(`/api/clothes`, "GET", { query, alert: false });
-  // } catch (_) {
-  //   return;
-  // }
   /////// create outfit
-  // const query = { id: props.id };
-  // let clothingResults;
-  // try {
-  //   clothingResults = await fetchy(`/api/outfits/createOutfit`, "POST", { query, alert: false });
-  // } catch (_) {
-  //   return;
-  // }
+  const body = {
+    name: outfitTitle.value,
+    description: description.value,
+    clothes: [headImage.value, ...topImages.value, ...bottomImages.value, onepieceImage.value, shoeImage.value].filter((x) => x),
+  };
+  let outfitId;
+  try {
+    outfitId = await fetchy(`/api/outfits/createOutfit`, "POST", { body, alert: false });
+  } catch (_) {
+    return;
+  }
   if (props.outfitOrChallenge === "outfit") {
-    /////// save outfit
-    // const query = { id: props.id };
-    // let clothingResults;
-    // try {
-    //   clothingResults = await fetchy(`/api/clothes`, "GET", { query, alert: false });
-    // } catch (_) {
-    //   return;
-    // }
-    void router.push({ name: "Outfit", params: { id: "1" } }); // id is the outfit we just made here
+    // save outfit
+    try {
+      await fetchy(`/api/outfits/save/${outfitId}`, "PATCH", { alert: false });
+    } catch (_) {
+      return;
+    }
+    void router.push({ name: "Outfit", params: { id: outfitId } }); // id is the outfit we just made here
   } else {
-    void router.push({ name: "Challenge", params: { id: props.challengeId } }); // TODO: how to move just made outfit to this page? maybe have outfit id and challenge id in params of page
+    //// TODO: submit outfit to challenge
+    void router.push({ name: "Challenge", params: { id: props.challengeId } });
   }
   emptyForm();
 };
