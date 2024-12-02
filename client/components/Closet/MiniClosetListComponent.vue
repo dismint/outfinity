@@ -31,8 +31,8 @@ onBeforeMount(async () => {
 <template>
   <div class="centered outerContainer">
     <div class="innerBox">
-      <div v-if="loaded && miniclosets.length !== 0" style="width: 100%; height: 100%">
-        <div class="miniClosetsContainer">
+      <div v-if="loaded && miniclosets.length !== 0" class="centered" style="width: 100%; height: 100%">
+        <div class="centered miniClosetsContainer">
           <div v-for="minicloset in miniclosets" :key="minicloset._id" class="centered" style="aspect-ratio: 1">
             <div class="elementBox">
               <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.description" :name="minicloset.name" />
@@ -50,13 +50,16 @@ onBeforeMount(async () => {
 .elementBox {
   width: 95%;
   height: 95%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .miniClosetsContainer {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   width: 100%;
   height: 100%;
+  place-items: center;
 }
 
 .innerBox {
