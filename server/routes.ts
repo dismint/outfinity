@@ -362,17 +362,22 @@ class Routes {
     return await Outfiting.getCollectionsItemIn(new ObjectId(id));
   }
 
-  @Router.patch("/outfits/createOutfit")
+  @Router.post("/outfits/createOutfit")
   async createOutfitWithClothes(session: SessionDoc, name: string, description: string, clothes: string[]) {
     const user = Sessioning.getUser(session);
+    const clothingTypes: string[] = [];
+    for (const p of clothes) {
+      await Clothing.assertClothingExists(new ObjectId(p));
+      const item = await Clothing.getClothingInformation(new ObjectId(p));
+      if (item) {
+        clothingTypes.push(item.type);
+      }
+    }
+    await Outfiting.assertOutfitIsValid(clothingTypes);
     const outfitId = await Outfiting.create(name, description, user);
     if (outfitId === null || outfitId.collection === null) {
       return { msg: "Outfit creation failed!" };
     } else {
-      // assert all clothes exist
-      for (const p of clothes) {
-        await Clothing.assertClothingExists(new ObjectId(p));
-      }
       for (const p of clothes) {
         await Outfiting.addClothing(new ObjectId(outfitId.collection._id), new ObjectId(p));
       }
