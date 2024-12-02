@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
 import { defineEmits, defineProps, onBeforeMount, ref } from "vue";
+import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
 
 const props = defineProps(["id", "inCloset"]);
@@ -8,10 +9,6 @@ const emit = defineEmits(["add", "remove"]);
 const inCloset = ref(props.inCloset);
 const clothing = ref<Record<string, string>>({});
 const loaded = ref(false);
-
-// const navigateToClothingItemPage = async () => {
-//   void router.push({ name: "ClothingItem", params: { id: props.id } });
-// };
 
 async function getClothing() {
   const query = { id: props.id };
@@ -21,11 +18,8 @@ async function getClothing() {
   } catch (_) {
     return;
   }
-  // console.log("clothing", clothingResults);
   clothing.value = clothingResults;
 }
-
-/// TODO: ClothingImageComponent
 
 const add = () => {
   inCloset.value = true;
@@ -47,11 +41,8 @@ onBeforeMount(async () => {
   <main>
     <img v-if="inCloset && loaded" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
     <img v-if="!inCloset && loaded" src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
-    <!-- <img :src="image" alt="clothing" /> -->
-    <!-- <ClothingImageComponent :clothing="props.clothing" /> -->
-    <!-- @click="navigateToClothingItemPage" -->
+    <ClothingImageComponent :imgUrl="clothing.imgUrl" />
     <h1 v-if="loaded">{{ clothing.name }}</h1>
-    <!-- <DisplayLabels :item="{ title: props.clothing.name, _id: props.clothing._id }" /> -->
   </main>
 </template>
 

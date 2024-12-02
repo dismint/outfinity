@@ -2,16 +2,16 @@
 import ImageRevolverComponent from "@/components/Outfit/ImageRevolverComponent.vue";
 import { defineProps } from "vue";
 
-const props = defineProps(["headImage", "topImages", "bottomImages", "onepieceImage", "shoeImage"]);
+const props = defineProps(["imageLoaded", "headImage", "topImages", "bottomImages", "onepieceImage", "shoeImage"]);
 </script>
 
 <template>
   <main>
-    <ImageRevolverComponent :images="props.headImage" :oneimage="true" />
-    <ImageRevolverComponent :images="props.topImages" :oneimage="false" />
-    <ImageRevolverComponent :images="props.bottomImages" :oneimage="false" />
-    <ImageRevolverComponent :images="props.onepieceImage" :oneimage="true" />
-    <ImageRevolverComponent :images="props.shoeImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.headImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.topImages" :oneimage="false" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.bottomImages" :oneimage="false" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.onepieceImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.shoeImage" :oneimage="true" />
   </main>
 </template>
 

@@ -5,15 +5,19 @@ import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 const props = defineProps(["images", "oneimage"]);
 const imageOrder = ref(props.images.slice());
 
-const bringToFront = (index: number) => {
-  const image = imageOrder.value.splice(index, 1)[0];
-  imageOrder.value.push(image);
-};
+// const bringToFront = (index: number) => {
+//   const image = imageOrder.value.splice(index, 1)[0];
+//   imageOrder.value.push(image);
+// };
+//@click="bringToFront(index)"
 </script>
 
 <template>
   <div class="image-revolver" v-if="props.images.length !== 0">
-    <div v-for="(image, index) in imageOrder" :key="index" :style="{ zIndex: images.length - index, transform: `translateX(${index * 20}px)` }" class="image-container" @click="bringToFront(index)">
+    <div v-if="props.oneimage">
+      <ClothingImageComponent :imgUrl="props.images" />
+    </div>
+    <div v-else v-for="(image, index) in imageOrder" :key="index" :style="{ zIndex: images.length - index, transform: `translateX(${index * 20}px)` }" class="image-container">
       <!-- <img :src="image" alt="Image" /> -->
       <ClothingImageComponent :imgUrl="image" />
       <!-- <p>{{ image }}</p> -->

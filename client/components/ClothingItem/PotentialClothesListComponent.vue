@@ -34,7 +34,7 @@ async function getPotentialClothes() {
   } catch (_) {
     return;
   }
-  clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing)); /// TODO: objectId not do equality checking correctly
+  clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing));
   clothesAdded.value = props.closet.clothes;
 }
 
@@ -104,8 +104,6 @@ onBeforeMount(async () => {
   await getPotentialClothes();
   loaded.value = true;
 });
-
-/// TODO: same as ClosetClothesListComponent, do we represent clothes are the fully thing from api results?
 </script>
 
 <template>

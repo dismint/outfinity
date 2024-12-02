@@ -11,7 +11,6 @@ const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
 
 const props = defineProps(["closet"]);
 const clothes = ref<Array<Record<string, string>>>(props.closet.clothes);
-//// TODO: if we format collection results, then we can pass in closet.clothes and then access each clothes from there
 const searchQuery = ref("");
 const filterType = ref("");
 
