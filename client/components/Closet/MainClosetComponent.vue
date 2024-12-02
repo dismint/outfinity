@@ -84,7 +84,7 @@ img {
 
 h1 {
   font-family: "Eczar";
-  font-size: 4em;
+  font-size: clamp(8px, 8vh, 3em);
   width: 100%;
   text-align: center;
 }
