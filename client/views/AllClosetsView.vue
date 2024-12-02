@@ -17,19 +17,29 @@ const navigateToNewClothesPage = async () => {
     <div class="centered">
       <div class="compressWidth">
         <h1>Closets</h1>
-
         <div class="closets">
           <MainClosetComponent />
+          <div class="row filler">
+            <div class="centered leftBlank">
+              <button @click="navigateToNewClothesPage">New Clothing</button>
+            </div>
+            <div class="centered rightBlank">
+              <button @click="navigateToNewMiniclosetPage">New Minicloset</button>
+            </div>
+          </div>
           <MiniClosetListComponent />
         </div>
-        <button @click="navigateToNewClothesPage">New Clothing</button>
-        <button @click="navigateToNewMiniclosetPage">New Minicloset</button>
       </div>
     </div>
   </main>
 </template>
 
 <style scoped>
+* {
+  margin: 0;
+  padding: 0;
+}
+
 h1 {
   box-sizing: border-box;
   display: block;
@@ -38,19 +48,34 @@ h1 {
   color: var(--dark-green);
   text-align: left;
   font-size: 4em;
-  padding: 0;
   margin-top: 1em;
 }
 
 .closets {
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
   width: 100%;
-  /*background: var(--light);*/
-  /*height: 60vh;*/
-  /*padding: 1em;*/
-  /*border-radius: 4em;*/
+}
+
+.filler {
+  width: 100%;
+  height: 10vh;
+  background-color: var(--light);
+}
+
+.leftBlank {
+  height: 100%;
+  width: 40%;
+  margin-right: auto;
+  border-radius: 0 3vh 3vh 0;
+  background-color: var(--primary-background);
+}
+
+.rightBlank {
+  height: 100%;
+  width: 40%;
+  margin-left: auto;
+  border-radius: 3vh 0 0 3vh;
+  background-color: var(--primary-background);
 }
 </style>

@@ -77,7 +77,7 @@ onBeforeMount(async () => {
   box-sizing: border-box;
   width: 100%;
   background-color: var(--light);
-  border-radius: 3vh;
+  border-radius: 0 0 3vh 3vh;
 }
 
 p {

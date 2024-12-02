@@ -51,7 +51,7 @@ onBeforeMount(async () => {
   width: 100%;
   height: 15vh;
   background-color: var(--light);
-  border-radius: 3vh;
+  border-radius: 3vh 3vh 0 0;
 }
 
 .innerBox {
