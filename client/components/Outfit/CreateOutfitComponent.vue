@@ -7,6 +7,11 @@ import OutfitPickerComponent from "./OutfitPickerComponent.vue";
 
 const props = defineProps(["title", "outfitOrChallenge", "closet", "challengeId"]);
 
+const head = ref("");
+const tops = ref<Array<string>>([]);
+const bottoms = ref<Array<string>>([]);
+const onepiece = ref("");
+const shoe = ref("");
 const headImage = ref("");
 const topImages = ref<Array<string>>([]);
 const bottomImages = ref<Array<string>>([]);
@@ -17,7 +22,7 @@ const outfitComplete = ref(false);
 const outfitTitle = ref("");
 const description = ref("");
 
-const getImage = async (id: string, stack: boolean) => {
+const getClothing = async (id: string, stack: boolean) => {
   const query = { id };
   let clothingResult;
   try {
@@ -25,6 +30,11 @@ const getImage = async (id: string, stack: boolean) => {
   } catch (_) {
     return;
   }
+  const clothesMap: Record<string, typeof head | typeof tops | typeof bottoms> = {
+    hat: head,
+    onepiece: onepiece,
+    shoe: shoe,
+  };
   const imageMap: Record<string, typeof headImage | typeof topImages | typeof bottomImages> = {
     hat: headImage,
     onepiece: onepieceImage,
@@ -32,19 +42,28 @@ const getImage = async (id: string, stack: boolean) => {
   };
 
   if (clothingResult.type === "top" || clothingResult.type === "bottom") {
+    const clothes = clothingResult.type === "top" ? tops : bottoms;
     const images = clothingResult.type === "top" ? topImages : bottomImages;
     if (stack) {
+      clothes.value.push(clothingResult._id);
       images.value.push(clothingResult.imgUrl);
     } else {
+      // const index = clothes.value.indexOf(clothingResult);
       const index = images.value.indexOf(clothingResult.imgUrl);
       if (index > -1) {
+        clothes.value.splice(index, 1);
         images.value.splice(index, 1);
       } else {
+        clothes.value.push(clothingResult._id);
         images.value.push(clothingResult.imgUrl);
       }
     }
   } else {
+    const clothing = clothesMap[clothingResult.type];
     const image = imageMap[clothingResult.type];
+    if (clothing) {
+      clothing.value = clothing.value === clothingResult._id ? "" : clothingResult._id;
+    }
     if (image) {
       image.value = image.value === clothingResult.imgUrl ? "" : clothingResult.imgUrl;
     }
@@ -52,34 +71,32 @@ const getImage = async (id: string, stack: boolean) => {
 };
 
 const isOutfitComplete = computed(() => {
-  const hasTopAndBottom = topImages.value.length > 0 && bottomImages.value.length > 0;
-  const hasShoe = shoeImage.value !== "";
-  const hasOnePiece = onepieceImage.value !== "";
+  const hasTopAndBottom = tops.value.length > 0 && bottoms.value.length > 0;
+  const hasShoe = Object.keys(shoe.value).length > 0;
+  const hasOnePiece = Object.keys(onepiece.value).length > 0;
   return (hasTopAndBottom || hasOnePiece) && hasShoe;
 });
 
 const submit = async () => {
-  /// TODO: validate outfit before submitting
-  /////// create outfit
   const body = {
     name: outfitTitle.value,
     description: description.value,
-    clothes: [headImage.value, ...topImages.value, ...bottomImages.value, onepieceImage.value, shoeImage.value].filter((x) => x),
+    clothes: [head.value, ...tops.value, ...bottoms.value, onepiece.value, shoe.value].filter((x) => x),
   };
-  let outfitId;
+  let outfit;
   try {
-    outfitId = await fetchy(`/api/outfits/createOutfit`, "POST", { body, alert: false });
+    outfit = await fetchy(`/api/outfits/createOutfit`, "POST", { body, alert: false });
   } catch (_) {
     return;
   }
   if (props.outfitOrChallenge === "outfit") {
     // save outfit
     try {
-      await fetchy(`/api/outfits/save/${outfitId}`, "PATCH", { alert: false });
+      await fetchy(`/api/outfits/save/${outfit.collection._id}`, "PATCH", { alert: false });
     } catch (_) {
       return;
     }
-    void router.push({ name: "Outfit", params: { id: outfitId } }); // id is the outfit we just made here
+    void router.push({ name: "Outfit", params: { id: outfit.collection._id } }); // id is the outfit we just made here
   } else {
     //// TODO: submit outfit to challenge
     void router.push({ name: "Challenge", params: { id: props.challengeId } });
@@ -96,7 +113,7 @@ const handleClothingClick = async (id: string) => {
   //// TODO: bruh think about how this works with stacking and hopefully we can integrate if we click clothing on outfit it removes it
   // then do stacking
   imageLoaded.value = false;
-  await getImage(id, false);
+  await getClothing(id, false);
   imageLoaded.value = true;
 };
 
@@ -110,6 +127,11 @@ const handleClothingClick = async (id: string) => {
 // };
 
 const emptyForm = () => {
+  head.value = "";
+  tops.value = [];
+  bottoms.value = [];
+  onepiece.value = "";
+  shoe.value = "";
   headImage.value = "";
   topImages.value = [];
   bottomImages.value = [];
@@ -122,6 +144,7 @@ const emptyForm = () => {
   <div v-if="!outfitComplete" class="centered">
     <div class="compressWidth sideBySide">
       <div>
+        <!-- <OutfitImageComponent :imageLoaded="imageLoaded" :head="head" :tops="tops" :bottoms="bottoms" :onepiece="onepiece" :shoe="shoe" /> -->
         <OutfitImageComponent :imageLoaded="imageLoaded" :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
         <!-- <OutfitImageComponent
           :imageLoaded="imageLoaded"
