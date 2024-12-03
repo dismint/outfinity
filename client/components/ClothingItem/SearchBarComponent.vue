@@ -10,20 +10,33 @@ function emitSearchQuery() {
 </script>
 
 <template>
-  <div>
-    <input v-model="searchQuery" @input="emitSearchQuery" type="text" placeholder="Search for clothes..." />
+  <div class="searchContainer">
+    <h2>Search</h2>
+    <div class="centered">
+      <input v-model="searchQuery" @input="emitSearchQuery" type="text" placeholder="Search for clothes..." />
+    </div>
   </div>
 </template>
 
 <style scoped>
-div {
-  margin: 0.5em 0;
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.searchContainer {
+  margin-top: 1em;
+  width: 100%;
+}
+
+h2 {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
 }
 
 input {
   width: 100%;
-  padding: 0.5em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  height: 1.6em;
 }
 </style>

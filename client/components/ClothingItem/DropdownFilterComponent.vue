@@ -13,8 +13,8 @@ function emitSelection() {
 </script>
 
 <template>
-  <div>
-    <label for="clothing-filter">Filter by:</label>
+  <div class="dropdownContainer">
+    <label for="clothing-filter">Filter</label>
     <select v-model="selectedOption" @change="emitSelection" id="clothing-filter">
       <option value="" disabled>Select a type</option>
       <option v-for="option in options" :key="option" :value="option.toLowerCase()">
@@ -25,8 +25,20 @@ function emitSelection() {
 </template>
 
 <style scoped>
-div {
-  margin: 0.5em 0;
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.dropdownContainer {
+  margin-top: 2vmin;
+  width: 100%;
+}
+
+label {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
 }
 
 select {

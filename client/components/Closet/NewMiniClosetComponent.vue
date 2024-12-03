@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import router from "@/router";
-// import { Picker } from "emoji-mart-vue";
-// import "emoji-mart-vue/dist/style.css";
 import { fetchy } from "@/utils/fetchy";
 import { ref } from "vue";
 import EmojiPicker from "vue3-emoji-picker";
@@ -28,22 +26,6 @@ const emptyForm = () => {
   selectedEmoji.value = "";
 };
 
-//  export default {
-//    components: {
-//      VueEmojiPicker
-//    },
-//    data() {
-//      return {
-//        message: ''
-//      };
-//    },
-//    methods: {
-//      addEmoji(emoji) {
-//        this.message += emoji.native;
-//      }
-//    }
-//  };
-
 interface Emoji {
   i: string;
   n: string[];
@@ -53,49 +35,102 @@ interface Emoji {
 }
 
 function onSelectEmoji(emoji: Emoji) {
-  // console.log(emoji);
   selectedEmoji.value = emoji.i;
   console.log(selectedEmoji.value);
-  /*
-    // result
-    { 
-        i: "😚", 
-        n: ["kissing face"], 
-        r: "1f61a", // with skin tone
-        t: "neutral", // skin tone
-        u: "1f61a" // without tone
-    }
-    */
 }
 </script>
 
 <template>
-  <div class="centered">
-    <div class="compressWidth">
-      <form @submit.prevent="newMiniCloset(name, selectedEmoji)">
-        <h2>Name:</h2>
-        <textarea id="name" v-model="name" required> </textarea>
-        <h2 class="author">Select an emoji to represent this minicloset!</h2>
-        <div>
-          <EmojiPicker :native="true" @select="onSelectEmoji" />
-          <h3 v-if="selectedEmoji != ''">
-            Emoji selected:
-            <span class="emoji">{{ selectedEmoji }}</span>
-          </h3>
-        </div>
-        <button class="centered" type="submit">create minicloset</button>
-      </form>
-    </div>
+  <div class="focusWidth">
+    <form @submit.prevent="newMiniCloset(name, selectedEmoji)">
+      <h2>Name</h2>
+      <input id="name" v-model="name" required />
+      <h2 class="author">Emoji</h2>
+      <EmojiPicker :native="true" @select="onSelectEmoji" />
+      <button v-if="selectedEmoji != '' && name == ''" class="centered gray" type="submit">
+        <div class="bold">Create Minicloset</div>
+        {{ selectedEmoji }}
+      </button>
+      <button v-else-if="name != ''" class="centered valid" type="submit">
+        <div class="bold">Create Minicloset</div>
+        <div>{{ name }} {{ selectedEmoji }}</div>
+      </button>
+      <button v-else class="centered gray" type="submit">Please fill out form!</button>
+    </form>
   </div>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
-  cursor: pointer;
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.bold {
+  font-weight: 800;
+}
+
+.gray {
+  background-color: rgba(240, 240, 240, 1);
+}
+
+.valid {
+  position: relative;
+  width: 100%;
+  height: 10vh;
+  border-radius: 2vmin;
+}
+
+.valid::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: var(--dark-green);
+  border-radius: 2vmin;
+  z-index: 10;
+  border: none;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.valid:hover::before {
+  opacity: 1;
+}
+
+.valid:hover * {
+  color: var(--primary-background);
+}
+
+.focusWidth {
+  background-color: var(--light);
+  padding: 2vmin;
+  border-radius: 2vmin;
+}
+
+form {
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  height: 1.6em;
+  font-family: "Inter";
+  font-weight: 500;
+}
+
+.v3-emoji-picker {
+  width: 100%;
+}
+
+h2 {
+  margin-top: 1em;
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
 }
 
 img {
@@ -106,6 +141,23 @@ img {
 
 .emoji {
   width: 500px;
-  height: auto;
+  height: 20vh;
+}
+
+button {
+  margin: 1em 0;
+  width: 100%;
+  height: 10vh;
+  font-family: "Inter";
+  font-size: 2.5vh;
+  font-weight: 500;
+  background-color: var(--light-green);
+  border: none;
+  border-radius: 2vmin;
+  cursor: pointer;
+}
+
+button * {
+  z-index: 11;
 }
 </style>
