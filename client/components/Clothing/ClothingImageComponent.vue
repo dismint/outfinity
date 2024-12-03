@@ -10,7 +10,8 @@ const props = defineProps(["imgUrl"]);
 
 <style scoped>
 img {
-  width: 100px;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

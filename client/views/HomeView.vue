@@ -12,7 +12,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
   <main class="centered">
     <div v-if="isLoggedIn">
       <div class="compressWidth">
-        <div class="scrollSeal titleContainer">
+        <div class="titleContainer">
           <h1 class="title">Welcome {{ currentUsername }}!</h1>
         </div>
         <h2>(click on a navbar option to get started)</h2>
@@ -27,11 +27,13 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 <style scoped>
 .title {
   font-family: "Baloo Tamma 2";
-  font-size: 8em;
+  font-size: min(8em, 20vh);
   font-weight: 800;
   background: linear-gradient(to right, var(--text-color), var(--dark-green) 50%, var(--light-green));
   background-clip: text;
   color: transparent;
+  margin: 0;
+  margin-top: 30vh;
 }
 
 .titleContainer {
@@ -40,7 +42,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
   align-items: center;
   text-align: center;
   height: 40vh;
-  margin: auto;
+  margin: 0;
 }
 
 h2 {

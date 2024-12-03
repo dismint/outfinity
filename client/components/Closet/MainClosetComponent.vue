@@ -29,28 +29,94 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="centered">
-    <img src="../../assets/images/closet.png" alt="closet" @click="navigateToClosetPage" />
-    <h1 class="author">Main Closet</h1>
+  <main class="mainClosetContainer" @click="navigateToClosetPage">
+    <div class="innerBox">
+      <div class="centered imgContainer">
+        <img src="../../assets/images/closet.png" alt="closet" />
+      </div>
+      <div class="centered textContainer">
+        <h1>Main Closet</h1>
+      </div>
+    </div>
   </main>
 </template>
 
 <style scoped>
-.centered {
-  width: 50%;
+.mainClosetContainer {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 15vh;
+  background-color: var(--light);
+  border-radius: 3vh 3vh 0 0;
+  cursor: pointer;
+}
+
+.mainClosetContainer::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--medium-green);
+  z-index: 10;
+  transition:
+    top 0.3s ease,
+    filter 0.3s ease;
+  border-radius: 3vh 3vh 0 0;
+}
+
+.mainClosetContainer:hover::before {
+  top: 0;
+}
+
+.mainClosetContainer:hover h1 {
+  color: var(--light);
+}
+
+.mainClosetContainer:hover img {
+  filter: invert(92%) sepia(2%) saturate(704%) hue-rotate(336deg) brightness(107%) contrast(101%);
+}
+
+.innerBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: 80%;
+}
+
+.textContainer {
+  box-sizing: border-box;
+  padding: 10%;
   height: 100%;
+  width: 80%;
+}
+
+.imgContainer {
+  box-sizing: border-box;
+  height: 100%;
+  width: 20%;
 }
 
 img {
   height: 100%;
-  width: 100%;
-  height: auto;
-  cursor: pointer;
+  z-index: 11;
 }
 
-.author {
+h1 {
   font-family: "Eczar";
-  font-size: 2em;
-  margin: 0;
+  font-size: clamp(8px, 8vh, 3em);
+  width: 100%;
+  text-align: center;
+  z-index: 11;
+  transition: color 0.3s ease;
 }
 </style>
