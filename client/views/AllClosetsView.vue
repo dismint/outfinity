@@ -20,11 +20,11 @@ const navigateToNewClothesPage = async () => {
         <div class="closets">
           <MainClosetComponent />
           <div class="row filler">
-            <div class="centered leftBlank">
-              <button @click="navigateToNewClothesPage">New Clothing</button>
+            <div class="centered leftBlank" @click="navigateToNewClothesPage">
+              <h3>Add Clothes</h3>
             </div>
-            <div class="centered rightBlank">
-              <button @click="navigateToNewMiniclosetPage">New Minicloset</button>
+            <div class="centered rightBlank" @click="navigateToNewMiniclosetPage">
+              <h3>New Closet</h3>
             </div>
           </div>
           <MiniClosetListComponent />
@@ -51,6 +51,14 @@ h1 {
   margin-top: 1em;
 }
 
+h3 {
+  font-family: "Eczar";
+  font-size: 2em;
+  color: var(--dark-green);
+  transition: color 0.3s ease;
+  z-index: 11;
+}
+
 .closets {
   display: flex;
   flex-direction: column;
@@ -72,10 +80,64 @@ h1 {
 }
 
 .rightBlank {
+  position: relative;
   height: 100%;
   width: 40%;
   margin-left: auto;
   border-radius: 3vh 0 0 3vh;
   background-color: var(--primary-background);
+  cursor: pointer;
+}
+
+.rightBlank::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 100%;
+  background-color: var(--medium-green);
+  z-index: 10;
+  transition: left 0.3s ease;
+  border-radius: 3vh 0 0 3vh;
+}
+
+.rightBlank:hover::before {
+  left: 0;
+}
+
+.rightBlank:hover h3 {
+  color: var(--light);
+}
+
+.leftBlank {
+  position: relative;
+  height: 100%;
+  width: 40%;
+  margin-right: auto;
+  border-radius: 0 3vh 3vh 0;
+  background-color: var(--primary-background);
+  cursor: pointer;
+}
+
+.leftBlank::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 100%;
+  bottom: 0;
+  left: 0;
+  background-color: var(--medium-green);
+  z-index: 10;
+  transition: right 0.3s ease;
+  border-radius: 0 3vh 3vh 0;
+}
+
+.leftBlank:hover::before {
+  right: 0;
+}
+
+.leftBlank:hover h3 {
+  color: var(--light);
 }
 </style>
