@@ -45,10 +45,7 @@ onBeforeMount(async () => {
       <img v-if="inCloset && loaded" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
       <img v-if="!inCloset && loaded" src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
     </div>
-    <div class="textGap" v-if="props.noclick">
-      <div class="nameText" v-if="loaded">{{ clothing.name }}</div>
-    </div>
-    <div class="textGap" v-else @click="navigateToClothingItemPage">
+    <div class="textGap">
       <div class="nameText" v-if="loaded">{{ clothing.name }}</div>
     </div>
   </div>
