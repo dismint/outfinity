@@ -39,8 +39,7 @@ onBeforeMount(async () => {
 
 <template>
   <div class="centered full">
-    <ClothingImageComponent v-if="props.noclick" :imgUrl="clothing.imgUrl" />
-    <ClothingImageComponent v-else :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
+    <ClothingImageComponent :imgUrl="clothing.imgUrl" />
     <div class="checkImage">
       <img v-if="inCloset && loaded" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
       <img v-if="!inCloset && loaded" src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
