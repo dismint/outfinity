@@ -38,25 +38,64 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main>
-    <img v-if="inCloset && loaded" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
-    <img v-if="!inCloset && loaded" src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
-    <ClothingImageComponent :imgUrl="clothing.imgUrl" />
-    <h1 v-if="loaded">{{ clothing.name }}</h1>
-  </main>
+  <div class="centered full">
+    <ClothingImageComponent v-if="props.noclick" :imgUrl="clothing.imgUrl" />
+    <ClothingImageComponent v-else :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
+    <div class="checkImage">
+      <img v-if="inCloset && loaded" src="../../assets/images/filledcheckbox.png" alt="checkbox filled in" @click="remove" />
+      <img v-if="!inCloset && loaded" src="../../assets/images/checkbox.png" alt="checkbox not filled in" @click="add" />
+    </div>
+    <div class="textGap" v-if="props.noclick">
+      <div class="nameText" v-if="loaded">{{ clothing.name }}</div>
+    </div>
+    <div class="textGap" v-else @click="navigateToClothingItemPage">
+      <div class="nameText" v-if="loaded">{{ clothing.name }}</div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.full {
+  background-color: var(--light-green);
+  position: relative;
 }
 
 img {
-  width: 30%;
-  height: auto;
-  cursor: pointer;
+  width: 40%;
+  height: 40%;
+}
+
+.checkImage {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.nameText {
+  padding: 0.5vmin;
+  background-color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-size: 1.2vmin;
 }
 </style>
