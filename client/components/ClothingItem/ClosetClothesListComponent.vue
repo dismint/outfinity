@@ -29,67 +29,78 @@ const navigateToAddRemoveClothesPage = async () => {
 </script>
 
 <template>
-  <div>
-    <div>
-      <h1>Clothing Search and Filter</h1>
-      <SearchBarComponent @update:query="handleSearchUpdate" />
-      <DropdownFilterComponent @update:filter="handleFilterUpdate" />
-
-      <p><strong>Search Query:</strong> {{ searchQuery }}</p>
-      <p><strong>Selected Filter:</strong> {{ filterType }}</p>
+  <div class="centered outside">
+    <div class="centered inner">
+      <div class="searchAndFilterContainer">
+        <SearchBarComponent @update:query="handleSearchUpdate" />
+        <DropdownFilterComponent @update:filter="handleFilterUpdate" />
+        <!-- <p><strong>Search Query:</strong> {{ searchQuery }}</p> -->
+        <!-- <p><strong>Selected Filter:</strong> {{ filterType }}</p> -->
+      </div>
+      <button v-if="props.closet.name !== 'main'" @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
+      <div class="resultText">
+        <h2>Results</h2>
+      </div>
+      <div class="centered clothesContainer" v-if="clothes.length !== 0">
+        <div v-for="clothing in clothes" :key="clothing._id" class="centered" style="aspect-ratio: 1">
+          <div class="elementBox">
+            <ClosetClothingItemComponent :id="clothing" />
+          </div>
+        </div>
+      </div>
+      <p v-else>No clothes yet!</p>
     </div>
-    <button v-if="props.closet.name !== 'main'" @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
-    <h3>Results</h3>
-    <section class="posts" v-if="clothes.length !== 0">
-      <article v-for="clothing in clothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing" />
-      </article>
-    </section>
-    <p v-else>No clothes yet!</p>
   </div>
 </template>
 
 <style scoped>
-div {
-  max-width: 400px;
-  margin: 0 auto;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 1em;
+.resultText {
+  width: 100%;
 }
 
-section {
-  display: flex;
-  /* flex-direction: column; */
-  gap: 1em;
+.elementBox {
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: pointer;
 }
 
-section,
-p,
-.row {
-  margin: 0 auto;
-  max-width: 60em;
+.clothesContainer {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  width: 100%;
+  height: 100%;
+  place-items: center;
 }
 
-article {
-  /* background-color: var(--base-bg); */
-  border-radius: 1em;
+h2 {
+  margin-top: 1em;
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
+}
+
+.searchAndFilterContainer {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+  align-items: center;
+  width: 100%;
 }
 
-.posts {
-  padding: 1em;
+.inner {
+  width: 95%;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 60em;
+.outside {
+  width: 100%;
+  border-radius: 3vmin;
+  background-color: var(--light);
 }
 </style>
