@@ -51,13 +51,13 @@ async function getMainCloset() {
 
 const submitClosetClothesChanges = async () => {
   try {
-    await fetchy(`/api/closets/${props.closet._id}/bulkAddClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
+    await fetchy(`/api/closets/${props.closet._id}/add`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
   } catch (e) {
     return;
   }
 
   try {
-    await fetchy(`/api/closets/${props.closet._id}/bulkRemoveClothing`, "PATCH", { body: { clothes: toRemoveClothes.value }, alert: false });
+    await fetchy(`/api/closets/${props.closet._id}/remove`, "PATCH", { body: { clothes: toRemoveClothes.value }, alert: false });
   } catch (e) {
     return;
   }

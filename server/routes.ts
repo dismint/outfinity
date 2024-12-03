@@ -273,15 +273,15 @@ class Routes {
     return await Closeting.getClothesInCollection(new ObjectId(id));
   }
 
-  @Router.patch("/closets/:id/addClothing/:clothingId")
-  async addClothingToCloset(session: SessionDoc, id: string, clothingId: string) {
-    const user = Sessioning.getUser(session);
-    await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Closeting.addClothing(new ObjectId(id), new ObjectId(clothingId));
-  }
+  // @Router.patch("/closets/:id/addClothing/:clothingId")
+  // async addClothingToCloset(session: SessionDoc, id: string, clothingId: string) {
+  //   const user = Sessioning.getUser(session);
+  //   await Clothing.assertClothingExists(new ObjectId(clothingId));
+  //   await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+  //   return await Closeting.addClothing(new ObjectId(id), new ObjectId(clothingId));
+  // }
 
-  @Router.patch("/closets/:id/bulkAddClothing")
+  @Router.patch("/closets/:id/add")
   async bulkAddClothingToCloset(session: SessionDoc, id: string, clothes: string[]) {
     const user = Sessioning.getUser(session);
     await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
@@ -294,7 +294,7 @@ class Routes {
     );
   }
 
-  @Router.patch("/closets/:id/bulkRemoveClothing")
+  @Router.patch("/closets/:id/remove")
   async bulkRemoveClothingFromCloset(session: SessionDoc, id: string, clothes: string[]) {
     const user = Sessioning.getUser(session);
     await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
@@ -307,13 +307,13 @@ class Routes {
     );
   }
 
-  @Router.patch("/closets/:id/removeClothing/:clothingId")
-  async removeClothingFromCloset(session: SessionDoc, id: string, clothingId: string) {
-    const user = Sessioning.getUser(session);
-    await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Closeting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
-  }
+  // @Router.patch("/closets/:id/removeClothing/:clothingId")
+  // async removeClothingFromCloset(session: SessionDoc, id: string, clothingId: string) {
+  //   const user = Sessioning.getUser(session);
+  //   await Clothing.assertClothingExists(new ObjectId(clothingId));
+  //   await Closeting.assertUserCanEditCollection(new ObjectId(id), user);
+  //   return await Closeting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
+  // }
 
   @Router.delete("/closets/:id")
   async deleteCloset(session: SessionDoc, id: string) {
@@ -322,11 +322,11 @@ class Routes {
     return await Closeting.deleteCollection(new ObjectId(id));
   }
 
-  @Router.post("/outfits")
-  async createOutfit(session: SessionDoc, name: string, description: string) {
-    const user = Sessioning.getUser(session);
-    return await Outfiting.create(name, description, user);
-  }
+  // @Router.post("/outfits")
+  // async createOutfit(session: SessionDoc, name: string, description: string) {
+  //   const user = Sessioning.getUser(session);
+  //   return await Outfiting.create(name, description, user);
+  // }
 
   @Router.get("/outfits/search/:keyword")
   @Router.validate(z.object({ keyword: z.string() }))
@@ -362,7 +362,7 @@ class Routes {
     return await Outfiting.getCollectionsItemIn(new ObjectId(id));
   }
 
-  @Router.post("/outfits/createOutfit")
+  @Router.post("/outfits")
   async createOutfitWithClothes(session: SessionDoc, name: string, description: string, clothes: string[]) {
     const user = Sessioning.getUser(session);
     const clothingTypes: string[] = [];
@@ -385,21 +385,21 @@ class Routes {
     }
   }
 
-  @Router.patch("/outfits/:id/addClothing/:clothingId")
-  async addClothingToOutfit(session: SessionDoc, id: string, clothingId: string) {
-    const user = Sessioning.getUser(session);
-    await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Outfiting.addClothing(new ObjectId(id), new ObjectId(clothingId));
-  }
+  // @Router.patch("/outfits/:id/addClothing/:clothingId")
+  // async addClothingToOutfit(session: SessionDoc, id: string, clothingId: string) {
+  //   const user = Sessioning.getUser(session);
+  //   await Clothing.assertClothingExists(new ObjectId(clothingId));
+  //   await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
+  //   return await Outfiting.addClothing(new ObjectId(id), new ObjectId(clothingId));
+  // }
 
-  @Router.patch("/outfits/:id/removeClothing/:clothingId")
-  async removeClothingFromOutfit(session: SessionDoc, id: string, clothingId: string) {
-    const user = Sessioning.getUser(session);
-    await Clothing.assertClothingExists(new ObjectId(clothingId));
-    await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
-    return await Outfiting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
-  }
+  // @Router.patch("/outfits/:id/removeClothing/:clothingId")
+  // async removeClothingFromOutfit(session: SessionDoc, id: string, clothingId: string) {
+  //   const user = Sessioning.getUser(session);
+  //   await Clothing.assertClothingExists(new ObjectId(clothingId));
+  //   await Outfiting.assertUserCanEditCollection(new ObjectId(id), user);
+  //   return await Outfiting.removeClothing(new ObjectId(id), new ObjectId(clothingId));
+  // }
 
   @Router.delete("/outfits/:id")
   async deleteOutfit(session: SessionDoc, id: string) {
