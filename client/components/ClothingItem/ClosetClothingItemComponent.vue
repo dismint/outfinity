@@ -32,19 +32,14 @@ onBeforeMount(async () => {
   }
   loaded.value = true;
 });
-
-//<main>
-//  <ClothingImageComponent :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
-//  <h1 v-if="loaded">{{ clothing.name }}</h1>
-//  <!-- <DisplayLabels :item="{ title: props.id, _id: props.id }" /> -->
-//</main>
 </script>
 
 <template>
   <div class="centered full">
-    <ClothingImageComponent :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
+    <ClothingImageComponent v-if="props.noclick" :imgUrl="clothing.imgUrl" />
+    <ClothingImageComponent v-else :imgUrl="clothing.imgUrl" @click="navigateToClothingItemPage" />
     <div class="textGap">
-      <div class="nameText">{{ clothing.name }}</div>
+      <div class="nameText" v-if="loaded">{{ clothing.name }}</div>
     </div>
   </div>
 </template>
