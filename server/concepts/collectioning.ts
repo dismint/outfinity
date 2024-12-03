@@ -187,6 +187,19 @@ export default class CollectioningConcept {
     return allMatches.filter((collection, index, self) => self.findIndex((c) => c._id.toString() === collection._id.toString()) === index);
   }
 
+  async assertItemInCollection(_id: ObjectId, item: ObjectId) {
+    const collection = await this.collections.readOne({ _id });
+    if (!collection) {
+      throw new NotFoundError(`Collection ${_id} does not exist!`);
+    }
+    for (const p of collection.clothes) {
+      if (p.toString() === item.toString()) {
+        return;
+      }
+    }
+    throw new NotAllowedError("Clothing not in collection!");
+  }
+
   async assertValidClosetName(owner: ObjectId, name: string) {
     if (!name) {
       throw new NotAllowedError("Closet name cannot be empty!");

@@ -448,6 +448,18 @@ class Routes {
   @Router.post("/challenges")
   async createChallenge(session: SessionDoc, name: string, description: string, closetId: string, requiredItemId: string | null) {
     const user = Sessioning.getUser(session);
+    if (requiredItemId) {
+      await Closeting.assertItemInCollection(new ObjectId(closetId), new ObjectId(requiredItemId));
+    }
+    const clothingTypes = [];
+    const clothes = await Closeting.getClothesInCollection(new ObjectId(closetId));
+    for (const p of clothes) {
+      const item = await Clothing.getClothingInformation(p);
+      if (item) {
+        clothingTypes.push(item.type);
+      }
+    }
+    await Closeting.assertClosetIsValid(clothingTypes);
     return await Challenging.create(name, description, user, new ObjectId(closetId), requiredItemId ? new ObjectId(requiredItemId) : null);
   }
 
