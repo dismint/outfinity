@@ -29,37 +29,61 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="centered">
-    <section class="posts centered" v-if="loaded && miniclosets.length !== 0">
-      <article v-for="minicloset in miniclosets" :key="minicloset._id" :style="{ width: 100 + '%', height: 100 / miniclosets.length + '%', maxHeight: 100 / miniclosets.length + '%' }">
-        <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.description" :name="minicloset.name" />
-      </article>
-    </section>
-    <p v-else-if="loaded">Add a Minicloset!</p>
-    <p v-else>Loading...</p>
+  <div class="centered outerContainer">
+    <div class="innerBox">
+      <div v-if="loaded && miniclosets.length !== 0" class="centered" style="width: 100%; height: 100%">
+        <div class="centered miniClosetsContainer">
+          <div v-for="minicloset in miniclosets" :key="minicloset._id" class="centered" style="aspect-ratio: 1">
+            <div class="elementBox">
+              <MiniClosetComponent :id="minicloset._id" :emoji="minicloset.description" :name="minicloset.name" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-else-if="loaded">Add a Minicloset!</p>
+      <p v-else>Loading...</p>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.centered {
-  width: 50%;
+.elementBox {
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.miniClosetsContainer {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+
+.innerBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 98%;
+  height: 100%;
+  margin: 1%;
+}
+
+.outerContainer {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--light);
+  border-radius: 0 0 3vh 3vh;
 }
 
 p {
   font-family: "Eczar";
-  font-size: 2em;
+  font-size: min(2em, 4vw);
   text-align: center;
   font-weight: 500;
-}
-
-.posts {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  max-width: 100%;
-  max-height: 100%;
-  height: 100%;
-  width: 100%;
-  margin: auto;
 }
 </style>

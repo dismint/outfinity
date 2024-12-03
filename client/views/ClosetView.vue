@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ClosetClothesListComponent from "@/components/ClothingItem/ClosetClothesListComponent.vue";
-// const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 
@@ -26,21 +25,23 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main>
-    <h1>{{ closet.name }}</h1>
-    <ClosetClothesListComponent v-if="loaded" :closet="closet" />
-  </main>
+  <div class="centered">
+    <div class="compressWidth">
+      <h1>{{ closet.name }}</h1>
+      <ClosetClothesListComponent v-if="loaded" :closet="closet" />
+    </div>
+  </div>
 </template>
 
 <style scoped>
 h1 {
-  text-align: center;
-}
-
-.closets {
-  display: flex;
-  flex-direction: row;
-  gap: 1em;
-  justify-content: space-around;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  font-family: "Eczar";
+  color: var(--dark-green);
+  text-align: left;
+  font-size: 4em;
+  margin-top: 1em;
 }
 </style>
