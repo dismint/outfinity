@@ -8,7 +8,7 @@ const userStore = useUserStore();
 const { isLoggedIn } = storeToRefs(userStore);
 
 const scrollY = ref(0);
-const maxScroll = ref(window.innerHeight * 1.0);
+const maxScroll = ref(window.innerHeight * 0.5);
 
 // Update scroll position on scroll event
 const updateScroll = () => {
