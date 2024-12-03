@@ -22,11 +22,4 @@ h1 {
   font-size: 4em;
   margin-top: 1em;
 }
-
-.closets {
-  display: flex;
-  flex-direction: row;
-  gap: 1em;
-  justify-content: space-around;
-}
 </style>

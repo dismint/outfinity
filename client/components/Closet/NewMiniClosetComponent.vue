@@ -85,18 +85,24 @@ function onSelectEmoji(emoji: Emoji) {
   content: "";
   position: absolute;
   left: 0;
-  right: 100%;
+  right: 0;
   top: 0;
   bottom: 0;
-  background-color: var(--medium-green);
+  background-color: var(--dark-green);
   border-radius: 2vmin;
   z-index: 10;
   border: none;
-  transition: right 0.3s ease;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .valid:hover::before {
-  right: 0;
+  opacity: 1;
+}
+
+.valid:hover * {
+  color: var(--primary-background);
 }
 
 .focusWidth {
