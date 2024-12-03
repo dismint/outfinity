@@ -17,6 +17,7 @@ const props = defineProps(["imgUrl"]);
 img {
   width: 100%;
   height: 100%;
+  border: 0.2vmin solid var(--dark-green);
   object-fit: contain;
 }
 </style>

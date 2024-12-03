@@ -36,7 +36,11 @@ const navigateToAddRemoveClothesPage = async () => {
         <!-- <p><strong>Search Query:</strong> {{ searchQuery }}</p> -->
         <!-- <p><strong>Selected Filter:</strong> {{ filterType }}</p> -->
       </div>
-      <button v-if="props.closet.name !== 'main'" @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
+      <div v-if="props.closet.name !== 'main'" class="centered buttonContainer">
+        <div class="buttonBody" @click="navigateToAddRemoveClothesPage">
+          <div class="buttonText">Modify Minicloset</div>
+        </div>
+      </div>
       <div class="resultText">
         <h2>Results</h2>
       </div>
@@ -57,6 +61,60 @@ const navigateToAddRemoveClothesPage = async () => {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.buttonContainer * {
+  cursor: pointer;
+}
+
+.buttonContainer {
+  margin-top: 0.5em;
+  width: 100%;
+  height: 6vmin;
+  position: relative;
+}
+
+.buttonText {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Inter";
+  font-weight: 700;
+  z-index: 20;
+  color: var(--text-color);
+  transition: color 0.2s ease;
+  z-index: 20;
+}
+
+.buttonBody::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  buttom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  background-color: var(--dark-green);
+  transition: opacity 0.2s ease;
+}
+
+.buttonBody:hover::after {
+  opacity: 1;
+}
+
+.buttonContainer:hover .buttonText {
+  color: var(--primary-background);
+}
+
+.buttonBody {
+  position: relative;
+  width: 50%;
+  height: 80%;
+  background-color: var(--light-green);
 }
 
 .resultText {
@@ -81,7 +139,7 @@ const navigateToAddRemoveClothesPage = async () => {
 }
 
 h2 {
-  margin-top: 1em;
+  margin-top: 0.5em;
   font-family: "Eczar";
   font-weight: 600;
   font-size: 2.5em;

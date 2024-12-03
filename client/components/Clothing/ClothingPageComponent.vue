@@ -82,6 +82,7 @@ h2 {
 }
 
 .infoContainer {
+  padding: 2vmin;
   height: 100%;
   width: 50%;
 }
