@@ -82,7 +82,7 @@ onBeforeMount(async () => {
 
 p {
   font-family: "Eczar";
-  font-size: 2em;
+  font-size: min(2em, 4vw);
   text-align: center;
   font-weight: 500;
 }

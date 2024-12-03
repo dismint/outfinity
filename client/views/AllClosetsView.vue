@@ -96,7 +96,7 @@ h3 {
   right: 0;
   bottom: 0;
   left: 100%;
-  background-color: var(--medium-green);
+  background-color: var(--dark-green);
   z-index: 10;
   transition: left 0.3s ease;
   border-radius: 3vh 0 0 3vh;
@@ -127,7 +127,7 @@ h3 {
   right: 100%;
   bottom: 0;
   left: 0;
-  background-color: var(--medium-green);
+  background-color: var(--dark-green);
   z-index: 10;
   transition: right 0.3s ease;
   border-radius: 0 3vh 3vh 0;

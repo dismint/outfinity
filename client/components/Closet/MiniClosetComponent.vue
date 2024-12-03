@@ -29,6 +29,24 @@ const navigateToClosetPage = async () => {
   padding: 0;
 }
 
+.miniClosetOutsideBox::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+  background-color: var(--medium-green);
+  border-radius: 2vmin;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+}
+
+.miniClosetOutsideBox:hover::before {
+  opacity: 1;
+}
+
 .emojiContainer {
   display: flex;
   justify-content: center;
@@ -37,6 +55,7 @@ const navigateToClosetPage = async () => {
 }
 
 .miniClosetOutsideBox {
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: var(--light-green);
@@ -47,11 +66,12 @@ const navigateToClosetPage = async () => {
 .emoji {
   box-sizing: border-box;
   font-size: clamp(1em, 5vw, 3.5em);
+  z-index: 11;
 }
 
 .name {
   box-sizing: border-box;
-  font-size: 1vw;
+  font-size: 0.7vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -67,7 +87,7 @@ const navigateToClosetPage = async () => {
   width: 90%;
   max-width: 90%;
   padding: 2%;
-  border: 3px solid var(--light-green);
+  border: 3px solid rgba(0, 0, 0, 0);
   z-index: 10;
 }
 
@@ -82,7 +102,7 @@ h2 {
 .nameContainer:hover {
   transition:
     border 0.5s,
-    max-width 1s ease-in-out;
+    max-width 0.5s ease-in-out;
   max-width: 530%;
   white-space: nowrap;
   width: auto;

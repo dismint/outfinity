@@ -70,23 +70,19 @@ function onSelectEmoji(emoji: Emoji) {
 </script>
 
 <template>
-  <div class="centered">
-    <div class="compressWidth">
-      <form @submit.prevent="newMiniCloset(name, selectedEmoji)">
-        <h2>Name:</h2>
-        <textarea id="name" v-model="name" required> </textarea>
-        <h2 class="author">Select an emoji to represent this minicloset!</h2>
-        <div>
-          <EmojiPicker :native="true" @select="onSelectEmoji" />
-          <h3 v-if="selectedEmoji != ''">
-            Emoji selected:
-            <span class="emoji">{{ selectedEmoji }}</span>
-          </h3>
-        </div>
-        <button class="centered" type="submit">create minicloset</button>
-      </form>
+  <form @submit.prevent="newMiniCloset(name, selectedEmoji)">
+    <h2>Name:</h2>
+    <textarea id="name" v-model="name" required> </textarea>
+    <h2 class="author">Select an emoji to represent this minicloset!</h2>
+    <div>
+      <EmojiPicker :native="true" @select="onSelectEmoji" />
+      <h3 v-if="selectedEmoji != ''">
+        Emoji selected:
+        <span class="emoji">{{ selectedEmoji }}</span>
+      </h3>
     </div>
-  </div>
+    <button class="centered" type="submit">create minicloset</button>
+  </form>
 </template>
 
 <style scoped>
