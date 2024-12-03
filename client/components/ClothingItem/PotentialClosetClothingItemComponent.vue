@@ -65,6 +65,7 @@ onBeforeMount(async () => {
 img {
   width: 40%;
   height: 40%;
+  cursor: pointer;
 }
 
 .checkImage {
