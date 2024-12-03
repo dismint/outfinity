@@ -224,7 +224,7 @@ export default class CollectioningConcept {
       }
     }
     if (!top || !bottom || !shoe) {
-      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe!");
+      throw new NotAllowedError("Closet must contain at least one top, one bottom, and one shoe in order to create a challenge!");
     }
   }
 
