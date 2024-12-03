@@ -5,7 +5,7 @@ import NewMiniClosetComponent from "@/components/Closet/NewMiniClosetComponent.v
 <template>
   <div class="centered">
     <div class="compressWidth">
-      <h1>Create New Minicloset</h1>
+      <h1>New Minicloset</h1>
       <NewMiniClosetComponent />
     </div>
   </div>

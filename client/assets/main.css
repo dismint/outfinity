@@ -79,9 +79,18 @@ a.button {
   align-items: center;
 }
 
-focusWidth {
-  max-width: max(50%, min(65%, 750px));
-  width: max(50%, min(95%, 1200px));
+.focusWidth {
+  max-width: max(30%, min(65%, 750px));
+  width: max(30%, min(65%, 750px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.focusInCompressWidth {
+  max-width: max(60%, min(80%, 800px));
+  width: max(60%, min(80%, 800px));
   display: flex;
   flex-direction: column;
   justify-content: center;
