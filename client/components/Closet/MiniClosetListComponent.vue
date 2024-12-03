@@ -48,8 +48,8 @@ onBeforeMount(async () => {
 
 <style scoped>
 .elementBox {
-  width: 95%;
-  height: 95%;
+  width: 80%;
+  height: 80%;
   max-width: 100%;
   max-height: 100%;
 }
