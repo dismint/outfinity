@@ -40,7 +40,7 @@ const emptyForm = () => {
         </div>
         <div class="pure-control-group">
           <h2 for="aligned-tags">Clothing Description</h2>
-          <input v-model.trim="description" id="aligned-tags" placeholder="Description" required />
+          <input v-model.trim="description" id="aligned-tags" placeholder="Description" />
         </div>
         <div class="pure-control-group">
           <h2 for="aligned-type">Clothing Type</h2>

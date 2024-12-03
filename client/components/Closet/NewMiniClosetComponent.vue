@@ -46,7 +46,9 @@ function onSelectEmoji(emoji: Emoji) {
       <h2>Name</h2>
       <input id="name" v-model="name" required />
       <h2 class="author">Emoji</h2>
-      <EmojiPicker :native="true" @select="onSelectEmoji" />
+      <div class="centered">
+        <EmojiPicker :native="true" @select="onSelectEmoji" />
+      </div>
       <button v-if="selectedEmoji != '' && name == ''" class="centered gray" type="submit">
         <div class="bold">Create Minicloset</div>
         {{ selectedEmoji }}
@@ -123,7 +125,7 @@ input {
 }
 
 .v3-emoji-picker {
-  width: 100%;
+  width: 60%;
 }
 
 h2 {
