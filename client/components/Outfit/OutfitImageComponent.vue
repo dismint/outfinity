@@ -6,26 +6,17 @@ const props = defineProps(["imageLoaded", "headImage", "topImages", "bottomImage
 </script>
 
 <template>
-  <main>
-    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.headImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.topImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.bottomImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.onepieceImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.shoeImage" :oneimage="true" />
-  </main>
+  <div class="column oimageContainer">
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.headImage" :oneimage="true" :type="'hat'" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.topImages" :oneimage="false" :type="'top'" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.bottomImages" :oneimage="false" :type="'bottom'" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.onepieceImage" :oneimage="true" :type="'onepiece'" />
+    <ImageRevolverComponent v-if="props.imageLoaded" :imageLoaded="props.imageLoaded" :images="props.shoeImage" :oneimage="true" :type="'shoe'" />
+  </div>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
-}
-
-img {
-  width: 30%;
-  height: auto;
-  cursor: pointer;
+.oimageContainer {
+  width: 100%;
 }
 </style>

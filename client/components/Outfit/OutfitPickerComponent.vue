@@ -40,32 +40,39 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Pick Your Outfit</h1>
-    <nav class="categories">
-      <button v-for="category in categories" :key="category" :class="{ active: category === selectedCategory }" @click="switchCategory(category)">
-        {{ category }}
-      </button>
-    </nav>
-    <section class="clothes" v-if="filteredClothes.length !== 0">
-      <article v-for="clothing in filteredClothes" :key="clothing._id">
-        <ClosetClothingItemComponent :id="clothing._id" :noclick="true" :clothingobject="clothing" @click="emit('clickClothing', clothing._id)" />
-      </article>
-    </section>
-    <p v-else>No clothes found in this category!</p>
-  </div>
+  <nav class="row">
+    <button v-for="category in categories" :key="category" :class="{ active: category === selectedCategory }" @click="switchCategory(category)">
+      {{ category }}
+    </button>
+  </nav>
+  <section class="clothes" v-if="filteredClothes.length !== 0">
+    <article v-for="clothing in filteredClothes" :key="clothing._id">
+      <ClosetClothingItemComponent :id="clothing._id" :noclick="true" :clothingobject="clothing" @click="emit('clickClothing', clothing._id)" />
+    </article>
+  </section>
+  <p v-else>No clothes found in this category!</p>
 </template>
 
 <style scoped>
-.categories {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1em;
-  justify-content: center;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+h2 {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
+}
+
+nav {
+  margin: 1vmin;
+  gap: 1vmin;
 }
 
 button {
-  background-color: #ddd;
+  background-color: var(--light-grey);
   border: none;
   padding: 0.5em 1em;
   border-radius: 5px;
@@ -74,22 +81,20 @@ button {
 }
 
 button.active {
-  background-color: #aaa;
+  background-color: var(--light-green);
   font-weight: bold;
 }
 
 .clothes {
   display: flex;
   flex-wrap: wrap;
-  gap: 1em;
-  justify-content: center;
+  gap: 1vmin;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 article {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 1em;
-  width: 150px;
-  text-align: center;
+  width: 10%;
+  aspect-ratio: 1;
 }
 </style>

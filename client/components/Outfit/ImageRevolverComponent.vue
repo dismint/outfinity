@@ -2,45 +2,50 @@
 import { defineProps, ref } from "vue";
 import ClothingImageComponent from "../Clothing/ClothingImageComponent.vue";
 
-const props = defineProps(["images", "oneimage"]);
+const props = defineProps(["images", "oneimage", "type"]);
 const imageOrder = ref(props.images.slice());
-
-// const bringToFront = (index: number) => {
-//   const image = imageOrder.value.splice(index, 1)[0];
-//   imageOrder.value.push(image);
-// };
-//@click="bringToFront(index)"
 </script>
 
 <template>
-  <div class="image-revolver" v-if="props.images.length !== 0">
-    <div v-if="props.oneimage">
-      <ClothingImageComponent :imgUrl="props.images" />
+  <div class="outerRevolver">
+    <div v-if="props.images.length !== 0">
+      <div class="centered" v-if="props.oneimage">
+        <ClothingImageComponent :imgUrl="props.images" />
+      </div>
+      <div class="" v-else>
+        <ClothingImageComponent v-for="(image, index) in imageOrder" :key="index" :imgUrl="image" :style="{ zIndex: index, position: 'absolute', scale: 1 - index * 0.2 }" />
+      </div>
     </div>
-    <div v-else v-for="(image, index) in imageOrder" :key="index" :style="{ zIndex: images.length - index, transform: `translateX(${index * 20}px)` }" class="image-container">
-      <!-- <img :src="image" alt="Image" /> -->
-      <ClothingImageComponent :imgUrl="image" />
-      <!-- <p>{{ image }}</p> -->
-    </div>
+    <p v-else class="noClothes">No {{ props.type }}</p>
   </div>
-  <p v-else>No clothes added to this type!</p>
 </template>
 
 <style scoped>
-.image-revolver {
-  /* position: relative; */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.outerRevolver {
+  box-sizing: content-box;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 0.4vmin solid var(--dark-green);
+  margin: 1%;
+  position: relative;
+}
+
+.noClothes {
+  width: 100%;
+  aspect-ratio: 1;
   display: flex;
-}
-
-.image-container {
-  /* position: absolute; */
-  /* cursor: pointer; */
-  transition: transform 0.3s;
-}
-
-.image-container img {
-  /* width: 100%; */
-  height: auto;
-  display: block;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: 1vmin;
+  color: var(--dark-green);
 }
 </style>

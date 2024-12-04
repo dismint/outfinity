@@ -27,20 +27,25 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="outfitpage">
-    <CreateOutfitComponent v-if="loaded" :title="'New Outfit'" :outfit-or-challenge="'outfit'" :closet="main" />
+  <main>
+    <div class="centered">
+      <div class="compressWidth">
+        <h1>Create Outfit</h1>
+        <CreateOutfitComponent v-if="loaded" :outfit-or-challenge="'outfit'" :closet="main" />
+      </div>
+    </div>
   </main>
 </template>
 
 <style scoped>
 h1 {
-  text-align: center;
-}
-
-.closets {
-  display: flex;
-  flex-direction: row;
-  gap: 1em;
-  justify-content: space-around;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  font-family: "Eczar";
+  color: var(--dark-green);
+  text-align: left;
+  font-size: 4em;
+  margin-top: 1em;
 }
 </style>

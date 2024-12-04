@@ -5,7 +5,7 @@ import { computed, defineProps, ref } from "vue";
 import OutfitImageComponent from "./OutfitImageComponent.vue";
 import OutfitPickerComponent from "./OutfitPickerComponent.vue";
 
-const props = defineProps(["title", "outfitOrChallenge", "closet", "challengeId"]);
+const props = defineProps(["outfitOrChallenge", "closet", "challengeId"]);
 
 const head = ref("");
 const tops = ref<Array<string>>([]);
@@ -141,65 +141,116 @@ const emptyForm = () => {
 </script>
 
 <template>
-  <div v-if="!outfitComplete" class="centered">
-    <div class="compressWidth sideBySide">
+  <div v-if="!outfitComplete" class="outerContainer row">
+    <div class="centered displayContainer">
+      <OutfitImageComponent :imageLoaded="imageLoaded" :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
+      <button class="clearButton" @click="emptyForm">Clear</button>
+    </div>
+    <div class="pickerContainer">
+      <h2>Pick Your Outfit</h2>
       <div>
-        <!-- <OutfitImageComponent :imageLoaded="imageLoaded" :head="head" :tops="tops" :bottoms="bottoms" :onepiece="onepiece" :shoe="shoe" /> -->
-        <OutfitImageComponent :imageLoaded="imageLoaded" :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
-        <!-- <OutfitImageComponent
-          :imageLoaded="imageLoaded"
-          :head-image="headImage"
-          :top-images="topImages"
-          :bottom-images="bottomImages"
-          :onepiece-image="onepieceImage"
-          :shoe-image="shoeImage"
-          :incomplete-categories="!isOutfitComplete ? getIncompleteCategories() : []"
-        /> -->
-        <button @click="emptyForm">Clear</button>
+        <button v-if="!isOutfitComplete" :disabled="true" class="finishButton notDone">Incomplete - add more clothes</button>
+        <button v-if="isOutfitComplete" @click="finishOutfit" class="finishButton done">Finish Outfit</button>
       </div>
-      <div>
-        <h1>{{ props.title }}</h1>
-        <OutfitPickerComponent :closet="props.closet" @clickClothing="handleClothingClick" />
-        <div>
-          <button :disabled="!isOutfitComplete" @click="finishOutfit">Save Outfit</button>
-          <p v-if="!isOutfitComplete" class="warning">Your outfit is incomplete. Please add all required items!</p>
-        </div>
-      </div>
+      <OutfitPickerComponent :closet="props.closet" @clickClothing="handleClothingClick" />
     </div>
   </div>
-  <div v-else>
+  <div v-else class="focusWidth finalContainer">
     <form @submit.prevent="submit">
-      <h1>Outfit Name</h1>
+      <h2>Outfit Name</h2>
       <input v-model="outfitTitle" title="Outfit Name" required minlength="1" maxlength="70" />
-      <h1>Description</h1>
-      <textarea v-model="description" placeholder="ex. layering order, tucking in a shirt, etc." maxlength="1000"> </textarea>
-      <button type="submit">Submit</button>
+      <h2 style="margin-top: 2vmin">Description</h2>
+      <input v-model="description" placeholder="ex. layering order, tucking in a shirt, etc." maxlength="1000"> </input>
+      <div class="centered">
+      <button class="submitClass" type="submit">Submit</button>
+      </div>
     </form>
   </div>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.sideBySide {
-  display: flex;
-  flex-direction: row;
+.finalContainer {
+  padding: 2vmin;
+  width: 100%;
+  background-color: var(--light);
+  border-radius: 3vmin;
 }
 
-img {
-  width: 30%;
-  height: auto;
+.submitClass {
+  margin: 1vmin;
+  padding: 1vmin;
+  border: none;
+  background-color: var(--light-grey);
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.warning {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5em;
+.submitClass:hover {
+  background-color: var(--light-green);
+}
+
+form {
+  width: 100%;
+}
+
+input {
+  width: 100%;
+}
+
+h2 {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
+}
+
+button.finishButton {
+  border: none;
+  padding: 1vmin;
+  margin-top: 1vmin;
+}
+
+button.finishButton.notDone {
+  color: var(--red);
+}
+
+button.finishButton.done {
+  background-color: var(--light-green);
+}
+
+.clearButton {
+  margin: 1vmin;
+  border: none;
+  padding: 1vmin;
+  font-weight: 600;
+  background-color: var(--light-grey);
+  transition: background-color 0.2s ease;
+}
+
+.clearButton:hover {
+  background-color: var(--light-green);
+}
+
+.displayContainer {
+  padding: 1vmin;
+  width: 10%;
+}
+
+.pickerContainer {
+  padding: 2vmin;
+  width: 90%;
+  align-self: flex-start;
+}
+
+.outerContainer {
+  padding: 2vmin;
+  width: 100%;
+  background-color: var(--light);
+  border-radius: 3vmin;
 }
 </style>
