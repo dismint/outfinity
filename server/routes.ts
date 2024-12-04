@@ -243,7 +243,8 @@ class Routes {
     for (const p of clothes) {
       clothingIds.push(p._id);
     }
-    return await Closeting.filterInCollection(new ObjectId(id), clothingIds);
+    const result = await Closeting.filterInCollection(new ObjectId(id), clothingIds);
+    return result;
   }
 
   @Router.get("/clothing/:id/closets")

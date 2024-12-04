@@ -73,7 +73,7 @@ export default class ClothingConcept {
     await this.assertTypeValid(type);
     const typeMatches = await this.searchClothingByType(type, owner);
     const keywordMatches = await this.searchClothingByKeyword(keyword, owner);
-    const allMatches = typeMatches.filter((value) => keywordMatches.includes(value));
+    const allMatches = typeMatches.filter((value) => keywordMatches.some((item) => item._id.toString() === value._id.toString()));
     return allMatches.filter((clothes, index, self) => self.findIndex((c) => c._id.toString() === clothes._id.toString()) === index);
   }
 

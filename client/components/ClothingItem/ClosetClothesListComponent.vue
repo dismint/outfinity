@@ -1,28 +1,63 @@
 <script setup lang="ts">
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { defineProps, ref } from "vue";
 import ClosetClothingItemComponent from "./ClosetClothingItemComponent.vue";
 import DropdownFilterComponent from "./DropdownFilterComponent.vue";
 import SearchBarComponent from "./SearchBarComponent.vue";
 
-const { isLoggedIn, currentUsername } = storeToRefs(useUserStore());
+const { userId } = storeToRefs(useUserStore());
 
 const props = defineProps(["closet"]);
 const clothes = ref<Array<Record<string, string>>>(props.closet.clothes);
 const searchQuery = ref("");
 const filterType = ref("");
+const loaded = ref(true);
 
-function handleSearchUpdate(query: string) {
+const getClothing = async () => {
+  const typeNotInQuery = filterType.value === "all" || filterType.value === "";
+  let query;
+  if (typeNotInQuery && searchQuery.value === "") {
+    query = {};
+  } else if (!typeNotInQuery && searchQuery.value !== "") {
+    query = { keyword: searchQuery.value, type: filterType.value };
+  } else if (typeNotInQuery) {
+    query = { keyword: searchQuery.value };
+  } else {
+    query = { type: filterType.value };
+  }
+  let allClothesResults;
+  try {
+    allClothesResults = await fetchy(`/api/users/${userId.value}/closets/${props.closet._id}/searchandfilter`, "GET", { query, alert: false });
+  } catch (_) {
+    return;
+  }
+  clothes.value = allClothesResults;
+};
+
+async function handleSearchUpdate(query: string) {
   searchQuery.value = query;
+  loaded.value = false;
+  await getClothing();
+  loaded.value = true;
 }
 
-function handleFilterUpdate(filter: string) {
+async function handleFilterUpdate(filter: string) {
   filterType.value = filter;
+  loaded.value = false;
+  await getClothing();
+  loaded.value = true;
+}
+
+function emptyForm() {
+  searchQuery.value = "";
+  filterType.value = "";
 }
 
 const navigateToAddRemoveClothesPage = async () => {
+  emptyForm();
   void router.push({ name: "AddRemoveClothes", params: { id: props.closet._id } });
 };
 </script>
@@ -33,14 +68,12 @@ const navigateToAddRemoveClothesPage = async () => {
       <div class="searchAndFilterContainer">
         <SearchBarComponent @update:query="handleSearchUpdate" />
         <DropdownFilterComponent @update:filter="handleFilterUpdate" />
-        <!-- <p><strong>Search Query:</strong> {{ searchQuery }}</p> -->
-        <!-- <p><strong>Selected Filter:</strong> {{ filterType }}</p> -->
       </div>
       <button v-if="props.closet.name !== 'main'" @click="navigateToAddRemoveClothesPage">add/remove items from closet</button>
       <div class="resultText">
         <h2>Results</h2>
       </div>
-      <div class="centered clothesContainer" v-if="clothes.length !== 0">
+      <div class="centered clothesContainer" v-if="clothes.length !== 0 && loaded">
         <div v-for="clothing in clothes" :key="clothing._id" class="centered" style="aspect-ratio: 1">
           <div class="elementBox">
             <ClosetClothingItemComponent :id="clothing" />

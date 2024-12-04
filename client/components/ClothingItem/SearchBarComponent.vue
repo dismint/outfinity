@@ -10,12 +10,22 @@ function emitSearchQuery() {
 </script>
 
 <template>
-  <div class="searchContainer">
+  <form @submit.prevent="emitSearchQuery" class="searchContainer">
     <h2>Search</h2>
-    <div class="centered">
-      <input v-model="searchQuery" @input="emitSearchQuery" type="text" placeholder="Search for clothes..." />
-    </div>
-  </div>
+    <fieldset>
+      <input id="text" type="text" v-model="searchQuery" placeholder="Search" />
+      <button type="submit">Search</button>
+      <button
+        type="button"
+        @click="
+          searchQuery = '';
+          emitSearchQuery();
+        "
+      >
+        Clear
+      </button>
+    </fieldset>
+  </form>
 </template>
 
 <style scoped>

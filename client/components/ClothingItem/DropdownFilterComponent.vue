@@ -2,7 +2,8 @@
 import { defineEmits, ref } from "vue";
 
 // Options for dropdown
-const options = ["Top", "Bottom", "One-piece", "Hat", "Shoe"];
+const options = ["All", "Top", "Bottom", "One-piece", "Hat", "Shoe"];
+const values = ["all", "top", "bottom", "onepiece", "hat", "shoe"];
 const selectedOption = ref("");
 const emit = defineEmits(["update:filter"]);
 
@@ -17,7 +18,7 @@ function emitSelection() {
     <label for="clothing-filter">Filter</label>
     <select v-model="selectedOption" @change="emitSelection" id="clothing-filter">
       <option value="" disabled>Select a type</option>
-      <option v-for="option in options" :key="option" :value="option.toLowerCase()">
+      <option v-for="(option, index) in options" :key="option" :value="values[index]">
         {{ option }}
       </option>
     </select>

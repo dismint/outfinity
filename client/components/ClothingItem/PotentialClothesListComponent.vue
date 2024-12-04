@@ -4,7 +4,9 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { defineProps, onBeforeMount, ref } from "vue";
+import DropdownFilterComponent from "./DropdownFilterComponent.vue";
 import PotentialClosetClothingItemComponent from "./PotentialClosetClothingItemComponent.vue";
+import SearchBarComponent from "./SearchBarComponent.vue";
 
 const { userId } = storeToRefs(useUserStore());
 
@@ -14,28 +16,36 @@ const clothesNotAdded = ref<Array<string>>([]);
 const clothesAdded = ref<Array<string>>([]);
 const toAddClothes = ref<Array<string>>([]);
 const toRemoveClothes = ref<Array<string>>([]);
-// const searchQuery = ref("");
-// const filterType = ref("");
-
-// function handleSearchUpdate(query: string) {
-//   searchQuery.value = query;
-// }
-
-// function handleFilterUpdate(filter: string) {
-//   filterType.value = filter;
-// }
+const searchQuery = ref("");
+const filterType = ref("");
 
 async function getPotentialClothes() {
   const mainId = (await getMainCloset())._id;
+  // let allClothesResults;
+  // try {
+  //   allClothesResults = await fetchy(`/api/users/${userId.value}/closets/${mainId}/searchandfilter`, "GET", { alert: false });
+  // } catch (_) {
+  //   return;
+  // }
+  const typeNotInQuery = filterType.value === "all" || filterType.value === "";
+  let query;
+  if (typeNotInQuery && searchQuery.value === "") {
+    query = {};
+  } else if (!typeNotInQuery && searchQuery.value !== "") {
+    query = { keyword: searchQuery.value, type: filterType.value };
+  } else if (typeNotInQuery) {
+    query = { keyword: searchQuery.value };
+  } else {
+    query = { type: filterType.value };
+  }
   let allClothesResults;
-  console.log("closet", props.closet.name);
   try {
-    allClothesResults = await fetchy(`/api/users/${userId.value}/closets/${mainId}/searchandfilter`, "GET", { alert: false });
+    allClothesResults = await fetchy(`/api/users/${userId.value}/closets/${mainId}/searchandfilter`, "GET", { query, alert: false });
   } catch (_) {
     return;
   }
   clothesNotAdded.value = allClothesResults.filter((clothing: Record<string, string>) => !props.closet.clothes.includes(clothing));
-  clothesAdded.value = props.closet.clothes;
+  clothesAdded.value = allClothesResults.filter((clothing: Record<string, string>) => props.closet.clothes.includes(clothing));
 }
 
 async function getMainCloset() {
@@ -62,9 +72,6 @@ const submitClosetClothesChanges = async () => {
     return;
   }
   emptyForm();
-
-  /// deug
-  // let query: Record<string, string> = { user: userId.value, name: "main" };
   let mainIdResult;
   try {
     mainIdResult = await fetchy(`/api/closets/${props.closet._id}`, "GET", { alert: false });
@@ -96,8 +103,22 @@ function remove(id: string) {
 function emptyForm() {
   toAddClothes.value = [];
   toRemoveClothes.value = [];
-  // searchQuery.value = "";
-  // filterType.value = "";
+  searchQuery.value = "";
+  filterType.value = "";
+}
+
+async function handleSearchUpdate(query: string) {
+  searchQuery.value = query;
+  loaded.value = false;
+  await getPotentialClothes();
+  loaded.value = true;
+}
+
+async function handleFilterUpdate(filter: string) {
+  filterType.value = filter;
+  loaded.value = false;
+  await getPotentialClothes();
+  loaded.value = true;
 }
 
 onBeforeMount(async () => {
@@ -107,14 +128,10 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <!-- <div>
-    <h1>Clothing Search and Filter</h1>
+  <div class="searchAndFilterContainer">
     <SearchBarComponent @update:query="handleSearchUpdate" />
     <DropdownFilterComponent @update:filter="handleFilterUpdate" />
-
-    <p><strong>Search Query:</strong> {{ searchQuery }}</p>
-    <p><strong>Selected Filter:</strong> {{ filterType }}</p>
-  </div> -->
+  </div>
   <form @submit.prevent="submitClosetClothesChanges()">
     <section class="posts" v-if="loaded && clothesNotAdded.length !== 0">
       <article v-for="clothing in clothesAdded" :key="clothing">
