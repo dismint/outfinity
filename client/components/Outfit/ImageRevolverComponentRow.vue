@@ -8,8 +8,8 @@ const imageOrder = ref(props.images.slice());
 
 <template>
   <div class="outerRevolver">
-    <div v-if="props.images.length !== 0">
-      <div class="centered" v-if="props.oneimage">
+    <div v-if="props.images.length !== 0" style="width: 100%; height: 100%">
+      <div class="centered adjust" v-if="props.oneimage">
         <ClothingImageComponent :imgUrl="props.images" />
       </div>
       <div class="" v-else>
@@ -26,6 +26,10 @@ const imageOrder = ref(props.images.slice());
   margin: 0;
   padding: 0;
   margin: 0;
+}
+
+.adjust {
+  height: 100%;
 }
 
 .outerRevolver {
