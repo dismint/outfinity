@@ -101,7 +101,7 @@ export default class ClothingConcept {
     if (!maybeClothing) {
       throw new ClothingNotFoundError(_id);
     }
-    if (maybeClothing.owner !== owner) {
+    if (maybeClothing.owner.toString() !== owner.toString()) {
       throw new NotAllowedError(`You do not own this clothing!`);
     }
   }
