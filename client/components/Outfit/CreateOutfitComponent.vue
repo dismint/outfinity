@@ -23,7 +23,6 @@ const outfitTitle = ref("");
 const description = ref("");
 
 const getClothing = async (id: string, stack: boolean) => {
-  console.log(props);
   const query = { id };
   let clothingResult;
   try {
