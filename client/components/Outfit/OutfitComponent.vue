@@ -40,12 +40,6 @@ const navigateToOutfitPage = async () => {
   margin: 0;
 }
 
-img {
-  width: 10%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .rowImage {
   width: 60%;
   aspect-ratio: 5 / 1;
