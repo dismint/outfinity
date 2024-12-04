@@ -25,8 +25,6 @@ const navigateToOutfitPage = async () => {
 
 <template>
   <main @click="navigateToOutfitPage">
-    <!-- /// TODO: call api when unsave here and then emit refresh outfits that refreshes outfits -->
-    <h3>make sure to put the bookmark save thing on the img, maybe make separate img component for this</h3>
     <img src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
     <OutfitSmallImageComponent :outfit="props.outfit" />
     <h1>{{ props.outfit.name }}</h1>
