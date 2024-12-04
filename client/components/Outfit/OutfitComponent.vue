@@ -3,8 +3,20 @@ import router from "@/router";
 import { defineProps } from "vue";
 import OutfitSmallImageComponent from "./OutfitSmallImageComponent.vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
+import { fetchy } from "@/utils/fetchy";
+import { defineEmits } from "vue";
 
 const props = defineProps(["outfit"]);
+const emit = defineEmits(["refreshOutfits"]);
+
+const unsave = async () => {
+  try {
+    await fetchy(`/api/outfits/unsave/${props.outfit._id}`, "PATCH", { alert: false });
+  } catch (_) {
+    return;
+  }
+  emit("refreshOutfits");
+};
 
 const navigateToOutfitPage = async () => {
   void router.push({ name: "Outfit", params: { id: props.outfit._id } });
@@ -15,6 +27,7 @@ const navigateToOutfitPage = async () => {
   <main @click="navigateToOutfitPage">
     <!-- /// TODO: call api when unsave here and then emit refresh outfits that refreshes outfits -->
     <h3>make sure to put the bookmark save thing on the img, maybe make separate img component for this</h3>
+    <img src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
     <OutfitSmallImageComponent :outfit="props.outfit" />
     <h1>{{ props.outfit.name }}</h1>
   </main>

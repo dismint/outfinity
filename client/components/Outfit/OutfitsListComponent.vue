@@ -10,10 +10,10 @@ let outfits = ref<Array<Record<string, string>>>([]);
 const { userId } = storeToRefs(useUserStore());
 
 async function getOutfits() {
-  let query: Record<string, string> = { id: userId.value };
+  // let query: Record<string, string> = { id: userId.value };
   let outfitResults;
   try {
-    outfitResults = await fetchy("/api/outfits/user", "GET", { query });
+    outfitResults = await fetchy(`/api/outfits`, "GET", { alert: false });
   } catch (_) {
     return;
   }
@@ -30,7 +30,7 @@ onBeforeMount(async () => {
   <div>
     <section class="posts" v-if="loaded && outfits.length !== 0">
       <article v-for="outfit in outfits" :key="outfit._id">
-        <OutfitComponent :outfit="outfit" />
+        <OutfitComponent :outfit="outfit" @refresh-outfits="getOutfits" />
       </article>
     </section>
     <p v-else-if="loaded">No outfits yet!</p>

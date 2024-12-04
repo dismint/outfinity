@@ -336,17 +336,17 @@ class Routes {
     return await Outfiting.searchCollectionsByKeyword(keyword);
   }
 
-  @Router.get("/outfits/user")
-  @Router.validate(z.object({ id: z.string().optional() }))
-  async getOutfitsByUser(id?: string) {
-    let collections;
-    if (id) {
-      collections = await Outfiting.getCollectionsByUser(new ObjectId(id));
-    } else {
-      collections = await Outfiting.getCollections();
-    }
-    return collections;
-  }
+  // @Router.get("/outfits/user")
+  // @Router.validate(z.object({ id: z.string().optional() }))
+  // async getOutfitsByUser(id?: string) {
+  //   let collections;
+  //   if (id) {
+  //     collections = await Outfiting.getCollectionsByUser(new ObjectId(id));
+  //   } else {
+  //     collections = await Outfiting.getCollections();
+  //   }
+  //   return collections;
+  // }
 
   @Router.get("/outfits/:id")
   async getOutfitById(id: string) {
@@ -419,13 +419,13 @@ class Routes {
     return await Outfiting.unsaveCollection(new ObjectId(id));
   }
 
-  @Router.get("/outfits/saved")
+  @Router.get("/outfits")
   async getSavedOutfits(session: SessionDoc) {
     const user = Sessioning.getUser(session);
     return await Outfiting.getUserSavedCollections(user);
   }
 
-  @Router.get("/outfits/:id/saved")
+  @Router.get("/outfit/:id/saved")
   async isOutfitSaved(id: string) {
     return await Outfiting.isCollectionSaved(new ObjectId(id));
   }

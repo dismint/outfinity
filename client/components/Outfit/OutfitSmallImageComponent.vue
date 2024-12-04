@@ -41,11 +41,11 @@ onBeforeMount(async () => {
 
 <template>
   <main>
-    <ImageRevolverComponent v-if="loaded" :imageLoaded="loaded" :images="headImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="loaded" :imageLoaded="loaded" :images="topImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="loaded" :imageLoaded="loaded" :images="bottomImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="loaded" :imageLoaded="loaded" :images="onepieceImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="loaded" :imageLoaded="loaded" :images="shoeImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="loaded && headImage" :imageLoaded="loaded" :images="headImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="loaded && topImages.length !== 0" :imageLoaded="loaded" :images="topImages" :oneimage="false" />
+    <ImageRevolverComponent v-if="loaded && bottomImages.length !== 0" :imageLoaded="loaded" :images="bottomImages" :oneimage="false" />
+    <ImageRevolverComponent v-if="loaded && onepieceImage" :imageLoaded="loaded" :images="onepieceImage" :oneimage="true" />
+    <ImageRevolverComponent v-if="loaded && shoeImage" :imageLoaded="loaded" :images="shoeImage" :oneimage="true" />
   </main>
 </template>
 
