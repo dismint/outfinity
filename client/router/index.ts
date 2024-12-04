@@ -4,17 +4,21 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import AddRemoveClothesView from "../views/AddRemoveClothesClosetView.vue";
 import AllClosetsView from "../views/AllClosetsView.vue";
+import ChallengeCompleteView from "../views/ChallengeCompleteView.vue";
 import ClosetView from "../views/ClosetView.vue";
 import ClothingItemView from "../views/ClothingItemView.vue";
+import CreateChallengeView from "../views/CreateChallengeView.vue";
 import CreateClosetView from "../views/CreateClosetView.vue";
 import CreateClothesView from "../views/CreateClothesView.vue";
 import CreateOutfitView from "../views/CreateOutfitView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import MyChallengesView from "../views/MyChallengesView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import OutfitsView from "../views/OutfitsView.vue";
 import OutfitView from "../views/OutfitView.vue";
 import ProfileView from "../views/ProfileView.vue";
+import SingleChallengeView from "../views/SingleChallengeView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -56,7 +60,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/newoutfit",
+      path: "/newoutfit/:outfitOrChallenge/:closet/:challengeId",
       name: "CreateOutfit",
       component: CreateOutfitView,
       meta: { requiresAuth: true },
@@ -98,6 +102,31 @@ const router = createRouter({
       path: "/clothes/:id",
       name: "ClothingItem",
       component: ClothingItemView,
+      meta: { requiresAuth: true },
+      props: true,
+    },
+    {
+      path: "/createchallenge",
+      name: "CreateChallenge",
+      component: CreateChallengeView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/entrycomplete",
+      name: "EntryComplete",
+      component: ChallengeCompleteView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/challenges",
+      name: "Challenges",
+      component: MyChallengesView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/challenge/:id",
+      name: "SingleChallenge",
+      component: SingleChallengeView,
       meta: { requiresAuth: true },
       props: true,
     },

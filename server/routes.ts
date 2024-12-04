@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Closeting, Clothing, Friending, Outfiting, Posting, Sessioning, Challenging } from "./app";
+import { Authing, Challenging, Closeting, Clothing, Friending, Outfiting, Posting, Sessioning } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -447,11 +447,8 @@ class Routes {
   }
 
   @Router.post("/challenges")
-  async createChallenge(session: SessionDoc, name: string, description: string, closetId: string, requiredItemId: string | null) {
+  async createChallenge(session: SessionDoc, name: string, description: string, closetId: string) {
     const user = Sessioning.getUser(session);
-    if (requiredItemId) {
-      await Closeting.assertItemInCollection(new ObjectId(closetId), new ObjectId(requiredItemId));
-    }
     const clothingTypes = [];
     const clothes = await Closeting.getClothesInCollection(new ObjectId(closetId));
     for (const p of clothes) {
@@ -461,7 +458,7 @@ class Routes {
       }
     }
     await Closeting.assertClosetIsValid(clothingTypes);
-    return await Challenging.create(name, description, user, new ObjectId(closetId), requiredItemId ? new ObjectId(requiredItemId) : null);
+    return await Challenging.create(name, description, user, new ObjectId(closetId), null);
   }
 
   @Router.patch("/challenges/:id/participate")
@@ -495,6 +492,13 @@ class Routes {
     const user = Sessioning.getUser(session);
     await Challenging.assertOwnerIsUser(new ObjectId(id), user);
     return await Challenging.endChallenge(new ObjectId(id));
+  }
+
+  @Router.patch("/challenges/:id/winner")
+  async pickWinner(session: SessionDoc, id: string, winner: string) {
+    const user = Sessioning.getUser(session);
+    await Challenging.assertOwnerIsUser(new ObjectId(id), user);
+    return await Challenging.addChallengeWinner(new ObjectId(id), new ObjectId(winner));
   }
 
   @Router.get("/challenges/:id/submissions")

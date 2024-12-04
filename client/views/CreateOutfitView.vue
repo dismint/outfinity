@@ -5,6 +5,8 @@ import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 
+const props = defineProps(["outfitOrChallenge", "closet", "challengeId"]);
+
 const main = ref<Record<string, string>>({});
 const { userId } = storeToRefs(useUserStore());
 const loaded = ref(false);
@@ -31,7 +33,8 @@ onBeforeMount(async () => {
     <div class="centered">
       <div class="compressWidth">
         <h1>Create Outfit</h1>
-        <CreateOutfitComponent v-if="loaded" :outfit-or-challenge="'outfit'" :closet="main" />
+        <CreateOutfitComponent v-if="loaded && props.outfitOrChallenge==='outfit'" :outfitOrChallenge="'outfit'" :closet="main" />
+        <CreateOutfitComponent v-else-if="loaded && props.outfitOrChallenge==='challenge'" :outfitOrChallenge="'challenge'" :closet="props.closet" :challengeId="props.challengeId" />
       </div>
     </div>
   </main>

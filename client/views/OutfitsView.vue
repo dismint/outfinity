@@ -3,7 +3,7 @@ import OutfitsListComponent from "@/components/Outfit/OutfitsListComponent.vue";
 import router from "@/router";
 
 const navigateToCreateOutfitPage = () => {
-  void router.push({ name: "CreateOutfit" });
+  void router.push({ name: "CreateOutfit", params: { outfitOrChallenge: "outfit", closet: "main", challengeId: "none" } });
 };
 </script>
 

@@ -23,6 +23,7 @@ const outfitTitle = ref("");
 const description = ref("");
 
 const getClothing = async (id: string, stack: boolean) => {
+  console.log(props);
   const query = { id };
   let clothingResult;
   try {
@@ -98,8 +99,18 @@ const submit = async () => {
     }
     void router.push({ name: "Outfit", params: { id: outfit.collection._id } }); // id is the outfit we just made here
   } else {
-    //// TODO: submit outfit to challenge
-    void router.push({ name: "Challenge", params: { id: props.challengeId } });
+    try {
+      await fetchy(`/api/challenges/${props.challengeId}/participate`, "PATCH", { 
+        body: { 
+          challengeId: props.challengeId,
+          name: outfitTitle.value,
+          description: description.value,
+          clothes: body["clothes"],
+        }, alert: false });
+    } catch (_) {
+      return;
+    }
+    void router.push({ name: "EntryComplete" });
   }
   emptyForm();
 };
