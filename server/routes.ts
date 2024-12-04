@@ -183,7 +183,7 @@ class Routes {
     await Clothing.removeClothing(new ObjectId(id), user);
     const allClosets = await Closeting.getCollectionsItemIn(new ObjectId(id));
     for (const clo in allClosets) {
-      await Closeting.removeClothing(new ObjectId(clo), new ObjectId(id));
+      await Closeting.removeClothing(allClosets[clo]._id, new ObjectId(id));
     }
     return { msg: "Clothing removed!" };
     // TODO: delete all outfits containing this clothing
