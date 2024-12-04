@@ -40,3 +40,11 @@ async function updatePassword() {
     </fieldset>
   </form>
 </template>
+
+<style scoped>
+h2 {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2.5em;
+}
+</style>
