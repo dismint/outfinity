@@ -85,7 +85,7 @@ const submit = async () => {
   };
   let outfit;
   try {
-    outfit = await fetchy(`/api/outfits/createOutfit`, "POST", { body, alert: false });
+    outfit = await fetchy(`/api/outfits`, "POST", { body, alert: false });
   } catch (_) {
     return;
   }

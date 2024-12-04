@@ -57,6 +57,7 @@ onBeforeMount(async () => {
 .miniClosetsContainer {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   width: 100%;
   height: 100%;
   place-items: center;

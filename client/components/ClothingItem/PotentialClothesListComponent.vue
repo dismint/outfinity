@@ -4,9 +4,7 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { defineProps, onBeforeMount, ref } from "vue";
-import DropdownFilterComponent from "./DropdownFilterComponent.vue";
 import PotentialClosetClothingItemComponent from "./PotentialClosetClothingItemComponent.vue";
-import SearchBarComponent from "./SearchBarComponent.vue";
 
 const { userId } = storeToRefs(useUserStore());
 
@@ -61,17 +59,18 @@ async function getMainCloset() {
 
 const submitClosetClothesChanges = async () => {
   try {
-    await fetchy(`/api/closets/${props.closet._id}/bulkAddClothing`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
+    await fetchy(`/api/closets/${props.closet._id}/add`, "PATCH", { body: { clothes: toAddClothes.value }, alert: false });
   } catch (e) {
     return;
   }
 
   try {
-    await fetchy(`/api/closets/${props.closet._id}/bulkRemoveClothing`, "PATCH", { body: { clothes: toRemoveClothes.value }, alert: false });
+    await fetchy(`/api/closets/${props.closet._id}/remove`, "PATCH", { body: { clothes: toRemoveClothes.value }, alert: false });
   } catch (e) {
     return;
   }
   emptyForm();
+
   let mainIdResult;
   try {
     mainIdResult = await fetchy(`/api/closets/${props.closet._id}`, "GET", { alert: false });
@@ -128,56 +127,84 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="searchAndFilterContainer">
-    <SearchBarComponent @update:query="handleSearchUpdate" />
-    <DropdownFilterComponent @update:filter="handleFilterUpdate" />
+  <div class="centered buttonContainer" @click="submitClosetClothesChanges">
+    <div class="buttonText">Save</div>
   </div>
-  <form @submit.prevent="submitClosetClothesChanges()">
-    <section class="posts" v-if="loaded && clothesNotAdded.length !== 0">
-      <article v-for="clothing in clothesAdded" :key="clothing">
-        <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="true" />
-      </article>
-      <article v-for="clothing in clothesNotAdded" :key="clothing">
-        <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="false" />
-      </article>
-    </section>
-    <p v-else-if="loaded">No potential new clothes!</p>
-    <p v-else>Loading...</p>
-    <button type="submit">save</button>
-  </form>
+  <div v-if="loaded && (clothesNotAdded.length !== 0 || clothesAdded.length !== 0)">
+    <div class="centered clothesContainer">
+      <div v-for="clothing in clothesAdded.concat(clothesNotAdded)" :key="clothing" class="centered" style="aspect-ratio: 1">
+        <div class="elementBox">
+          <PotentialClosetClothingItemComponent :id="clothing" @add="add" @remove="remove" :in-closet="clothesAdded.includes(clothing)" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <p v-else-if="loaded">No clothes!</p>
+  <p v-else>Loading...</p>
 </template>
 
 <style scoped>
-section {
-  display: flex;
-  /* flex-direction: column; */
-  gap: 1em;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
 }
 
-section,
-p,
-.row {
-  margin: 0 auto;
-  max-width: 60em;
+.buttonContainer {
+  cursor: pointer;
 }
 
-article {
-  /* background-color: var(--base-bg); */
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+.buttonText {
+  font-size: 2vmin;
+  font-weight: 600;
+  font-family: "Inter";
+  color: var(--dark-green);
+  transition: color 0.3s ease;
+  z-index: 20;
 }
 
-.posts {
-  padding: 1em;
+.buttonContainer {
+  position: relative;
+  width: 50%;
+  height: 80%;
+  background-color: var(--light-green);
+  padding: 2vmin;
+  margin-bottom: 2vmin;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 60em;
+.buttonContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: var(--dark-green);
+  transition: right 0.3s ease;
+  z-index: 10;
+}
+
+.buttonContainer:hover::after {
+  right: 0;
+}
+
+.buttonContainer:hover .buttonText {
+  color: var(--primary-background);
+}
+
+.elementBox {
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.clothesContainer {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  place-items: center;
 }
 </style>
