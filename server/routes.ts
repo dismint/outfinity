@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Closeting, Clothing, Friending, Outfiting, Posting, Sessioning } from "./app";
+import { Authing, Closeting, Clothing, Friending, Outfiting, Posting, Sessioning, Challenging } from "./app";
 import { PostOptions } from "./concepts/posting";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
@@ -428,6 +428,78 @@ class Routes {
   @Router.get("/outfit/:id/saved")
   async isOutfitSaved(id: string) {
     return await Outfiting.isCollectionSaved(new ObjectId(id));
+  }
+
+  @Router.get("/challenges")
+  async getChallenges() {
+    return await Challenging.getChallenges();
+  }
+
+  @Router.get("/challenges/:id")
+  async getChallengeById(id: string) {
+    return await Challenging.getChallengeById(new ObjectId(id));
+  }
+
+  @Router.get("/challenges/owner/:owner")
+  @Router.validate(z.object({ owner: z.string().min(1) }))
+  async getByOwner(owner: string) {
+    return await Challenging.getByOwner(new ObjectId(owner));
+  }
+
+  @Router.post("/challenges")
+  async createChallenge(session: SessionDoc, name: string, description: string, closetId: string, requiredItemId: string | null) {
+    const user = Sessioning.getUser(session);
+    if (requiredItemId) {
+      await Closeting.assertItemInCollection(new ObjectId(closetId), new ObjectId(requiredItemId));
+    }
+    const clothingTypes = [];
+    const clothes = await Closeting.getClothesInCollection(new ObjectId(closetId));
+    for (const p of clothes) {
+      const item = await Clothing.getClothingInformation(p);
+      if (item) {
+        clothingTypes.push(item.type);
+      }
+    }
+    await Closeting.assertClosetIsValid(clothingTypes);
+    return await Challenging.create(name, description, user, new ObjectId(closetId), requiredItemId ? new ObjectId(requiredItemId) : null);
+  }
+
+  @Router.patch("/challenges/:id/participate")
+  async participate(session: SessionDoc, challengeId: string, name: string, description: string, clothes: string[]) {
+    const user = Sessioning.getUser(session);
+    const clothingTypes: string[] = [];
+    for (const p of clothes) {
+      await Clothing.assertClothingExists(new ObjectId(p));
+      const item = await Clothing.getClothingInformation(new ObjectId(p));
+      if (item) {
+        clothingTypes.push(item.type);
+      }
+    }
+    await Outfiting.assertOutfitIsValid(clothingTypes);
+    const requiredItem = await Challenging.getChallengeMustHaveItem(new ObjectId(challengeId));
+    if (requiredItem) {
+      if (!clothes.includes(requiredItem.toString())) {
+        throw new Error("Required item not included in outfit!");
+      }
+    }
+    const outfit = await Outfiting.create(name, description, user);
+    const outfitId = outfit.collection?._id;
+    if (!outfitId) {
+      throw new Error("Outfit creation failed!");
+    }
+    return await Challenging.participate(new ObjectId(challengeId), user, outfitId);
+  }
+
+  @Router.patch("/challenges/:id/end")
+  async endChallenge(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    await Challenging.assertOwnerIsUser(new ObjectId(id), user);
+    return await Challenging.endChallenge(new ObjectId(id));
+  }
+
+  @Router.get("/challenges/:id/submissions")
+  async getChallengeSubmissions(id: string) {
+    return await Challenging.getChallengeSubmissions(new ObjectId(id));
   }
 }
 
