@@ -4,7 +4,9 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { defineProps, onBeforeMount, ref } from "vue";
+import DropdownFilterComponent from "./DropdownFilterComponent.vue";
 import PotentialClosetClothingItemComponent from "./PotentialClosetClothingItemComponent.vue";
+import SearchBarComponent from "./SearchBarComponent.vue";
 
 const { userId } = storeToRefs(useUserStore());
 
@@ -127,6 +129,10 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  <div class="searchAndFilterContainer">
+    <SearchBarComponent @update:query="handleSearchUpdate" />
+    <DropdownFilterComponent @update:filter="handleFilterUpdate" />
+  </div>
   <div class="centered buttonContainer" @click="submitClosetClothesChanges">
     <div class="buttonText">Save</div>
   </div>
