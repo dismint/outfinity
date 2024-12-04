@@ -14,16 +14,19 @@ function emitSearchQuery() {
     <h2>Search</h2>
     <fieldset>
       <input id="text" type="text" v-model="searchQuery" placeholder="Search" />
-      <button type="submit">Search</button>
-      <button
-        type="button"
-        @click="
-          searchQuery = '';
-          emitSearchQuery();
-        "
-      >
-        Clear
-      </button>
+      <div>
+        <button class="searchButton" type="submit"><span>Search</span></button>
+        <button
+          type="button"
+          class="searchButton"
+          @click="
+            searchQuery = '';
+            emitSearchQuery();
+          "
+        >
+          <span>Clear</span>
+        </button>
+      </div>
     </fieldset>
   </form>
 </template>
@@ -32,6 +35,42 @@ function emitSearchQuery() {
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+.searchButton {
+  margin: 1vmin 1vmin 0 0;
+  padding: 1vmin;
+  border: none;
+  background-color: var(--light-grey);
+  cursor: pointer;
+  position: relative;
+}
+
+.searchButton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  background-color: var(--light-green);
+  z-index: 11;
+  transition: opacity 0.2s ease;
+}
+
+.searchButton:hover::after {
+  opacity: 1;
+}
+
+.searchButton span {
+  position: relative;
+  z-index: 20;
+}
+
+fieldset {
+  border: none;
 }
 
 .searchContainer {
