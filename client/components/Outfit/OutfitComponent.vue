@@ -46,9 +46,10 @@ const navigateToOutfitPage = async () => {
 }
 
 h2 {
+  width: 100%;
   font-family: "Eczar";
   font-weight: 600;
-  font-size: 2.5em;
+  font-size: 1.2em;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
