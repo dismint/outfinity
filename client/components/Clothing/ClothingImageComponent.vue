@@ -9,15 +9,17 @@ const props = defineProps(["imgUrl"]);
 </template>
 
 <style scoped>
-.full {
-  max-width: 100%;
-  max-height: 100%;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 img {
   width: 100%;
   height: 100%;
   border: 0.2vmin solid var(--dark-green);
+  background-color: var(--light);
   object-fit: contain;
 }
 </style>

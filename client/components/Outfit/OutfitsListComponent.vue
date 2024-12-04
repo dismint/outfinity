@@ -27,12 +27,12 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div>
-    <section class="posts" v-if="loaded && outfits.length !== 0">
+  <div class="centered full">
+    <div class="column full" v-if="loaded && outfits.length !== 0">
       <article v-for="outfit in outfits" :key="outfit._id">
         <OutfitComponent :outfit="outfit" @refresh-outfits="getOutfits" />
       </article>
-    </section>
+    </div>
     <p v-else-if="loaded">No outfits yet!</p>
     <p v-else>Loading...</p>
   </div>
@@ -53,12 +53,7 @@ p,
 }
 
 article {
-  background-color: var(--base-bg);
-  border-radius: 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-  padding: 1em;
+  width: 100%;
 }
 
 .posts {

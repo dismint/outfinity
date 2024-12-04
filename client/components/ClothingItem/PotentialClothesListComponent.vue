@@ -156,6 +156,11 @@ onBeforeMount(async () => {
   box-sizing: 0;
 }
 
+.searchAndFilterContainer {
+  width: 100%;
+  margin-bottom: 2vmin;
+}
+
 .buttonContainer {
   cursor: pointer;
 }

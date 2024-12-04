@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ImageRevolverComponent from "@/components/Outfit/ImageRevolverComponent.vue";
+import ImageRevolverComponentRow from "@/components/Outfit/ImageRevolverComponentRow.vue";
 import { fetchy } from "@/utils/fetchy";
 import { defineProps, onBeforeMount, ref } from "vue";
 
@@ -19,7 +19,7 @@ const getImages = async () => {
     } catch (_) {
       return;
     }
-    if (clothingResult.type === "head") {
+    if (clothingResult.type === "hat") {
       headImage.value = clothingResult.imgUrl;
     } else if (clothingResult.type === "top") {
       topImages.value.push(clothingResult.imgUrl);
@@ -29,37 +29,36 @@ const getImages = async () => {
       onepieceImage.value = clothingResult.imgUrl;
     } else if (clothingResult.type === "shoe") {
       shoeImage.value = clothingResult.imgUrl;
+      console.log("shoeImage", shoeImage);
     }
   }
 };
 
 onBeforeMount(async () => {
+  console.log("props.outfit", props.outfit);
   await getImages();
   loaded.value = true;
 });
 </script>
 
 <template>
-  <main>
-    <ImageRevolverComponent v-if="loaded && headImage" :imageLoaded="loaded" :images="headImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="loaded && topImages.length !== 0" :imageLoaded="loaded" :images="topImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="loaded && bottomImages.length !== 0" :imageLoaded="loaded" :images="bottomImages" :oneimage="false" />
-    <ImageRevolverComponent v-if="loaded && onepieceImage" :imageLoaded="loaded" :images="onepieceImage" :oneimage="true" />
-    <ImageRevolverComponent v-if="loaded && shoeImage" :imageLoaded="loaded" :images="shoeImage" :oneimage="true" />
-  </main>
+  <div class="row oimageContainer">
+    <ImageRevolverComponentRow v-if="loaded && headImage" :imageLoaded="loaded" :images="headImage" :oneimage="true" :type="'hat'" />
+    <ImageRevolverComponentRow v-if="loaded && topImages" :imageLoaded="loaded" :images="topImages" :oneimage="false" :type="'top'" />
+    <ImageRevolverComponentRow v-if="loaded && bottomImages" :imageLoaded="loaded" :images="bottomImages" :oneimage="false" :type="'bottom'" />
+    <ImageRevolverComponentRow v-if="loaded && onepieceImage" :imageLoaded="loaded" :images="onepieceImage" :oneimage="true" :type="'onepiece'" />
+    <ImageRevolverComponentRow v-if="loaded && shoeImage" :imageLoaded="loaded" :images="shoeImage" :oneimage="true" :type="'shoe'" />
+  </div>
 </template>
 
 <style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  align-items: center;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-img {
-  width: 30%;
-  height: auto;
-  cursor: pointer;
+.oimageContainer {
+  height: 100%;
 }
 </style>

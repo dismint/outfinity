@@ -30,7 +30,7 @@ const imageOrder = ref(props.images.slice());
 
 .outerRevolver {
   box-sizing: content-box;
-  width: 100%;
+  height: 100%;
   aspect-ratio: 1;
   border: 0.4vmin solid var(--dark-green);
   margin: 1%;
@@ -38,7 +38,7 @@ const imageOrder = ref(props.images.slice());
 }
 
 .noClothes {
-  width: 100%;
+  height: 100%;
   aspect-ratio: 1;
   display: flex;
   justify-content: center;

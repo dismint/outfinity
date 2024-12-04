@@ -125,7 +125,7 @@ const navigateToAddRemoveClothesPage = async () => {
   content: "";
   position: absolute;
   top: 0;
-  buttom: 0;
+  bottom: 0;
   left: 0;
   right: 0;
   height: 100%;
@@ -193,5 +193,11 @@ h2 {
   width: 100%;
   border-radius: 3vmin;
   background-color: var(--light);
+}
+
+p {
+  font-family: "Inter";
+  font-weight: 400;
+  margin: 2vmin;
 }
 </style>

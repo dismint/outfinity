@@ -53,15 +53,65 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="outfitpage">
-    <OutfitImageComponent v-if="loaded" :imageLoaded="loaded" :head-image="headImage" :top-images="topImages" :bottom-images="bottomImages" :onepiece-image="onepieceImage" :shoe-image="shoeImage" />
-    <OutfitDescriptionComponent v-if="loaded" :outfit="outfit" />
+  <main>
+    <div class="centered">
+      <div class="compressWidth">
+        <h1>{{ outfit.name }}</h1>
+        <div class="row outerOutfitContainer">
+          <div class="image">
+            <OutfitImageComponent
+              v-if="loaded"
+              :imageLoaded="loaded"
+              :head-image="headImage"
+              :top-images="topImages"
+              :bottom-images="bottomImages"
+              :onepiece-image="onepieceImage"
+              :shoe-image="shoeImage"
+            />
+          </div>
+          <div class="description">
+            <OutfitDescriptionComponent v-if="loaded" :outfit="outfit" />
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 h1 {
-  text-align: center;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  font-family: "Eczar";
+  color: var(--dark-green);
+  text-align: left;
+  margin-top: 1em;
+  font-size: 4em;
+}
+
+.outerOutfitContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 2vmin;
+  border-radius: 3vmin;
+  background-color: var(--light);
+}
+
+.image {
+  width: 30%;
+  padding: 2% 10%;
+}
+
+.description {
+  width: 70%;
 }
 
 .outfitpage {

@@ -69,6 +69,7 @@ h2 {
 .imageContainer {
   height: 100%;
   width: 50%;
+  object-fit: coer;
 }
 
 .textInfoContainer {
