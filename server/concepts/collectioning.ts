@@ -8,7 +8,7 @@ export interface CollectionDoc extends BaseDoc {
   description: string;
   owner: ObjectId;
   clothes: ObjectId[];
-  saved: boolean;
+  saved: string[];
 }
 
 /**
@@ -26,7 +26,7 @@ export default class CollectioningConcept {
 
   async create(name: string, description: string, owner: ObjectId) {
     await this.assertValidClosetName(owner, name);
-    const _id = await this.collections.createOne({ name, description, owner, clothes: [], saved: false });
+    const _id = await this.collections.createOne({ name, description, owner, clothes: [], saved: [] });
     return { msg: "Closet successfully created!", collection: await this.collections.readOne({ _id }) };
   }
 
@@ -145,26 +145,38 @@ export default class CollectioningConcept {
     return { msg: "Closet successfully deleted!" };
   }
 
-  async saveCollection(_id: ObjectId) {
-    await this.collections.partialUpdateOne({ _id }, { saved: true });
+  async saveCollection(_id: ObjectId, user: ObjectId) {
+    console.log(user, _id);
+    try {
+      await this.collections.collection.updateOne({ _id }, { $addToSet: { saved: user.toString() } });
+    } catch (e) {
+      console.log(e);
+    }
     return { msg: "Outfit successfully saved!" };
   }
 
-  async unsaveCollection(_id: ObjectId) {
-    await this.collections.partialUpdateOne({ _id }, { saved: false });
+  async unsaveCollection(_id: ObjectId, user: ObjectId) {
+    await this.collections.collection.updateOne({ _id }, { $pull: { saved: user.toString() } });
     return { msg: "Outfit successfully unsaved!" };
   }
 
   async getUserSavedCollections(user: ObjectId) {
-    return await this.collections.readMany({ owner: user, saved: true });
+    // read all collections that have user in the saved array
+    return await this.collections.readMany({ saved: user.toString() });
   }
 
-  async isCollectionSaved(_id: ObjectId) {
+  async isCollectionSaved(_id: ObjectId, user: ObjectId) {
     const collection = await this.collections.readOne({ _id });
     if (!collection) {
       throw new NotFoundError(`Collection ${_id} does not exist!`);
     }
-    return collection.saved;
+    //TODO: check this later in case it bugs
+    for (const p of collection.saved) {
+      console.log(p);
+      if (p.toString() === user.toString()) {
+        return true;
+      }
+    }
   }
 
   async assertUserCanEditCollection(_id: ObjectId, user: ObjectId) {
