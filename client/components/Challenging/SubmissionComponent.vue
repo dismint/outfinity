@@ -3,13 +3,14 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { defineEmits, defineProps, onBeforeMount, ref } from "vue";
+import { defineProps, onBeforeMount, ref } from "vue";
 import OutfitImageComponentRow from "../Outfit/OutfitImageComponentRow.vue";
 
 const props = defineProps(["outfit", "owner", "id"]);
 const { userId } = storeToRefs(useUserStore());
 const outfitObject = ref({});
 const saved = ref(false);
+const isWinner = ref(false);
 
 const unsave = async () => {
   try {
@@ -35,13 +36,26 @@ const pickWinner = async () => {
       body: { winner: outfitObject.value.owner },
       alert: false,
     });
-  } catch (_) {
+  } catch (e) {
+    console.log(e);
     return;
   }
+  isWinner.value = true;
+};
+
+const removeWinner = async () => {
+  try {
+    await fetchy(`/api/challenges/${props.id}/remove`, "PATCH", {
+      body: { uid: outfitObject.value.owner },
+      alert: false });
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+  isWinner.value = false;
 };
 
 onBeforeMount(async () => {
-  console.log(props, userId);
   let apiResult;
   try {
     apiResult = await fetchy(`/api/outfits/${props.outfit}`, "GET", { alert: false });
@@ -56,6 +70,13 @@ onBeforeMount(async () => {
     return;
   }
   saved.value = apiResult;
+  try {
+    apiResult = await fetchy(`/api/challenges/${props.id}/${outfitObject.value.owner}`, "GET", { alert: false });
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+  isWinner.value = apiResult;
 });
 
 const navigateToOutfitPage = async () => {
@@ -72,7 +93,11 @@ const navigateToOutfitPage = async () => {
       <h2>{{ outfitObject.name }}</h2>
     </div>
     <div class="centered" v-if="userId === props.owner">
-      <button @click.stop="pickWinner">Select Challenge Winner</button>
+      <button @click.stop="pickWinner" v-if="!isWinner">Select Challenge Winner</button>
+      <button @click.stop="removeWinner" v-else>Remove Challenge Winner</button>
+    </div>
+    <div class="centered" v-else-if="isWinner">
+      <h2>Winner!</h2> 
     </div>
   </div>
 </template>

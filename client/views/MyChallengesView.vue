@@ -10,6 +10,7 @@ const userId = storeToRefs(useUserStore()).userId.value;
 const challenges = ref<Array<Record<string, string>>>([]);
 const activeChallenges = ref<Array<Record<string, string>>>([]);
 const inactiveChallenges = ref<Array<Record<string, string>>>([]);
+const participatedChallenges = ref<Array<Record<string, string>>>([]);
 
 const getAllChallenges = async () => {
   let challengeInfo;
@@ -20,6 +21,7 @@ const getAllChallenges = async () => {
   }
   challenges.value = challengeInfo;
 };
+
 
 const openChallengePage = async (id: string) => {
   router.push({ name: "SingleChallenge", params: { id } });
@@ -50,6 +52,10 @@ onBeforeMount(async () => {
             <div class="challengeContainer" v-for="challenge in inactiveChallenges" v-on:click="openChallengePage(challenge._id)">
               <ChallengePreviewComponent :id="challenge._id" />
             </div>
+            <h2>Participated Challenges</h2>
+            <div class="challengeContainer" v-for="challenge in participatedChallenges" v-on:click="openChallengePage(challenge._id)">
+              <ChallengePreviewComponent :id="challenge._id" />
+            </div>  
           </div>
         </div>
       </div>

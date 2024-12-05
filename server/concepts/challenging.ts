@@ -105,23 +105,15 @@ export default class ChallengingConcept {
     if (!challenge) {
       throw new NotFoundError(`Challenge ${_id} does not exist!`);
     }
-    let winnerDidChallenge = false;
-    for (const [_, user] of new Map(Object.entries(challenge.submissions))) {
-      if (user.toString() === winner.toString()) {
-        winnerDidChallenge = true;
-      }
-    }
-    if (!winnerDidChallenge) {
-      throw new NotAllowedError(`User ${winner} did not participate in challenge ${_id}!`);
-    }
     if (challenge.winners.length === 3) {
-      console.log(challenge.winners);
       throw new NotAllowedError(`Challenge ${_id} already has 3 winners!`);
     }
     let winnerAlreadyPicked = false;
-    for (const [_, val] of new Array(Object.entries(challenge.winners))) {
-      if (val[1].toString() === winner.toString()) {
-        winnerAlreadyPicked = true;
+    if (challenge.winners.length > 0) {
+      for (let w of challenge.winners) {
+        if (w.toString() === winner.toString()) {
+          winnerAlreadyPicked = true;
+        }
       }
     }
     if (winnerAlreadyPicked) {
@@ -137,7 +129,8 @@ export default class ChallengingConcept {
       throw new NotFoundError(`Challenge ${_id} does not exist!`);
     }
     let winnerIsWinner = false;
-    for (const w of challenge.winners) {
+    for (let w of challenge.winners) {
+      console.log(w.toString(), winner.toString());
       if (w.toString() === winner.toString()) {
         winnerIsWinner = true;
       }
@@ -145,9 +138,23 @@ export default class ChallengingConcept {
     if (!winnerIsWinner) {
       throw new NotAllowedError(`User ${winner} is not a winner of challenge ${_id}!`);
     }
-    challenge.winners = challenge.winners.filter((w) => w.toString() !== winner.toString());
-    await this.challenges.collection.updateOne({ _id }, { winners: challenge.winners });
+    await this.challenges.collection.updateOne({ _id }, { $pull: { winners: winner } });
     return { msg: "Winner successfully removed!" };
+  }
+
+  async assertIsWinner(_id: ObjectId, winner: ObjectId) {
+    const challenge = await this.challenges.readOne({ _id });
+    if (!challenge) {
+      throw new NotFoundError(`Challenge ${_id} does not exist!`);
+    }
+    if (challenge.winners.length > 0) {
+      for (let w of challenge.winners) {
+        if (w.toString() === winner.toString()) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
 
