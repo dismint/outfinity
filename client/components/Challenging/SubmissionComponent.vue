@@ -47,7 +47,8 @@ const removeWinner = async () => {
   try {
     await fetchy(`/api/challenges/${props.id}/remove`, "PATCH", {
       body: { uid: outfitObject.value.owner },
-      alert: false });
+      alert: false,
+    });
   } catch (e) {
     console.log(e);
     return;
@@ -85,19 +86,23 @@ const navigateToOutfitPage = async () => {
 </script>
 
 <template>
-  <div @click="navigateToOutfitPage" class="outfitContainer">
-    <img v-if="saved" src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
-    <img v-else src="../../assets/images/bookmark.png" alt="filled bookmark" @click.stop="save" />
-    <OutfitImageComponentRow class="rowImage" :outfit="outfitObject" />
-    <div class="name">
-      <h2>{{ outfitObject.name }}</h2>
+  <div class="superOuter">
+    <div @click="navigateToOutfitPage" class="outfitContainer">
+      <img v-if="saved" src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
+      <img v-else src="../../assets/images/bookmark.png" alt="filled bookmark" @click.stop="save" />
+      <OutfitImageComponentRow class="rowImage" :outfit="outfitObject" />
+      <div class="name">
+        <h2>{{ outfitObject.name }}</h2>
+      </div>
     </div>
-    <div class="centered" v-if="userId === props.owner">
-      <button @click.stop="pickWinner" v-if="!isWinner">Select Challenge Winner</button>
-      <button @click.stop="removeWinner" v-else>Remove Challenge Winner</button>
-    </div>
-    <div class="centered" v-else-if="isWinner">
-      <h2>Winner!</h2> 
+    <div class="infoBar">
+      <div class="centered" v-if="userId === props.owner">
+        <button class="pickButton" @click.stop="pickWinner" v-if="!isWinner">Select Challenge Winner</button>
+        <button class="removeButton" @click.stop="removeWinner" v-else>Remove Challenge Winner</button>
+      </div>
+      <div class="centered" v-else-if="isWinner">
+        <h2 style="text-align: center">Winner!</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -107,6 +112,44 @@ const navigateToOutfitPage = async () => {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+button {
+  padding: 0.5vmin;
+  background-color: var(--light-green);
+  color: var(--text-color);
+  border: none;
+  border-radius: 1vmin;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
+}
+
+button:hover.pickButton {
+  background-color: var(--dark-green);
+  color: var(--light);
+}
+
+button:hover.removeButton {
+  background-color: var(--red);
+  color: var(--light);
+}
+
+.superOuter {
+  background-color: var(--medium-green);
+  padding: 1vmin;
+  margin: 1vmin 0;
+  border-radius: 1vmin;
+}
+
+.infoBar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1vmin;
 }
 
 .rowImage {

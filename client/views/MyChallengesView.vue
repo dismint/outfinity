@@ -22,7 +22,6 @@ const getAllChallenges = async () => {
   challenges.value = challengeInfo;
 };
 
-
 const openChallengePage = async (id: string) => {
   router.push({ name: "SingleChallenge", params: { id } });
 };
@@ -40,6 +39,7 @@ onBeforeMount(async () => {
       <div class="compressWidth">
         <h1>My Challenges</h1>
         <div class="challengesContainer">
+          <button class="createButton" v-on:click="router.push({ name: 'CreateChallenge' })">Create Challenge</button>
           <div class="row centered" v-if="!challenges">
             <h2>No challenges found!</h2>
           </div>
@@ -52,10 +52,6 @@ onBeforeMount(async () => {
             <div class="challengeContainer" v-for="challenge in inactiveChallenges" v-on:click="openChallengePage(challenge._id)">
               <ChallengePreviewComponent :id="challenge._id" />
             </div>
-            <h2>Participated Challenges</h2>
-            <div class="challengeContainer" v-for="challenge in participatedChallenges" v-on:click="openChallengePage(challenge._id)">
-              <ChallengePreviewComponent :id="challenge._id" />
-            </div>  
           </div>
         </div>
       </div>
@@ -75,6 +71,23 @@ onBeforeMount(async () => {
   background-color: var(--light);
   border-radius: 3vmin;
   padding: 2vmin;
+}
+
+.createButton {
+  padding: 1vmin;
+  margin: 1vmin 0;
+  border-radius: 1vmin;
+  cursor: pointer;
+  border: none;
+  background-color: var(--light-green);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.createButton:hover {
+  background-color: var(--dark-green);
+  color: var(--light);
 }
 
 .challengeContainer {
