@@ -410,13 +410,15 @@ class Routes {
   }
 
   @Router.patch("/outfits/save/:id")
-  async saveOutfit(id: string) {
-    return await Outfiting.saveCollection(new ObjectId(id));
+  async saveOutfit(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    return await Outfiting.saveCollection(new ObjectId(id), user);
   }
 
   @Router.patch("/outfits/unsave/:id")
-  async unsaveOutfit(id: string) {
-    return await Outfiting.unsaveCollection(new ObjectId(id));
+  async unsaveOutfit(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    return await Outfiting.unsaveCollection(new ObjectId(id), user);
   }
 
   @Router.get("/outfits")
@@ -426,8 +428,9 @@ class Routes {
   }
 
   @Router.get("/outfit/:id/saved")
-  async isOutfitSaved(id: string) {
-    return await Outfiting.isCollectionSaved(new ObjectId(id));
+  async isOutfitSaved(session: SessionDoc, id: string) {
+    const user = Sessioning.getUser(session);
+    return await Outfiting.isCollectionSaved(new ObjectId(id), user);
   }
 
   @Router.get("/challenges")
