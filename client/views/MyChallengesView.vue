@@ -82,6 +82,7 @@ onBeforeMount(async () => {
   background-color: var(--light-green);
   margin: 1vmin 0;
   border-radius: 1vmin;
+  padding: 1vmin;
   cursor: pointer;
 }
 
