@@ -462,10 +462,11 @@ class Routes {
   }
 
   @Router.patch("/challenges/:id/participate")
-  async participate(session: SessionDoc, challengeId: string, name: string, description: string, clothes: string[]) {
+  async participate(session: SessionDoc, id: string, name: string, description: string, clothes: string[]) {
     const user = Sessioning.getUser(session);
     const clothingTypes: string[] = [];
-    for (const p of clothes) {
+    for (let i = 0; i < clothes.length; i++) {
+      const p = clothes[i];
       await Clothing.assertClothingExists(new ObjectId(p));
       const item = await Clothing.getClothingInformation(new ObjectId(p));
       if (item) {
@@ -473,18 +474,16 @@ class Routes {
       }
     }
     await Outfiting.assertOutfitIsValid(clothingTypes);
-    const requiredItem = await Challenging.getChallengeMustHaveItem(new ObjectId(challengeId));
-    if (requiredItem) {
-      if (!clothes.includes(requiredItem.toString())) {
-        throw new Error("Required item not included in outfit!");
-      }
-    }
     const outfit = await Outfiting.create(name, description, user);
     const outfitId = outfit.collection?._id;
     if (!outfitId) {
       throw new Error("Outfit creation failed!");
     }
-    return await Challenging.participate(new ObjectId(challengeId), user, outfitId);
+    for (let i = 0; i < clothes.length; i++) {
+      const p = clothes[i];
+      await Outfiting.addClothing(new ObjectId(outfitId), new ObjectId(p));
+    }
+    return await Challenging.participate(new ObjectId(id), user, outfitId);
   }
 
   @Router.patch("/challenges/:id/end")

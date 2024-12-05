@@ -4,7 +4,7 @@ import { defineProps } from "vue";
 // import DisplayLabels from "../Labeling/DisplayLabels.vue";
 import OutfitImageComponentRow from "./OutfitImageComponentRow.vue";
 import { fetchy } from "@/utils/fetchy";
-import { defineEmits } from "vue";
+import { defineEmits, onMounted } from "vue";
 
 const props = defineProps(["outfit"]);
 const emit = defineEmits(["refreshOutfits"]);

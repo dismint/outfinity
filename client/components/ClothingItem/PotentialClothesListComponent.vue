@@ -79,7 +79,6 @@ const submitClosetClothesChanges = async () => {
   } catch (_) {
     return;
   }
-  console.log("closet", mainIdResult);
   void router.push({ name: "Closet", params: { id: props.closet._id } });
 };
 

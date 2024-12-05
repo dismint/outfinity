@@ -8,11 +8,11 @@ const imageOrder = ref(props.images.slice());
 
 <template>
   <div class="outerRevolver">
-    <div v-if="props.images.length !== 0">
+    <div v-if="props.images.length !== 0" class="full">
       <div class="centered" v-if="props.oneimage">
         <ClothingImageComponent :imgUrl="props.images" />
       </div>
-      <div class="" v-else>
+      <div class="full" v-else>
         <ClothingImageComponent v-for="(image, index) in imageOrder" :key="index" :imgUrl="image" :style="{ zIndex: index, position: 'absolute', scale: 1 - index * 0.2 }" />
       </div>
     </div>

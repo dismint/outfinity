@@ -14,7 +14,6 @@ const getClothingInfo = async () => {
     return;
   }
   clothing.value = clothingInfo;
-  console.log(clothing.value, clothingInfo);
 };
 
 onBeforeMount(async () => {

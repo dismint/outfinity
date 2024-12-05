@@ -57,8 +57,7 @@ export default class ChallengingConcept {
     if (!challenge.active) {
       throw new NotAllowedError(`Challenge ${_id} is not active!`);
     }
-    challenge.submissions.set(outfit, user);
-    await this.challenges.collection.updateOne({ _id }, { submissions: challenge.submissions });
+    await this.challenges.collection.updateOne({ _id }, { $set: { [`submissions.${outfit}`]: user } });
     return { msg: "Participation successful!" };
   }
 
@@ -107,7 +106,7 @@ export default class ChallengingConcept {
       throw new NotFoundError(`Challenge ${_id} does not exist!`);
     }
     let winnerDidChallenge = false;
-    for (const user of challenge.submissions.values()) {
+    for (const [_, user] of new Map(Object.entries(challenge.submissions))) {
       if (user.toString() === winner.toString()) {
         winnerDidChallenge = true;
       }
@@ -116,19 +115,19 @@ export default class ChallengingConcept {
       throw new NotAllowedError(`User ${winner} did not participate in challenge ${_id}!`);
     }
     if (challenge.winners.length === 3) {
+      console.log(challenge.winners);
       throw new NotAllowedError(`Challenge ${_id} already has 3 winners!`);
     }
     let winnerAlreadyPicked = false;
-    for (const w of challenge.winners) {
-      if (w.toString() === winner.toString()) {
+    for (const [_, val] of new Array(Object.entries(challenge.winners))) {
+      if (val[1].toString() === winner.toString()) {
         winnerAlreadyPicked = true;
       }
     }
     if (winnerAlreadyPicked) {
       throw new NotAllowedError(`User ${winner} is already a winner of challenge ${_id}!`);
     }
-    challenge.winners.push(winner);
-    await this.challenges.collection.updateOne({ _id }, { winners: challenge.winners });
+    await this.challenges.collection.updateOne({ _id }, { $push: { winners: winner } });
     return { msg: "Winner successfully added!" };
   }
 

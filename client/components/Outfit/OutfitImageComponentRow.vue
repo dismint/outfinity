@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ImageRevolverComponentRow from "@/components/Outfit/ImageRevolverComponentRow.vue";
 import { fetchy } from "@/utils/fetchy";
-import { defineProps, onBeforeMount, ref } from "vue";
+import { defineProps, onBeforeMount, ref, onUpdated, onMounted } from "vue";
 
 const props = defineProps(["outfit"]);
 const loaded = ref(false);
@@ -29,13 +29,18 @@ const getImages = async () => {
       onepieceImage.value = clothingResult.imgUrl;
     } else if (clothingResult.type === "shoe") {
       shoeImage.value = clothingResult.imgUrl;
-      console.log("shoeImage", shoeImage);
     }
   }
 };
 
 onBeforeMount(async () => {
-  console.log("props.outfit", props.outfit);
+  if (props.outfit && props.outfit.clothes) {
+    await getImages();
+    loaded.value = true;
+  }
+});
+
+onUpdated(async () => {
   await getImages();
   loaded.value = true;
 });

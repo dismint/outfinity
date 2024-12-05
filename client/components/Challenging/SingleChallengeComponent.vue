@@ -9,7 +9,18 @@ import SubmissionComponent from "./SubmissionComponent.vue";
 const props = defineProps(["id"]);
 const challenge = ref<Record<string, string>>({});
 const submissions = ref<Array<Record<string, string>>>([]);
+const closetName = ref("");
 const { userId } = storeToRefs(useUserStore());
+
+const getClosetNames = async () => {
+  let apiResult;
+  try {
+    apiResult = await fetchy(`/api/closets/${challenge.value.closet.toString()}`, "GET", {});
+  } catch (e) {
+    return;
+  }
+  closetName.value = apiResult.name;
+};
 
 const getChallengeInfo = async () => {
   let challengeInfo;
@@ -37,25 +48,33 @@ const endChallenge = async () => {
 
 onBeforeMount(async () => {
   await getChallengeInfo();
+  await getClosetNames();
 });
 </script>
 
 <template>
-  <div class="row clothingPageContainer">
+  <div class="column challengeContainer">
     <div class="column infoContainer">
       <div class="textInfoContainer">
-        <h2>Description</h2>
-        <p>{{ challenge.description }}</p>
+        <h3>Description</h3>
+        <p style="margin-bottom: 2vmin">{{ challenge.description }}</p>
+        <h3>Closet</h3>
+        <p>{{ closetName }}</p>
       </div>
-      <div class="centered delete" v-if="userId === challenge.owner">
-        <button class="end" @click="endChallenge"></button>
-      </div>
-      <div class="centered enter" v-else>
-        <button class="enter" @click="enterChallenge"></button>
+      <div v-if="challenge.active" class="full">
+        <div class="centered delete" v-if="userId === challenge.owner">
+          <button class="end" @click="endChallenge">End Challenge</button>
+        </div>
+        <div class="enter" v-else>
+          <button class="enter" @click="enterChallenge">Enter Challenge</button>
+        </div>
       </div>
     </div>
-    <div class="challengeEntryContainer" v-for="outfit in submissions">
-        <SubmissionComponent :outfit="outfit" :owner="challenge.owner" :id="props.id"/>
+    <div class="interactingContainer">
+      <h2>Entries</h2>
+      <div class="challengeEntryContainer" v-for="(owner, outfit) in submissions">
+        <SubmissionComponent :outfit="outfit" :owner="challenge.owner" :id="props.id" />
+      </div>
     </div>
   </div>
 </template>
@@ -67,10 +86,20 @@ onBeforeMount(async () => {
   box-sizing: border-box;
 }
 
+.interactingContainer {
+  width: 100%;
+}
+
 h2 {
   font-family: "Eczar";
   font-weight: 600;
   font-size: 2.5em;
+}
+
+h3 {
+  font-family: "Eczar";
+  font-weight: 600;
+  font-size: 2em;
 }
 
 .imageContainer {
@@ -91,85 +120,33 @@ h2 {
 
 .infoContainer {
   padding: 2vmin;
-  height: 100%;
-  width: 50%;
+  width: 100%;
 }
 
 button {
-  width: 50%;
-  height: 80%;
   border: none;
-  background-color: var(--primary-background);
-  position: relative;
+  padding: 1vmin;
+  margin: 2vmin 0;
+  background-color: var(--light-grey);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  cursor: pointer;
 }
 
-button.enter::after {
-  content: "Enter Challenge";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: "Inter";
-  font-weight: 700;
-  z-index: 20;
-  color: var(--text-color);
-  transition: color 0.3s ease;
+button.end:hover {
+  background-color: var(--red);
+  color: var(--light);
 }
 
-button.end::after {
-  content: "End Challenge";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: "Inter";
-  font-weight: 700;
-  z-index: 20;
-  color: var(--text-color);
-  transition: color 0.3s ease;
+button.enter:hover {
+  background-color: var(--light-green);
 }
 
-button.end::before {
-  content: "";
-  position: absolute;
-  right: 100%;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: rgba(255, 105, 97, 1);
-  z-index: 10;
-  border: none;
-  transition: right 0.3s ease;
-  overflow: hidden;
-}
-
-button.enter::before {
-  content: "";
-  position: absolute;
-  right: 100%;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: rgb(103, 209, 117);
-  z-index: 10;
-  border: none;
-  transition: right 0.3s ease;
-  overflow: hidden;
-}
-
-button:hover::before {
-  right: 0;
-}
-
-button:hover::after {
-  color: var(--primary-background);
-}
-
-.clothingPageContainer {
+.challengeContainer {
   width: 100%;
-  height: 40vh;
   border-radius: 3vmin;
-  padding: 3vmin;
+  padding: 2vmin;
   background-color: var(--light);
 }
 </style>

@@ -3,44 +3,75 @@ import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
-import { defineEmits, defineProps, } from "vue";
+import { defineEmits, defineProps, onBeforeMount, ref } from "vue";
 import OutfitImageComponentRow from "../Outfit/OutfitImageComponentRow.vue";
 
 const props = defineProps(["outfit", "owner", "id"]);
-const emit = defineEmits(["refreshOutfits"]);
 const { userId } = storeToRefs(useUserStore());
+const outfitObject = ref({});
+const saved = ref(false);
 
 const unsave = async () => {
   try {
-    await fetchy(`/api/outfits/unsave/${props.outfit._id}`, "PATCH", { alert: false });
+    await fetchy(`/api/outfits/unsave/${props.outfit}`, "PATCH", { alert: false });
   } catch (_) {
     return;
   }
-  emit("refreshOutfits");
+  saved.value = false;
+};
+
+const save = async () => {
+  try {
+    await fetchy(`/api/outfits/save/${props.outfit}`, "PATCH", { alert: false });
+  } catch (_) {
+    return;
+  }
+  saved.value = true;
 };
 
 const pickWinner = async () => {
-    try {
-        await fetchy(`/api/challenges/${props.id}/winner`, "PATCH", { 
-            body: { winner: props.outfit.owner } });
-    } catch (_) {
-        return;
-    }
-}
+  try {
+    await fetchy(`/api/challenges/${props.id}/winner`, "PATCH", {
+      body: { winner: outfitObject.value.owner },
+      alert: false,
+    });
+  } catch (_) {
+    return;
+  }
+};
+
+onBeforeMount(async () => {
+  console.log(props, userId);
+  let apiResult;
+  try {
+    apiResult = await fetchy(`/api/outfits/${props.outfit}`, "GET", { alert: false });
+  } catch (_) {
+    return;
+  }
+  outfitObject.value = apiResult;
+
+  try {
+    apiResult = await fetchy(`/api/outfit/${props.outfit}/saved`, "GET", { alert: false });
+  } catch (_) {
+    return;
+  }
+  saved.value = apiResult;
+});
 
 const navigateToOutfitPage = async () => {
-  void router.push({ name: "Outfit", params: { id: props.outfit._id } });
+  void router.push({ name: "Outfit", params: { id: props.outfit } });
 };
 </script>
 
 <template>
   <div @click="navigateToOutfitPage" class="outfitContainer">
-    <img src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
-    <OutfitImageComponentRow class="rowImage" :outfit="props.outfit" />
+    <img v-if="saved" src="../../assets/images/filledbookmark.png" alt="filled bookmark" @click.stop="unsave" />
+    <img v-else src="../../assets/images/bookmark.png" alt="filled bookmark" @click.stop="save" />
+    <OutfitImageComponentRow class="rowImage" :outfit="outfitObject" />
     <div class="name">
-      <h2>{{ props.outfit.name }}</h2>
+      <h2>{{ outfitObject.name }}</h2>
     </div>
-    <div class="centered" v-if="userId == props.owner">
+    <div class="centered" v-if="userId === props.owner">
       <button @click.stop="pickWinner">Select Challenge Winner</button>
     </div>
   </div>
@@ -86,5 +117,9 @@ h2 {
   width: 100%;
   height: 8vh;
   background-color: var(--light-green);
+}
+
+img {
+  z-index: 100;
 }
 </style>

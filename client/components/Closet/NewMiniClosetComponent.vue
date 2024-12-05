@@ -9,14 +9,12 @@ const name = ref("");
 const selectedEmoji = ref("");
 
 const newMiniCloset = async (name: string, emoji: string) => {
-  console.log("selected", name, emoji);
   let closetResult;
   try {
     closetResult = await fetchy(`/api/closets`, "POST", { body: { name, emoji } });
   } catch (e) {
     return;
   }
-  console.log("id", closetResult.collection._id);
   emptyForm();
   void router.push({ name: "Closet", params: { id: closetResult.collection._id } });
 };
@@ -36,7 +34,6 @@ interface Emoji {
 
 function onSelectEmoji(emoji: Emoji) {
   selectedEmoji.value = emoji.i;
-  console.log(selectedEmoji.value);
 }
 </script>
 

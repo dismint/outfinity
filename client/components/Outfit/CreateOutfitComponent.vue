@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import router from "@/router";
 import { fetchy } from "@/utils/fetchy";
-import { computed, defineProps, ref } from "vue";
+import { computed, defineProps, ref, onBeforeMount } from "vue";
 import OutfitImageComponent from "./OutfitImageComponent.vue";
 import OutfitPickerComponent from "./OutfitPickerComponent.vue";
 
@@ -21,6 +21,7 @@ const imageLoaded = ref(true);
 const outfitComplete = ref(false);
 const outfitTitle = ref("");
 const description = ref("");
+const closetObject = ref({});
 
 const getClothing = async (id: string, stack: boolean) => {
   const query = { id };
@@ -83,13 +84,13 @@ const submit = async () => {
     description: description.value,
     clothes: [head.value, ...tops.value, ...bottoms.value, onepiece.value, shoe.value].filter((x) => x),
   };
-  let outfit;
-  try {
-    outfit = await fetchy(`/api/outfits`, "POST", { body, alert: false });
-  } catch (_) {
-    return;
-  }
   if (props.outfitOrChallenge === "outfit") {
+    let outfit;
+    try {
+      outfit = await fetchy(`/api/outfits`, "POST", { body, alert: false });
+    } catch (_) {
+      return;
+    }
     // save outfit
     try {
       await fetchy(`/api/outfits/save/${outfit.collection._id}`, "PATCH", { alert: false });
@@ -99,13 +100,10 @@ const submit = async () => {
     void router.push({ name: "Outfit", params: { id: outfit.collection._id } }); // id is the outfit we just made here
   } else {
     try {
-      await fetchy(`/api/challenges/${props.challengeId}/participate`, "PATCH", { 
-        body: { 
-          challengeId: props.challengeId,
-          name: outfitTitle.value,
-          description: description.value,
-          clothes: body["clothes"],
-        }, alert: false });
+      await fetchy(`/api/challenges/${props.challengeId}/participate`, "PATCH", {
+        body,
+        alert: false,
+      });
     } catch (_) {
       return;
     }
@@ -113,6 +111,18 @@ const submit = async () => {
   }
   emptyForm();
 };
+
+onBeforeMount(async () => {
+  if (props.outfitOrChallenge === "challenge") {
+    let apiResult;
+    try {
+      apiResult = await fetchy(`/api/closets/${props.closet}`, "GET", {});
+    } catch (_) {
+      return;
+    }
+    closetObject.value = apiResult;
+  }
+});
 
 const finishOutfit = async () => {
   if (!isOutfitComplete.value) return;
@@ -162,7 +172,8 @@ const emptyForm = () => {
         <button v-if="!isOutfitComplete" :disabled="true" class="finishButton notDone">Incomplete - add more clothes</button>
         <button v-if="isOutfitComplete" @click="finishOutfit" class="finishButton done">Finish Outfit</button>
       </div>
-      <OutfitPickerComponent :closet="props.closet" @clickClothing="handleClothingClick" />
+      <OutfitPickerComponent v-if="props.outfitOrChallenge === 'challenge'" :closet="closetObject" @clickClothing="handleClothingClick" />
+      <OutfitPickerComponent v-else :closet="props.closet" @clickClothing="handleClothingClick" />
     </div>
   </div>
   <div v-else class="focusWidth finalContainer">
@@ -170,9 +181,9 @@ const emptyForm = () => {
       <h2>Outfit Name</h2>
       <input v-model="outfitTitle" title="Outfit Name" required minlength="1" maxlength="70" />
       <h2 style="margin-top: 2vmin">Description</h2>
-      <input v-model="description" placeholder="ex. layering order, tucking in a shirt, etc." maxlength="1000"> </input>
+      <input v-model="description" placeholder="ex. layering order, tucking in a shirt, etc." maxlength="1000" />
       <div class="centered">
-      <button class="submitClass" type="submit">Submit</button>
+        <button class="submitClass" type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -230,6 +241,7 @@ button.finishButton.notDone {
 }
 
 button.finishButton.done {
+  cursor: pointer;
   background-color: var(--light-green);
 }
 

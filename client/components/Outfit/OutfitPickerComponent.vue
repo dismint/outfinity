@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { fetchy } from "@/utils/fetchy";
-import { computed, defineProps, onBeforeMount, ref } from "vue";
+import { computed, defineProps, onBeforeMount, onUpdated, ref } from "vue";
 import ClosetClothingItemComponent from "../ClothingItem/ClosetClothingItemComponent.vue";
 
 const props = defineProps(["closet"]);
@@ -9,6 +9,7 @@ const selectedCategory = ref("all");
 const clothes = ref<Array<Record<string, string>>>([]);
 const loaded = ref(false);
 const emit = defineEmits(["clickClothing"]);
+let flag = false;
 
 const categories = ["all", "hat", "top", "bottom", "onepiece", "shoe"];
 
@@ -36,6 +37,14 @@ const switchCategory = (category: string) => {
 onBeforeMount(async () => {
   await getClothes();
   loaded.value = true;
+});
+
+onUpdated(async (u) => {
+  if (!flag) {
+    await getClothes();
+    loaded.value = true;
+    flag = true;
+  }
 });
 </script>
 
