@@ -8,7 +8,7 @@ import OutfitImageComponentRow from "../Outfit/OutfitImageComponentRow.vue";
 
 const props = defineProps(["outfit", "owner", "id"]);
 const { userId } = storeToRefs(useUserStore());
-const outfitObject = ref({});
+const outfitObject = ref({ name: "dummy", owner: "dummy" });
 const saved = ref(false);
 const isWinner = ref(false);
 
