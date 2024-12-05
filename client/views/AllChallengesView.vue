@@ -8,18 +8,16 @@ import { onBeforeMount, ref } from "vue";
 
 const userId = storeToRefs(useUserStore()).userId.value;
 const challenges = ref<Array<Record<string, string>>>([]);
-const activeChallenges = ref<Array<Record<string, string>>>([]);
-const inactiveChallenges = ref<Array<Record<string, string>>>([]);
-const participatedChallenges = ref<Array<Record<string, string>>>([]);
 
 const getAllChallenges = async () => {
   let challengeInfo;
   try {
-    challengeInfo = await fetchy(`/api/challenges/owner/${userId}`, "GET", {});
+    challengeInfo = await fetchy(`/api/challenges`, "GET", {});
   } catch (e) {
     return;
   }
-  challenges.value = challengeInfo;
+  challenges.value = challengeInfo.filter((challenge: Record<string, string>) => challenge.active);
+  console.log(challenges);
 };
 
 const openChallengePage = async (id: string) => {
@@ -28,8 +26,6 @@ const openChallengePage = async (id: string) => {
 
 onBeforeMount(async () => {
   await getAllChallenges();
-  activeChallenges.value = challenges.value.filter((challenge: Record<string, string>) => challenge.active);
-  inactiveChallenges.value = challenges.value.filter((challenge: Record<string, string>) => !challenge.active);
 });
 </script>
 
@@ -37,19 +33,14 @@ onBeforeMount(async () => {
   <main>
     <div class="centered">
       <div class="compressWidth">
-        <h1>My Challenges</h1>
+        <h1>Find Challenges</h1>
         <div class="challengesContainer">
-          <button class="createButton" v-on:click="router.push({ name: 'CreateChallenge' })">Create Challenge</button>
           <div class="row centered" v-if="!challenges">
             <h2>No challenges found!</h2>
           </div>
           <div v-else class="full">
-            <h2>Active Challenges</h2>
-            <div class="challengeContainer" v-for="challenge in activeChallenges" v-on:click="openChallengePage(challenge._id)">
-              <ChallengePreviewComponent :id="challenge._id" />
-            </div>
-            <h2>Inactive Challenges</h2>
-            <div class="challengeContainer" v-for="challenge in inactiveChallenges" v-on:click="openChallengePage(challenge._id)">
+            <h2>Available Challenges</h2>
+            <div class="challengeContainer" v-for="challenge in challenges" v-on:click="openChallengePage(challenge._id)">
               <ChallengePreviewComponent :id="challenge._id" />
             </div>
           </div>

@@ -507,6 +507,16 @@ class Routes {
   async getChallengeSubmissions(id: string) {
     return await Challenging.getChallengeSubmissions(new ObjectId(id));
   }
+
+  @Router.patch("/challenges/:id/remove")
+  async removeChallengeSubmission(id: string, uid: string) {
+    return await Challenging.removeChallengeWinner(new ObjectId(id), new ObjectId(uid));
+  }
+
+  @Router.get("/challenges/:id/:uid")
+  async isWinner(id: string, uid: string) {
+    return await Challenging.assertIsWinner(new ObjectId(id), new ObjectId(uid));
+  }
 }
 
 /** The web app. */

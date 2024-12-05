@@ -19,6 +19,7 @@ import OutfitsView from "../views/OutfitsView.vue";
 import OutfitView from "../views/OutfitView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SingleChallengeView from "../views/SingleChallengeView.vue";
+import AllChallengesView from "../views/AllChallengesView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -122,6 +123,13 @@ const router = createRouter({
       name: "Challenges",
       component: MyChallengesView,
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/allchallenges",
+      name: "AllChallenges",
+      component: AllChallengesView,
+      meta: { requiresAuth: true },
+      props: true,
     },
     {
       path: "/challenge/:id",

@@ -73,7 +73,7 @@ onBeforeMount(async () => {
     <div class="interactingContainer">
       <h2>Entries</h2>
       <div class="challengeEntryContainer" v-for="(owner, outfit) in submissions">
-        <SubmissionComponent :outfit="outfit" :owner="challenge.owner" :id="props.id" />
+        <SubmissionComponent :outfit="outfit" :owner="challenge.owner" :id="props.id" @emit="getChallengeInfo"/>
       </div>
     </div>
   </div>
