@@ -39,7 +39,7 @@ onBeforeMount(async () => {
   loaded.value = true;
 });
 
-onUpdated(async (u) => {
+onUpdated(async () => {
   if (!flag) {
     await getClothes();
     loaded.value = true;
