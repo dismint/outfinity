@@ -127,12 +127,20 @@ onMounted(() => {
         <div class="imageGallery row">
           <div class="col" style="width: 48.5%; height: 96%; margin: 1% 0.5% 1% 1%">
             <div class="row" style="height: 50%">
-              <div class="imageSmall L scrollSeal imageBox"></div>
-              <div class="imageSmall R scrollSeal imageBox rightPlease"></div>
+              <div class="imageSmall L scrollSeal imageBox">
+                <img class="boxImg" src="https://u.cubeupload.com/dismint/outfit.png" alt="outfit image" />
+              </div>
+              <div class="imageSmall R scrollSeal imageBox rightPlease">
+                <img class="boxImg" src="https://u.cubeupload.com/dismint/minicloset.png" alt="outfit image" />
+              </div>
             </div>
-            <div class="imageMedium scrollSeal imageBox rightPlease"></div>
+            <div class="imageMedium scrollSeal imageBox rightPlease">
+              <img class="boxImg" src="https://u.cubeupload.com/dismint/closets.png" alt="outfit image" />
+            </div>
           </div>
-          <div class="imageLarge scrollSeal imageBox"></div>
+          <div class="imageLarge scrollSeal imageBox">
+            <img class="boxImg" src="https://u.cubeupload.com/dismint/challenge.png" alt="outfit image" />
+          </div>
         </div>
       </div>
       <div class="compressWidth">
@@ -176,6 +184,19 @@ h2 {
   font-size: 2em;
   font-weight: 800;
   color: var(--dark-green);
+}
+
+.imageBox {
+  box-sizing: border-box;
+  padding: 1vh;
+}
+
+.boxImg {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  object-fit: cover;
+  border-radius: 1em;
 }
 
 .bottomMark {
